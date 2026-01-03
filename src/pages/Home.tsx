@@ -367,7 +367,7 @@ const Home = () => {
             {[
               { icon: Anchor, title: "Sourcing Precision", desc: "Direct-from-manufacturer pipelines for premium logistics." },
               { icon: MapPin, title: "Strategic Hubs", desc: "Alexandria-based logistics engineered for rapid distribution." },
-              { icon: Box, title: "Diverse Portfolio", desc: "Expertly handling international trade across food and medical sectors." }
+              { icon: Box, title: "Diverse Portfolio", desc: "Expertly handling international trade across all food sectors." }
             ].map((item, i) => (
               <motion.div key={i} variants={cardVariant} className="relative group">
                 <div className="relative bg-[#12151C] rounded-2xl p-12 border border-white/5">
