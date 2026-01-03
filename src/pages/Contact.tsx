@@ -59,7 +59,7 @@ const Contact = () => {
     setIsSubmitting(true);
     try {
       // Using your specific EmailJS credentials from the provided code
-      await emailjs.send("service_lbav6nz", "template_kk7hr85", {
+      await emailjs.send("service_lbav6nz", "template_9pk6yuf", {
         from_name: formData.name,
         from_email: formData.email,
         message: formData.message,

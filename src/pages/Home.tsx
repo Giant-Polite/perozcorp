@@ -197,7 +197,7 @@ const Home = () => {
             to="/products"
             className="text-sm font-bold border-b-2 border-indigo-600 pb-1 hover:text-indigo-600 transition-colors"
           >
-            VIEW ALL BRANDS
+            VIEW ALL PRODUCTS
           </Link>
         </div>
 
