@@ -317,7 +317,7 @@ export default function AdminDashboard(): JSX.Element {
                   placeholder="e.g. Beverages"
                   className="bg-slate-800/50 border-slate-700"
                 />
-                <Button type="submit" className="bg-slate-700 hover:bg-cyan-600 transition-colors">
+                <Button type="submit" className="bg-slate-200 hover:bg-cyan-600 transition-colors">
                   <Plus className="w-4 h-4" />
                 </Button>
               </form>
