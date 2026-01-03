@@ -10,10 +10,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "ts-node --esm backend/index.js",
-    "generate-sitemap": "node generate-sitemap.js",
-    "sitemap": "node scripts/generate-Sitemap.js",
-    "build": "npm run sitemap && vite build"
+    "server": "ts-node --esm backend/index.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
