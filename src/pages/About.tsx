@@ -219,12 +219,12 @@ export default function About() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: luxuryEase }}
-          className="max-w-4xl text-4xl font-black"
+          className="max-w-4xl text-5xl font-black"
         >
-          Connecting global quality to local businesses,
+          Connecting Global Quality To Local Businesses,
           <br />
           <span className="italic text-violet-600 font-light">
-            one direct delivery at a time.
+            One Direct Delivery At a Time.
           </span>
         </motion.p>
       </section>

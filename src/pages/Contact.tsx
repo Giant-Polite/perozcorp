@@ -160,7 +160,7 @@ const Contact = () => {
     className="relative bg-white rounded-[28px] px-10 py-14 md:px-14 md:py-20 shadow-[0_30px_70px_rgba(0,0,0,0.08)]"
   >
     {/* subtle decorative mark */}
-    <div className="absolute top-8 right-10 text-[11px] tracking-[0.4em] font-black uppercase text-slate-200">
+    <div className="absolute top-8 right-10 text-[11px] tracking-[0.4em] font-black uppercase text-slate-600">
       Secure Form
     </div>
 
