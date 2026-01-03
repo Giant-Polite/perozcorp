@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Lock, Eye, EyeOff, AlertCircle, Home } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +11,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const logo = "/logo.webp";
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -32,7 +31,7 @@ export default function Login() {
         return;
       }
 
-      window.alert("Login Successful! Welcome back, Mr Bosari!");
+      window.alert("Login Successful! Welcome back, Mr Ali!");
       setTimeout(() => {
         navigate("/admin-dashboard");
       }, 1000);
@@ -45,132 +44,151 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#FFF8E7] via-[#F5E6D3] to-[#E8D4B8]">
-      {/* Gradient Circles */}
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden flex items-center justify-center">
+      {/* Animated background orbs */}
       <motion.div
-        className="absolute top-20 right-20 w-96 h-96 rounded-full opacity-20 blur-3xl"
-        style={{ backgroundColor: "#FACC15" }}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.2 }}
-        transition={{ duration: 1.2, delay: 0.2 }}
-      />
-      <motion.div
-        className="absolute bottom-10 left-10 w-80 h-80 rounded-full opacity-15 blur-3xl"
-        style={{ backgroundColor: "#8B6F47" }}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.15 }}
-        transition={{ duration: 1.2, delay: 0.4 }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl"
-        style={{ backgroundColor: "#D4A574" }}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.1 }}
-        transition={{ duration: 1.2 }}
+        className="absolute top-20 right-32 w-80 h-80 rounded-full opacity-20 blur-3xl"
+        style={{ background: "radial-gradient(circle, #06b6d4 0%, transparent 70%)" }}
+        animate={{
+          scale: [1, 1.2, 1],
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md px-4">
+      <motion.div
+        className="absolute bottom-10 left-20 w-96 h-96 rounded-full opacity-15 blur-3xl"
+        style={{ background: "radial-gradient(circle, #0891b2 0%, transparent 70%)" }}
+        animate={{
+          scale: [1, 1.3, 1],
+          x: [0, -60, 0],
+          y: [0, 40, 0],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <motion.div
+        className="absolute top-1/2 left-1/3 w-72 h-72 rounded-full opacity-10 blur-3xl"
+        style={{ background: "radial-gradient(circle, #10b981 0%, transparent 70%)" }}
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Grid pattern */}
+      <div
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, .05) 25%, rgba(6, 182, 212, .05) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .05) 75%, rgba(6, 182, 212, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, .05) 25%, rgba(6, 182, 212, .05) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .05) 75%, rgba(6, 182, 212, .05) 76%, transparent 77%, transparent)`,
+          backgroundSize: "50px 50px",
+        }}
+      />
+
+      {/* Main container */}
+      <div className="relative z-10 w-full max-w-md px-6">
+        {/* Card */}
         <motion.div
-          className="bg-white/80 backdrop-blur-xl rounded-[20px] shadow-2xl shadow-black/10 p-8 border border-white/60"
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-10 shadow-2xl"
         >
-          {/* Logo */}
+          {/* Gradient border effect on hover */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-teal-500/0 opacity-0 hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
+
+          {/* Inner shadow effect */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
+
+          {/* Logo Section */}
           <motion.div
-            className="text-center mb-8"
-            initial={{ opacity: 0, y: -10 }}
+            className="text-center mb-10 relative"
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
           >
-            <div className="inline-flex items-center justify-center mb-4">
-              <motion.img
-                src={logo}
-                alt="Osari Trading Logo"
-                className="w-24 h-24 rounded-full object-cover shadow-lg"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.3,
-                  type: "spring",
-                  stiffness: 200,
-                }}
-              />
-            </div>
-            <h1
-              className="text-[28px] font-[700] mb-1"
-              style={{ color: "#8B6F47" }}
+            {/* Logo glow */}
+            <motion.div
+              className="inline-block relative mb-6"
+              animate={{
+                filter: [
+                  "drop-shadow(0 0 0px rgba(6, 182, 212, 0))",
+                  "drop-shadow(0 0 20px rgba(6, 182, 212, 0.5))",
+                  "drop-shadow(0 0 0px rgba(6, 182, 212, 0))",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
             >
-              Osari Trading
+              <img
+                src={logo}
+                alt="Peroz Corp"
+                className="w-20 h-20 rounded-full object-cover border-2 border-cyan-500/30"
+              />
+            </motion.div>
+
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent mb-1">
+              Peroz Corp
             </h1>
-            <p className="text-[14px] text-gray-600 font-[400]">Admin Portal</p>
+            <p className="text-sm text-slate-400 font-medium">Admin Access Portal</p>
           </motion.div>
 
           {/* Error Message */}
           <AnimatePresence>
             {error && (
               <motion.div
-                initial={{ opacity: 0, y: -10, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: "auto" }}
-                exit={{ opacity: 0, y: -10, height: 0 }}
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 20 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                 transition={{ duration: 0.3 }}
-                className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2"
+                className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 flex items-start gap-3 mb-6 backdrop-blur-sm"
               >
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-[13px] text-red-700">{error}</p>
+                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-200">{error}</p>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Login Form */}
+          {/* Form */}
           <form onSubmit={handleLogin} className="space-y-5">
+            {/* Email Input */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <label
-                htmlFor="email"
-                className="block text-[14px] mb-2 text-gray-700 font-[600]"
-              >
-                Email
+              <label className="block text-sm font-semibold text-slate-200 mb-2.5">
+                Email Address
               </label>
-              <div className="relative">
-                <Input
-                  id="email"
+              <div className="relative group">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500/50 group-focus-within:text-cyan-400 transition-colors duration-300" />
+                <input
                   type="email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setError("");
                   }}
-                  placeholder="Enter your admin email"
-                  className="pl-4 h-12 border border-gray-200 rounded-lg focus:ring-2 focus:border-transparent transition-all"
-                  style={{ "--tw-ring-color": "#8B6F47" } as React.CSSProperties}
+                  placeholder="admin@perozcorp.com"
                   required
+                  className="w-full h-12 pl-11 pr-4 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 backdrop-blur-sm"
                 />
               </div>
             </motion.div>
 
+            {/* Password Input */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <label
-                htmlFor="password"
-                className="block text-[14px] mb-2 text-gray-700 font-[600]"
-              >
+              <label className="block text-sm font-semibold text-slate-200 mb-2.5">
                 Password
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <Input
-                  id="password"
+              <div className="relative group">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500/50 group-focus-within:text-cyan-400 transition-colors duration-300" />
+                <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => {
@@ -178,47 +196,53 @@ export default function Login() {
                     setError("");
                   }}
                   placeholder="Enter your password"
-                  className="pl-11 pr-11 h-12 border border-gray-200 rounded-lg focus:ring-2 focus:border-transparent transition-all"
-                  style={{ "--tw-ring-color": "#8B6F47" } as React.CSSProperties}
                   required
+                  className="w-full h-12 pl-11 pr-12 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 backdrop-blur-sm"
                 />
-                <button
+                <motion.button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors duration-300 focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
                   ) : (
                     <Eye className="w-5 h-5" />
                   )}
-                </button>
+                </motion.button>
               </div>
             </motion.div>
 
+            {/* Submit Button */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.6 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="pt-2"
             >
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full h-12 rounded-lg transition-all duration-200 hover:shadow-lg font-[600] text-[16px]"
-                  style={{
-                    backgroundColor: "#8B6F47",
-                    color: "white",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#6B5437";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "#8B6F47";
-                  }}
-                >
+              <motion.button
+                type="submit"
+                disabled={isLoading}
+                whileHover={!isLoading ? { scale: 1.02, y: -2 } : {}}
+                whileTap={!isLoading ? { scale: 0.98 } : {}}
+                className="relative w-full h-12 rounded-lg font-semibold text-white overflow-hidden group disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300"
+              >
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-teal-600 group-hover:from-cyan-500 group-hover:to-teal-500 transition-all duration-300" />
+
+                {/* Shine effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.6 }}
+                />
+
+                <div className="relative flex items-center justify-center gap-2">
                   {isLoading ? (
-                    <span className="flex items-center justify-center gap-2">
+                    <>
                       <svg
                         className="animate-spin h-5 w-5"
                         xmlns="http://www.w3.org/2000/svg"
@@ -232,54 +256,62 @@ export default function Login() {
                           r="10"
                           stroke="currentColor"
                           strokeWidth="4"
-                        ></circle>
+                        />
                         <path
                           className="opacity-75"
                           fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
+                        />
                       </svg>
-                      Logging in...
-                    </span>
+                      <span>Authenticating...</span>
+                    </>
                   ) : (
-                    "Login"
+                    <>
+                      <Lock className="w-4 h-4" />
+                      <span>Secure Login</span>
+                    </>
                   )}
-                </Button>
-              </motion.div>
+                </div>
+              </motion.button>
             </motion.div>
           </form>
 
-          {/* Info + Back to Home */}
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-7">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+            <span className="text-xs text-slate-500 font-medium">or</span>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+          </div>
+
+          {/* Footer Links */}
           <motion.div
-            className="mt-6 text-center space-y-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.7 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="space-y-3 text-center"
           >
-            <p className="text-[12px] text-gray-600">
-              Admin access only. Please return to the home page if you’re not an
-              Osari Trading administrator.
+            <p className="text-xs text-slate-400">
+              Admin access only. Unauthorized access is prohibited.
             </p>
             <motion.a
               href="/"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 text-[13px] font-medium px-4 py-2 rounded-lg bg-[#8B6F47] text-white hover:bg-[#6B5437] transition-colors"
+              className="inline-block px-6 py-2.5 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 text-slate-300 text-sm font-medium transition-all duration-300 hover:text-cyan-400 hover:border-cyan-500/50"
             >
-              <Home className="w-4 h-4" />
-              Back to Home
+              ← Back to Homepage
             </motion.a>
           </motion.div>
         </motion.div>
 
         {/* Footer */}
         <motion.div
-          className="text-center mt-6"
+          className="text-center mt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.8 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
         >
-          <p className="text-[13px] text-gray-600">© 2025 Osari Trading</p>
+          <p className="text-sm text-slate-500 font-medium">© 2026 Peroz Corp. All rights reserved.</p>
         </motion.div>
       </div>
     </div>

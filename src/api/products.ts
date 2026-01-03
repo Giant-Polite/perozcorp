@@ -20,7 +20,7 @@ export interface Category {
 // ✅ Use environment variable (set in .env)
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "https://osari-trading-backend.onrender.com/api/products"; // we'll use this after deployment
+  "https://Perozcorp-backend.onrender.com/api/products"; // we'll use this after deployment
 
 // ✅ Fetch all products
 export const fetchProducts = async (): Promise<Product[]> => {

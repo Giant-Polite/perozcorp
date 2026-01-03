@@ -31,8 +31,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://osari-trading.vercel.app",
-      "https://osari-trading.com",
+      "https://Perozcorp.vercel.app",
+      "https://Perozcorp.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
   })

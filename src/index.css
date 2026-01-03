@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ===========================================================
-   🌾 Osari Trading Global Styles
+   🌾 Peroz Corp Global Styles
    =========================================================== */
 @layer base {
   :root {
@@ -27,7 +27,7 @@
     --input: 33 35% 85%;
     --ring: 45 62% 52%;
     --radius: 0.5rem;
-    /* Custom Colors for Osari Trading */
+    /* Custom Colors for Peroz Corp */
     --chart-1: 45 62% 52%; /* Matches #FFD700 for toasts, active category */
     --chart-2: 140 48% 48%; /* Green for Halal Certified badge */
     --chart-4: 33 52% 60%; /* Amber for hover states, particles */

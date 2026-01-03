@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // Added for navigation
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Package, LogOut, Search, Filter, Edit2, Trash } from "lucide-react";
+import { 
+  Package, 
+  LogOut, 
+  Search, 
+  Filter, 
+  Edit2, 
+  Trash, 
+  Plus, 
+  LayoutDashboard,
+  CheckCircle2,
+  XCircle
+} from "lucide-react";
 
 type Product = {
   id: string;
@@ -23,17 +35,11 @@ type Product = {
   in_stock: boolean;
 };
 
-type Category = {
-  id: string;
-  name: string;
-};
-
 export default function AdminDashboard(): JSX.Element {
   const formRef = useRef<HTMLElement | null>(null);
-  const categoryFormRef = useRef<HTMLElement | null>(null);
-  const navigate = useNavigate(); // Added for redirect
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Added for auth state
-  const [authLoading, setAuthLoading] = useState(true); // Added for auth check loading
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [formData, setFormData] = useState({
@@ -44,28 +50,25 @@ export default function AdminDashboard(): JSX.Element {
     image: "",
     in_stock: true,
   });
-  const [categoryFormData, setCategoryFormData] = useState({
-    name: "",
-  });
+  const [categoryFormData, setCategoryFormData] = useState({ name: "" });
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string | "all">("all");
   const [loading, setLoading] = useState(false);
 
-  // Check authentication on mount
+  const logo = "/logo.webp";
+
+  // Auth check
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
-          window.alert("You must be logged in to access the admin dashboard.");
           navigate("/login");
         } else {
           setIsAuthenticated(true);
         }
       } catch (error) {
-        console.error("Auth check error:", error);
-        window.alert("An error occurred. Please try logging in again.");
         navigate("/login");
       } finally {
         setAuthLoading(false);
@@ -74,9 +77,9 @@ export default function AdminDashboard(): JSX.Element {
     checkAuth();
   }, [navigate]);
 
-  // Fetch products and categories from Supabase
+  // Fetching
   useEffect(() => {
-    if (!isAuthenticated) return; // Skip if not authenticated
+    if (!isAuthenticated) return;
     const fetchData = async () => {
       setLoading(true);
       const [productsRes, categoriesRes] = await Promise.all([
@@ -84,23 +87,9 @@ export default function AdminDashboard(): JSX.Element {
         supabase.from("categories").select("name").order("name", { ascending: true }),
       ]);
 
-      if (productsRes.error) {
-        console.error("Fetch products error:", productsRes.error);
-        window.alert(`Failed to fetch products: ${productsRes.error.message}`);
-      } else {
-        console.log("Fetched products:", productsRes.data);
-        setProducts(productsRes.data || []);
-      }
-
-      if (categoriesRes.error) {
-        console.error("Fetch categories error:", categoriesRes.error);
-        window.alert(`Failed to fetch categories: ${categoriesRes.error.message}`);
-      } else {
-        const sortedCategories = categoriesRes.data
-          .map((c) => c.name)
-          .sort((a, b) => a.localeCompare(b));
-        console.log("Fetched categories:", sortedCategories);
-        setCategories(sortedCategories);
+      if (!productsRes.error) setProducts(productsRes.data || []);
+      if (!categoriesRes.error) {
+        setCategories(categoriesRes.data.map((c) => c.name));
       }
       setLoading(false);
     };
@@ -109,10 +98,9 @@ export default function AdminDashboard(): JSX.Element {
 
   const productCounts = useMemo(() => {
     const map: Record<string, number> = {};
-    categories.forEach((category) => {
-      map[category] = products.filter((p) => p.category === category).length;
+    categories.forEach((cat) => {
+      map[cat] = products.filter((p) => p.category === cat).length;
     });
-    console.log("Product counts:", map);
     return map;
   }, [products, categories]);
 
@@ -124,778 +112,297 @@ export default function AdminDashboard(): JSX.Element {
     }));
   };
 
-  const handleCategoryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategoryFormData({ name: e.target.value });
-  };
-
-  const clearProductForm = () => {
-    setFormData({ id: "", name: "", category: "", description: "", image: "", in_stock: true });
-    setEditingProductId(null);
-    window.alert("Product form cleared.");
-  };
-
-  const clearCategoryForm = () => {
-    setCategoryFormData({ name: "" });
-    window.alert("Category form cleared.");
-  };
-
-  const validateProductForm = () => {
-    if (!formData.name?.trim()) {
-      window.alert("Product name is required.");
-      return false;
-    }
-    if (!formData.category?.trim()) {
-      window.alert("Category is required.");
-      return false;
-    }
-    if (formData.image && !isValidUrl(formData.image)) {
-      window.alert("Please enter a valid image URL.");
-      return false;
-    }
-    return true;
-  };
-
-  const validateCategoryForm = () => {
-    const name = categoryFormData.name.trim();
-    if (!name) {
-      window.alert("Category name is required.");
-      return false;
-    }
-    if (categories.some((c) => c.toLowerCase() === name.toLowerCase())) {
-      window.alert("Category already exists.");
-      return false;
-    }
-    return true;
-  };
-
-  const isValidUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateProductForm()) return;
-
     setLoading(true);
     try {
-      if (editingProductId) {
-        const { error } = await supabase
-          .from("products")
-          .update({
-            name: formData.name,
-            category: formData.category,
-            description: formData.description,
-            image: formData.image,
-            in_stock: formData.in_stock,
-          })
-          .eq("id", editingProductId);
+      const payload = {
+        name: formData.name,
+        category: formData.category,
+        description: formData.description,
+        image: formData.image,
+        in_stock: formData.in_stock,
+      };
 
-        if (error) throw error;
-        window.alert("Product updated successfully.");
-        clearProductForm();
-      } else {
-        const { error } = await supabase.from("products").insert([
-          {
-            name: formData.name,
-            category: formData.category,
-            description: formData.description,
-            image: formData.image,
-            in_stock: formData.in_stock,
-          },
-        ]);
+      const { error } = editingProductId 
+        ? await supabase.from("products").update(payload).eq("id", editingProductId)
+        : await supabase.from("products").insert([payload]);
 
-        if (error) throw error;
-        window.alert("Product added successfully.");
-        clearProductForm();
-      }
+      if (error) throw error;
+      
       const { data } = await supabase.from("products").select("*").order("created_at", { ascending: false });
       setProducts(data || []);
-    } catch (error: any) {
-      console.error("Product submit error:", error);
-      window.alert(`Failed to ${editingProductId ? "update" : "add"} product: ${error.message}`);
+      setFormData({ id: "", name: "", category: "", description: "", image: "", in_stock: true });
+      setEditingProductId(null);
+      window.alert("Success!");
+    } catch (err: any) {
+      window.alert(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (productId: string) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
-
-    setLoading(true);
-    try {
-      const { error } = await supabase.from("products").delete().eq("id", productId);
-      if (error) throw error;
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
-      window.alert("Product deleted successfully.");
-    } catch (error: any) {
-      console.error("Delete error:", error);
-      window.alert(`Failed to delete product: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Delete this product?")) return;
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (!error) setProducts(prev => prev.filter(p => p.id !== id));
   };
 
   const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateCategoryForm()) return;
-
-    const name = categoryFormData.name
-      .trim()
-      .split(/\s+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-
-    setLoading(true);
-    try {
-      console.log("Adding category:", name);
-      const { error } = await supabase.from("categories").insert([{ name }]);
-      if (error) throw error;
-      window.alert("Category added successfully.");
-      setCategories((prev) => [...prev, name].sort((a, b) => a.localeCompare(b)));
-      clearCategoryForm();
-      const { data } = await supabase.from("categories").select("name").order("name", { ascending: true });
-      setCategories(data?.map((c) => c.name).sort((a, b) => a.localeCompare(b)) || []);
-    } catch (error: any) {
-      console.error("Category submit error:", error);
-      window.alert(`Failed to add category: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const startEdit = (p: Product) => {
-    setFormData({
-      id: p.id,
-      name: p.name,
-      category: p.category,
-      description: p.description ?? "",
-      image: p.image,
-      in_stock: p.in_stock ?? true,
-    });
-    setEditingProductId(p.id);
-    if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    const name = categoryFormData.name.trim();
+    const { error } = await supabase.from("categories").insert([{ name }]);
+    if (!error) {
+      setCategories(prev => [...prev, name].sort());
+      setCategoryFormData({ name: "" });
     }
   };
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
-      const matchesSearch =
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (p.description ?? "").toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategoryFilter === "all" || p.category === selectedCategoryFilter;
       return matchesSearch && matchesCategory;
     });
   }, [products, searchQuery, selectedCategoryFilter]);
 
-  const handleCategoryCardClick = (category: string) => {
-    setSelectedCategoryFilter(category);
-    const el = document.getElementById("product-list-section");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  // Show loading screen during auth check
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ color: "#F5E6D3" }}>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  // Return null if not authenticated (redirect handled by useEffect)
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (authLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-cyan-400">Loading Access...</div>;
 
   return (
-    <div
-      className="min-h-screen relative"
-      style={{
-        background: "rgba(0, 0, 0, 0.6)",
-        fontFamily: "Inter, system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <header
-        className="px-8 py-6 flex items-center justify-between"
-        style={{
-          background: "linear-gradient(135deg, rgba(139, 111, 71, 0.4), rgba(212, 165, 116, 0.3))",
-          backdropFilter: "blur(10px)",
-          borderBottom: "1px solid rgba(255, 215, 0, 0.2)",
-        }}
-      >
-        <div className="flex items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{
-              background: "linear-gradient(135deg, #D4A574, #8B6F47)",
-              boxShadow: "0 4px 15px rgba(212, 165, 116, 0.3)",
-            }}
-          >
-            <Package className="w-7 h-7" style={{ color: "#FFF8E7" }} />
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden text-slate-100 font-sans">
+      
+      {/* BACKGROUND ANIMATION - Matches Login Page */}
+      <motion.div
+        className="fixed top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full opacity-10 blur-[120px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, #06b6d4 0%, transparent 70%)" }}
+        animate={{ scale: [1, 1.2, 1], x: [0, 30, 0] }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
+      <motion.div
+        className="fixed bottom-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full opacity-10 blur-[120px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, #10b981 0%, transparent 70%)" }}
+        animate={{ scale: [1, 1.3, 1], y: [0, -40, 0] }}
+        transition={{ duration: 12, repeat: Infinity }}
+      />
+
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 w-full bg-slate-900/60 backdrop-blur-xl border-b border-slate-700/50 px-8 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src={logo} alt="Logo" className="w-10 h-10 rounded-full border border-cyan-500/30" />
+            <div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
+                Peroz Corp
+              </h1>
+              <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Admin Dashboard</p>
+            </div>
           </div>
-          <h1
-            className="tracking-wide"
-            style={{
-              color: "#F5E6D3",
-              fontFamily: "Georgia, serif",
-            }}
+          <Button 
+            onClick={() => supabase.auth.signOut().then(() => navigate("/"))}
+            variant="ghost" 
+            className="text-slate-400 hover:text-red-400 hover:bg-red-400/10 transition-all"
           >
-            Osari Trading Admin Panel
-          </h1>
+            <LogOut className="w-4 h-4 mr-2" /> Logout
+          </Button>
         </div>
-        <Button
-          onClick={() => supabase.auth.signOut().then(() => (window.location.href = "/"))}
-          className="px-6 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg"
-          style={{
-            border: "2px solid #FFD700",
-            color: "#FFD700",
-            background: "transparent",
-            boxShadow: "0 0 0 rgba(255, 215, 0, 0)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = "0 0 20px rgba(255, 215, 0, 0.5)";
-            e.currentTarget.style.background = "rgba(255, 215, 0, 0.1)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = "0 0 0 rgba(255, 215, 0, 0)";
-            e.currentTarget.style.background = "transparent";
-          }}
-        >
-          <LogOut className="w-4 h-4 mr-2" /> Logout
-        </Button>
       </header>
 
-      <main className="px-8 py-8 max-w-7xl mx-auto space-y-8">
-        {loading && (
-          <div className="text-center text-[#F5E6D3]">Loading...</div>
-        )}
-
-        <section
-          className="rounded-3xl p-8"
-          style={{
-            background: "linear-gradient(135deg, rgba(139, 111, 71, 0.5), rgba(212, 165, 116, 0.4))",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
-            animation: "fadeIn 0.4s ease-out",
-          }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2
-              style={{
-                color: "#F5E6D3",
-                fontFamily: "Georgia, serif",
-              }}
-            >
-              Products Overview
-            </h2>
-            <div
-              className="flex items-center gap-2 px-4 py-2 rounded-xl"
-              style={{
-                background: "rgba(255, 215, 0, 0.2)",
-                border: "1px solid rgba(255, 215, 0, 0.3)",
-              }}
-            >
-              <Search className="w-5 h-5" style={{ color: "#FFD700" }} />
-              <span style={{ color: "#F5E6D3" }}>{products.length} total products</span>
-            </div>
+      <main className="relative z-10 max-w-7xl mx-auto px-8 py-10 space-y-10">
+        
+        {/* STATS / CATEGORY CARDS */}
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="md:col-span-4 mb-2 flex items-center gap-2 text-cyan-400">
+            <LayoutDashboard className="w-5 h-5" />
+            <h2 className="font-semibold tracking-tight">Inventory Overview</h2>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {categories.map((category, index) => {
-              const count = productCounts[category] || 0;
-              return (
-                <div
-                  key={category}
-                  className="rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:scale-105 relative"
-                  style={{
-                    background: "linear-gradient(135deg, #8B6F47, #D4A574)",
-                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-                    animation: `fadeIn 0.5s ease-out ${index * 0.05}s both`,
-                  }}
-                  onClick={() => handleCategoryCardClick(category)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "0 8px 30px rgba(255, 215, 0, 0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.2)";
-                  }}
-                >
-                  <h3 style={{ color: "#F5E6D3", fontFamily: "Georgia, serif" }}>{category}</h3>
-                  <p style={{ color: "#FFF8E7", opacity: 0.9 }}>
-                    {count} {count === 1 ? "Product" : "Products"}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+          {categories.map((cat) => (
+            <motion.div
+              key={cat}
+              whileHover={{ y: -5 }}
+              onClick={() => setSelectedCategoryFilter(cat)}
+              className={`p-6 rounded-2xl border cursor-pointer transition-all ${
+                selectedCategoryFilter === cat 
+                ? "bg-cyan-500/10 border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.1)]" 
+                : "bg-slate-900/40 border-slate-700/50 hover:border-slate-500"
+              }`}
+            >
+              <p className="text-xs font-bold text-slate-500 uppercase mb-1">{cat}</p>
+              <p className="text-2xl font-bold text-white">{productCounts[cat] || 0}</p>
+              <p className="text-[10px] text-slate-400">Total Items</p>
+            </motion.div>
+          ))}
         </section>
 
-        <section
-          ref={formRef}
-          className="rounded-3xl p-8"
-          style={{
-            background: "linear-gradient(135deg, #8B6F47, #D4A574)",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
-            animation: "slideUp 0.5s ease-out",
-          }}
-        >
-          <h2
-            className="mb-6"
-            style={{
-              color: "#F5E6D3",
-              fontFamily: "Georgia, serif",
-            }}
-          >
-            {editingProductId ? "Edit Product" : "Add New Product"}
-          </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          
+          {/* LEFT: FORMS */}
+          <div className="lg:col-span-1 space-y-8">
+            {/* PRODUCT FORM */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 shadow-xl"
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400">
+                  <Plus className="w-5 h-5" />
+                </div>
+                <h3 className="font-bold text-lg">{editingProductId ? "Update Item" : "New Product"}</h3>
+              </div>
 
-          <form onSubmit={handleProductSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2">
-                <Label style={{ color: "#FFF8E7" }}>Product Name</Label>
-                <Input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="border-0 rounded-xl"
-                  style={{
-                    background: "rgba(255, 248, 231, 0.9)",
-                    color: "#8B6F47",
-                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                  }}
+              <form onSubmit={handleProductSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-xs font-bold uppercase">Product Name</Label>
+                  <Input 
+                    name="name" value={formData.name} onChange={handleInputChange} required
+                    className="bg-slate-800/50 border-slate-700 focus:border-cyan-500 focus:ring-cyan-500/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-xs font-bold uppercase">Category</Label>
+                  <Select value={formData.category} onValueChange={(v) => setFormData(p => ({...p, category: v}))}>
+                    <SelectTrigger className="bg-slate-800/50 border-slate-700">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-900 border-slate-700 text-slate-200">
+                      {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-xs font-bold uppercase">Image URL</Label>
+                  <Input 
+                    name="image" value={formData.image} onChange={handleInputChange}
+                    className="bg-slate-800/50 border-slate-700 focus:border-cyan-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-xs font-bold uppercase">Description</Label>
+                  <Textarea 
+                    name="description" value={formData.description} onChange={handleInputChange}
+                    className="bg-slate-800/50 border-slate-700 focus:border-cyan-500 min-h-[100px]"
+                  />
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
+                  <input 
+                    type="checkbox" name="in_stock" checked={formData.in_stock} onChange={handleInputChange}
+                    className="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-cyan-500/20 bg-slate-800"
+                  />
+                  <Label className="text-sm font-medium">Available in Stock</Label>
+                </div>
+                <Button 
+                  type="submit" disabled={loading}
+                  className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold h-12 rounded-xl shadow-lg shadow-cyan-900/20 transition-all"
+                >
+                  {loading ? "Processing..." : editingProductId ? "Save Changes" : "Publish Product"}
+                </Button>
+                {editingProductId && (
+                   <Button variant="ghost" onClick={() => {setEditingProductId(null); setFormData({id:"", name:"", category:"", description:"", image:"", in_stock: true})}} className="w-full text-slate-500">Cancel Edit</Button>
+                )}
+              </form>
+            </motion.div>
+
+            {/* CATEGORY FORM */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 shadow-xl"
+            >
+              <h3 className="font-bold text-sm text-slate-400 uppercase tracking-widest mb-4">Quick Add Category</h3>
+              <form onSubmit={handleCategorySubmit} className="flex gap-2">
+                <Input 
+                  value={categoryFormData.name} 
+                  onChange={(e) => setCategoryFormData({name: e.target.value})}
+                  placeholder="e.g. Beverages"
+                  className="bg-slate-800/50 border-slate-700"
+                />
+                <Button type="submit" className="bg-slate-700 hover:bg-cyan-600 transition-colors">
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </form>
+            </motion.div>
+          </div>
+
+          {/* RIGHT: LIST */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Input 
+                  placeholder="Search inventory..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-slate-900/40 border-slate-700 focus:border-cyan-500 h-12 rounded-xl"
                 />
               </div>
+              <Button 
+                variant="outline" 
+                onClick={() => {setSelectedCategoryFilter("all"); setSearchQuery("");}}
+                className="border-slate-700 text-slate-400 hover:bg-slate-800 h-12 rounded-xl px-6"
+              >
+                Reset Filters
+              </Button>
+            </div>
 
-              <div className="space-y-2">
-                <Label style={{ color: "#FFF8E7" }}>Category</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(v) => setFormData((p) => ({ ...p, category: v }))}
-                  onOpenChange={(open) => {
-                    if (open) {
-                      window.scrollY; // Prevent scroll jump
-                    }
-                  }}
-                >
-                  <SelectTrigger
-                    className="border-0 rounded-xl"
-                    style={{
-                      background: "rgba(255, 248, 231, 0.9)",
-                      color: "#8B6F47",
-                      boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                    }}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <AnimatePresence mode="popLayout">
+                {filteredProducts.map((p) => (
+                  <motion.div
+                    layout
+                    key={p.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="group relative bg-slate-900/40 backdrop-blur-md border border-slate-700/50 p-4 rounded-2xl hover:border-cyan-500/50 transition-all shadow-lg"
                   >
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label style={{ color: "#FFF8E7" }}>Image URL</Label>
-              <Input
-                name="image"
-                type="url"
-                value={formData.image}
-                onChange={handleInputChange}
-                placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
-                className="border-0 rounded-xl"
-                style={{
-                  background: "rgba(255, 248, 231, 0.9)",
-                  color: "#8B6F47",
-                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                }}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label style={{ color: "#FFF8E7" }}>Description</Label>
-              <Textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={4}
-                className="border-0 rounded-xl resize-none"
-                style={{
-                  background: "rgba(255, 248, 231, 0.9)",
-                  color: "#8B6F47",
-                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                }}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label style={{ color: "#FFF8E7" }}>In Stock</Label>
-              <input
-                type="checkbox"
-                name="in_stock"
-                checked={formData.in_stock}
-                onChange={handleInputChange}
-                className="h-5 w-5 text-yellow-600"
-              />
-            </div>
-
-            <div className="flex gap-4 pt-2">
-              <Button
-                type="submit"
-                className="flex-1 rounded-xl transition-all duration-300"
-                style={{
-                  background: "linear-gradient(135deg, #FFD700, #FFA500)",
-                  color: "#8B6F47",
-                  boxShadow: "0 4px 15px rgba(255, 215, 0, 0.3)",
-                }}
-                disabled={loading}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 6px 25px rgba(255, 215, 0, 0.6)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "0 4px 15px rgba(255, 215, 0, 0.3)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                {editingProductId ? "Update Product" : "Add Product"}
-              </Button>
-              <Button
-                type="button"
-                onClick={clearProductForm}
-                variant="outline"
-                className="rounded-xl transition-all duration-300"
-                style={{
-                  background: "#3C2F2F", // Rich brown color
-                  border: "2px solid #3C2F2F",
-                  color: "#F5E6D3",
-                }}
-                disabled={loading}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#4A3B3B";
-                  e.currentTarget.style.borderColor = "#F5E6D3";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#3C2F2F";
-                  e.currentTarget.style.borderColor = "#3C2F2F";
-                }}
-              >
-                Clear Form
-              </Button>
-            </div>
-          </form>
-        </section>
-
-        <section
-          ref={categoryFormRef}
-          className="rounded-3xl p-8"
-          style={{
-            background: "linear-gradient(135deg, #8B6F47, #D4A574)",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
-            animation: "slideUp 0.5s ease-out",
-          }}
-        >
-          <h2
-            className="mb-6"
-            style={{
-              color: "#F5E6D3",
-              fontFamily: "Georgia, serif",
-            }}
-          >
-            Add New Category
-          </h2>
-
-          <form onSubmit={handleCategorySubmit} className="space-y-5">
-            <div className="space-y-2">
-              <Label style={{ color: "#FFF8E7" }}>Category Name</Label>
-              <Input
-                name="name"
-                value={categoryFormData.name}
-                onChange={handleCategoryInputChange}
-                placeholder="e.g., Beverages"
-                required
-                className="border-0 rounded-xl"
-                style={{
-                  background: "rgba(255, 248, 231, 0.9)",
-                  color: "#8B6F47",
-                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                }}
-              />
-            </div>
-
-            <div className="flex gap-4 pt-2">
-              <Button
-                type="submit"
-                className="flex-1 rounded-xl transition-all duration-300"
-                style={{
-                  background: "linear-gradient(135deg, #FFD700, #FFA500)",
-                  color: "#8B6F47",
-                  boxShadow: "0 4px 15px rgba(255, 215, 0, 0.3)",
-                }}
-                disabled={loading}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 6px 25px rgba(255, 215, 0, 0.6)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "0 4px 15px rgba(255, 215, 0, 0.3)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                Add Category
-              </Button>
-              <Button
-                type="button"
-                onClick={clearCategoryForm}
-                variant="outline"
-                className="rounded-xl transition-all duration-300"
-                style={{
-                  background: "#3C2F2F", // Rich brown color
-                  border: "2px solid #3C2F2F",
-                  color: "#F5E6D3",
-                }}
-                disabled={loading}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#4A3B3B";
-                  e.currentTarget.style.borderColor = "#F5E6D3";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#3C2F2F";
-                  e.currentTarget.style.borderColor = "#3C2F2F";
-                }}
-              >
-                Clear Form
-              </Button>
-            </div>
-          </form>
-        </section>
-
-        <section
-          id="product-list-section"
-          className="rounded-3xl p-8"
-          style={{
-            background: "linear-gradient(135deg, rgba(139, 111, 71, 0.8), rgba(212, 165, 116, 0.6))",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
-            animation: "slideUp 0.6s ease-out",
-          }}
-        >
-          <h2
-            className="mb-6"
-            style={{
-              color: "#F5E6D3",
-              fontFamily: "Georgia, serif",
-            }}
-          >
-            Product List
-          </h2>
-
-          <div className="mb-6 flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5"
-                style={{ color: "#8B6F47" }}
-              />
-              <Input
-                type="text"
-                placeholder="Search products by name or description..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 border-0 rounded-xl"
-                style={{
-                  background: "rgba(255, 248, 231, 0.9)",
-                  color: "#8B6F47",
-                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                }}
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <Select
-                value={selectedCategoryFilter}
-                onValueChange={(v) => setSelectedCategoryFilter(v as any)}
-                onOpenChange={(open) => {
-                  if (open) {
-                    window.scrollY; // Prevent scroll jump
-                  }
-                }}
-              >
-                <SelectTrigger
-                  className="w-48 border-0 rounded-xl flex items-center gap-2"
-                  style={{
-                    background: "rgba(255, 248, 231, 0.9)",
-                    color: "#8B6F47",
-                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  <Filter className="w-4 h-4" />
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {(searchQuery || selectedCategoryFilter !== "all") && (
-                <Button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategoryFilter("all");
-                    window.alert("Filters cleared.");
-                  }}
-                  variant="outline"
-                  className="px-4 py-2 rounded-xl transition-all duration-300"
-                  style={{
-                    background: "rgba(245, 230, 211, 0.2)",
-                    border: "2px solid rgba(245, 230, 211, 0.4)",
-                    color: "#F5E6D3",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(245, 230, 211, 0.3)";
-                    e.currentTarget.style.borderColor = "#F5E6D3";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(245, 230, 211, 0.2)";
-                    e.currentTarget.style.borderColor = "rgba(245, 230, 211, 0.4)";
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {filteredProducts.length === 0 ? (
-            <div className="text-center py-12" style={{ color: "#FFF8E7", opacity: 0.6 }}>
-              <Package className="w-16 h-16 mx-auto mb-4 opacity-40" />
-              <p>{products.length === 0 ? "No products yet. Add your first product above!" : "No products match your filters."}</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product, index) => (
-                <div
-                  key={product.id}
-                  className="rounded-2xl p-5 transition-shadow duration-300"
-                  style={{
-                    background: "rgba(255, 248, 231, 0.15)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 215, 0, 0.2)",
-                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-                    animation: `fadeIn 0.5s ease-out ${index * 0.1}s both`,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "0 8px 30px rgba(255, 215, 0, 0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.2)";
-                  }}
-                >
-                  <div className="relative">
-                    <img
-                      src={product.image || "https://via.placeholder.com/300x192"}
-                      alt={product.name}
-                      className="w-full h-48 object-contain rounded-2xl mb-4"
-                      style={{
-                        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-                      }}
-                      onError={(e) => {
-                        console.error(`Image failed to load: ${product.image}`);
-                        e.currentTarget.src = "https://via.placeholder.com/300x192";
-                      }}
-                    />
-                    <div className="absolute top-2 right-2 flex gap-2">
-                      <Button
-                        onClick={() => startEdit(product)}
-                        size="sm"
-                        className="p-2 rounded-lg transition-all duration-300"
-                        style={{
-                          background: "rgba(255, 215, 0, 0.9)",
-                          color: "#8B6F47",
+                    <div className="flex gap-4">
+                      <div className="w-24 h-24 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden border border-slate-700">
+                        <img src={p.image} alt={p.name} className="w-full h-full object-contain p-2" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start">
+                          <span className="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">{p.category}</span>
+                          {p.in_stock ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <XCircle className="w-4 h-4 text-red-500" />}
+                        </div>
+                        <h4 className="font-bold text-white truncate text-lg mb-1">{p.name}</h4>
+                        <p className="text-xs text-slate-500 line-clamp-2">{p.description || "No description provided."}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2 mt-4 pt-4 border-t border-slate-800/50">
+                      <Button 
+                        size="sm" variant="ghost" 
+                        onClick={() => {
+                          setEditingProductId(p.id);
+                          setFormData({...p, description: p.description || ""});
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        disabled={loading}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 215, 0, 1)";
-                          e.currentTarget.style.transform = "scale(1.1)";
-                          e.currentTarget.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.6)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 215, 0, 0.9)";
-                          e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "none";
-                        }}
+                        className="flex-1 text-xs text-slate-400 hover:text-cyan-400 hover:bg-cyan-400/10"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3 h-3 mr-2" /> Edit
                       </Button>
-                      <Button
-                        onClick={() => handleDelete(product.id)}
-                        size="sm"
-                        className="p-2 rounded-lg transition-all duration-300"
-                        style={{
-                          background: "rgba(255, 0, 0, 0.9)",
-                          color: "#FFFFFF",
-                        }}
-                        disabled={loading}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 0, 0, 1)";
-                          e.currentTarget.style.transform = "scale(1.1)";
-                          e.currentTarget.style.boxShadow = "0 0 15px rgba(255, 0, 0, 0.6)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "rgba(255, 0, 0, 0.9)";
-                          e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "none";
-                        }}
+                      <Button 
+                        size="sm" variant="ghost"
+                        onClick={() => handleDelete(p.id)}
+                        className="flex-1 text-xs text-slate-400 hover:text-red-400 hover:bg-red-400/10"
                       >
-                        <Trash className="w-4 h-4" />
+                        <Trash className="w-3 h-3 mr-2" /> Delete
                       </Button>
                     </div>
-                  </div>
-
-                  <h3 style={{ color: "#F5E6D3", fontFamily: "Georgia, serif" }}>{product.name}</h3>
-                  <div className="flex items-center gap-2 mt-2 flex-wrap">
-                    <span
-                      className="px-3 py-1 rounded-lg inline-block"
-                      style={{
-                        color: "#FFD700",
-                        background: "rgba(255, 215, 0, 0.2)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      {product.category}
-                    </span>
-                    <span
-                      className="px-3 py-1 rounded-lg inline-block"
-                      style={{
-                        color: "#F5E6D3",
-                        background: "rgba(245, 230, 211, 0.2)",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      {product.in_stock ? "In stock" : "Out of stock"}
-                    </span>
-                  </div>
-                  <p className="mt-3" style={{ color: "#FFF8E7", opacity: 0.8 }}>
-                    {product.description || "No description"}
-                  </p>
-                </div>
-              ))}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
-          )}
-        </section>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl">
+                <Package className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+                <p className="text-slate-500 font-medium">No items found in your inventory.</p>
+              </div>
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

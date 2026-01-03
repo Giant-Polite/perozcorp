@@ -1,294 +1,233 @@
 import {
-  Wheat,
-  Wine,
-  Award,
-  Users,
-  Sparkles,
-  Handshake,
-  Leaf,
-  Truck,
-  ChevronDown,
-} from "lucide-react";
-import { motion, useScroll, useTransform, Variants } from "framer-motion";
-import { useRef, useState} from "react";
+  motion,
+  useScroll,
+  useTransform,
+  Variants,
+  useReducedMotion,
+} from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 
-const About = () => {
-  const heroRef = useRef<HTMLDivElement | null>(null);
-  const [showIndicator, setShowIndicator] = useState(true);
+/* ================= UTIL ================= */
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
 
+/* ================= MOTION SYSTEM ================= */
+
+const luxuryEase: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+const container: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.16 },
+  },
+};
+
+const fadeUp = (isMobile: boolean): Variants => ({
+  hidden: { opacity: 0, y: isMobile ? 24 : 48 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: isMobile ? 0.7 : 1.1, ease: luxuryEase },
+  },
+});
+
+/* ================= PAGE ================= */
+
+export default function About() {
+  const isMobile = useIsMobile();
+  const reduceMotion = useReducedMotion();
+
+  const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
-  // === Data ===
-  const stats = [
-    { label: "Generations of Experience", value: "3+", icon: Award },
-    { label: "Products Supplied", value: "5000+", icon: Wheat },
-    { label: "Trusted Clients", value: "100+", icon: Users },
-    { label: "Minneapolis & Midwest", value: "MN", icon: Wine },
-  ];
+  const headlineY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduceMotion ? [0, 0] : [0, isMobile ? 20 : 80]
+  );
 
-  const highlights = [
-    { icon: "🌾", text: "Premium Grains & Raw Foods at Wholesale Scale" },
-    { icon: "🌶️", text: "From Farm to Flavor, Wholesale Spices Done Right" },
-    { icon: "🥤", text: "Beverages at Wholesale Scale" },
-  ];
-
-  const values = [
-    {
-      icon: Handshake,
-      title: "Integrity",
-      description:
-        "We build lasting relationships through transparency, honesty, and trust — the foundation of every deal we make.",
-    },
-    {
-      icon: Leaf,
-      title: "Sustainability",
-      description:
-        "From sourcing to distribution, we choose partners and practices that protect the environment and future generations.",
-    },
-    {
-      icon: Truck,
-      title: "Reliability",
-      description:
-        "Our clients depend on us for consistency, punctuality, and quality. We deliver — every single time.",
-    },
-  ];
-
-  // === Variants ===
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.3 },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeInOut",
-      },
-    },
-  };
+  const letterSpacing = useTransform(
+    scrollYProgress,
+    [0, 1],
+    isMobile || reduceMotion ? ["-0.01em", "-0.01em"] : ["-0.02em", "0.06em"]
+  );
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-[#fff9f2] to-[#fefaf6] relative overflow-hidden scroll-smooth">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,hsl(var(--primary)/0.1),transparent_60%),radial-gradient(circle_at_80%_70%,hsl(var(--secondary)/0.1),transparent_70%)] pointer-events-none"></div>
+    <main className="relative bg-[#FAF9F6] text-slate-900 overflow-x-hidden">
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.035] bg-[url('/grain.png')]" />
 
-      {/* === HERO === */}
-      <section ref={heroRef} className="relative overflow-hidden">
-        <motion.img
-          src="/warehouse.webp"
-          alt="Osari Trading LLC Warehouse"
-          className="w-full h-[600px] object-cover"
-          style={{ y }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent flex flex-col items-center justify-center text-center text-white px-4">
-          <motion.div
-            className="inline-flex items-center bg-white/10 border border-white/20 rounded-full px-5 py-2 mb-4 backdrop-blur-md"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
+      {/* ================= HERO ================= */}
+      <section
+        ref={heroRef}
+        className="relative z-10 pt-44 pb-48 px-[8%] md:px-[10%]"
+      >
+        <motion.div variants={container} initial="hidden" animate="visible">
+          <motion.span
+            variants={fadeUp(isMobile)}
+            className="block text-violet-600 font-black tracking-[0.45em] uppercase text-[11px] mb-10"
           >
-            <Sparkles className="w-4 h-4 mr-2 text-primary" />
-            Creating the Future of Trusted Trade
-          </motion.div>
+            About Us
+          </motion.span>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-gold to-olive bg-clip-text text-transparent"
+            style={{ y: headlineY, letterSpacing }}
+            className="text-[clamp(3.2rem,8vw,8.5rem)] font-black leading-[0.82] mb-12"
           >
-            Osari Trading LLC
+            Direct transmission.
+            <br />
+            <span className="italic text-violet-600 font-light">
+              Global precision.
+            </span>
           </motion.h1>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="text-2xl md:text-3xl mt-4 text-amber-100"
+          <motion.p
+            variants={fadeUp(isMobile)}
+            className="max-w-3xl text-xl text-slate-600 leading-relaxed"
           >
-            Family-Run Wholesale Excellence
-          </motion.h2>
-        
-        {/* Scroll Indicator */}
-          {showIndicator && (
-            <motion.div
-              className="absolute bottom-10 text-white flex flex-col items-center"
-              initial={{ opacity: 0, y: 0 }}
-              animate={{
-                opacity: [0, 1, 1, 0],
-                y: [0, 10, 10, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <ChevronDown className="w-8 h-8 text-white/80" />
-              <span className="text-sm mt-1 text-white/70">Scroll</span>
-            </motion.div>
-          )}
-        </div>
+            Peroz Corp is an Alexandria-based wholesale distributor and global
+            importer dedicated to providing East Coast businesses with a direct
+            line to world-class products. From our strategically located
+            logistical hubs in Virginia and Maryland, we bridge the gap between
+            international manufacturers and the domestic market with unrivaled
+            precision.
+          </motion.p>
+        </motion.div>
       </section>
 
-      {/* === ABOUT === */}
-      <section className="container mx-auto px-6 py-20">
-        <motion.div
-          className="max-w-4xl mx-auto bg-card rounded-xl p-8 md:p-14 shadow-lg backdrop-blur-sm"
+      {/* ================= HERITAGE ================= */}
+      <section className="relative z-10 px-[8%] md:px-[10%] pb-40">
+        <motion.div variants={container} initial="hidden" whileInView="visible">
+          <motion.h2
+            variants={fadeUp(isMobile)}
+            className="text-5xl text-violet-500 font-black mb-6"
+          >
+            Our Heritage of Excellence
+          </motion.h2>
+
+          <motion.p
+            variants={fadeUp(isMobile)}
+            className="max-w-3xl text-lg text-slate-600 leading-relaxed"
+          >
+            Built on a foundation of reliability and community-focused values,
+            Peroz Corp is more than just a logistical provider — we are a partner
+            in your growth. We specialize in sourcing high-quality goods from
+            trusted global partners across Asia and Europe, including premium
+            rice varieties, cleaning systems, and specialized pharmaceutical
+            supplies.
+          </motion.p>
+        </motion.div>
+      </section>
+
+      {/* ================= WHY PARTNER ================= */}
+      <section className="relative z-10 px-[8%] md:px-[10%] pb-40">
+        <motion.div variants={container} initial="hidden" whileInView="visible">
+          <motion.h2
+            variants={fadeUp(isMobile)}
+            className="text-5xl text-violet-500 font-black mb-6"
+          >
+            Why Partner With Us
+          </motion.h2>
+
+          <motion.p
+            variants={fadeUp(isMobile)}
+            className="max-w-3xl text-lg text-slate-600 leading-relaxed"
+          >
+            As a key distributor for the East Coast, we are committed to
+            supporting local businesses — from grocery stores and restaurants to
+            industrial service providers — with a supply chain that never stops.
+            Our operations in Alexandria and Clarksburg are designed for speed,
+            ensuring that our partners receive essential goods exactly when they
+            need them.
+          </motion.p>
+
+          <motion.p
+            variants={fadeUp(isMobile)}
+            className="max-w-3xl mt-6 text-lg text-slate-600 leading-relaxed"
+          >
+            At Peroz Corp, we believe in a transparent,{" "}
+            <span className="italic">direct transmission</span> approach. When
+            you work with us, you are engaging with a team that treats your
+            logistical needs with the same care and attention as a family
+            business.
+          </motion.p>
+        </motion.div>
+      </section>
+
+      {/* ================= LOCATIONS ================= */}
+      <section className="relative z-10 px-[8%] md:px-[10%] pb-48">
+        <motion.div variants={container} initial="hidden" whileInView="visible">
+          <motion.h2
+            variants={fadeUp(isMobile)}
+            className="text-5xl text-violet-500 font-black mb-10"
+          >
+            Our Locations & Operations
+          </motion.h2>
+
+          <motion.div
+            variants={fadeUp(isMobile)}
+            className="grid md:grid-cols-2 gap-12 text-lg text-slate-600"
+          >
+            <div>
+              <strong className="text-[#8A7A5E] font-semibold tracking-wide">
+                Logistics Center
+              </strong>
+              <p>6304 Gravel Ave, Ste G-H, Alexandria, VA 22310</p>
+              </div>
+
+              <div>
+              <strong className="text-[#8A7A5E] font-semibold tracking-wide">
+                Regional Office
+              </strong>
+              <p>11808 Piedmont Road, Clarksburg, MD 20871</p>
+              </div>
+
+              <div>
+              <strong className="text-[#8A7A5E] font-semibold tracking-wide">
+                Operating Hours
+              </strong>
+              <p>Mon–Sat | 9:00 AM – 6:00 PM</p>
+              </div>
+
+              <div>
+              <strong className="text-[#8A7A5E] font-semibold tracking-wide">
+                Direct Contact
+              </strong>
+              <p>+1 301-305-8748</p>
+              <p>Ali@PerozCorp.Com</p>
+              </div>
+
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ================= CLOSING ================= */}
+      <section className="relative z-10 px-[8%] md:px-[10%] pb-20">
+        <motion.p
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 1.2, ease: luxuryEase }}
+          className="max-w-4xl text-4xl font-black"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8 text-center">
-            About Us
-          </h2>
-          <div className="space-y-6 text-muted-foreground leading-relaxed text-base md:text-lg">
-            <p>
-              <strong className="text-primary">Osari Trading LLC</strong> is a family-owned wholesale distributor based in Minneapolis, Minnesota,
-               proudly serving restaurants, grocery stores, and food service businesses across the Midwest.
-               </p>
-               <p>
-              With three generations of experience, 
-               we specialize in sourcing and supplying premium halal-certified food products, grains, spices, and beverages from trusted global partners. 
-               Our selection includes essentials such as rice, lentils, tea, cooking oils, and authentic African and Middle Eastern spices, all carefully 
-               curated for quality and freshness.
-            </p>
-            <p>
-              As a leading halal food supplier in Minneapolis, we’re dedicated to supporting local businesses with reliable service, competitive pricing, and a strong commitment to community values.
-            </p>
-            <p>
-              At Osari Trading LLC, you’re not just a customer — you’re part of
-              our extended family.
-            </p>
-            <p>
-              📍 <strong>Location:</strong> 7308 Aspen Ln N, Suite 155, Brooklyn Park, MN 55428
-              <br />
-              ⏰ <strong>Hours:</strong> Mon–Sat 9:00 AM – 6:00 PM
-              <br />
-              📞 <strong>Contact:</strong> 
-              <a href="https://www.osari-trading.com" target="_blank" rel="noopener noreferrer" className="text-primary underline ml-1">
-                www.osari-trading.com
-              </a>
-              {" | "}
-              <a href="mailto:info@osari-trading.com" className="text-primary underline">
-                sales@osaritrading.com
-              </a>
-            </p>
-            <p>
-              Supplying quality halal products for the Midwest, one partnership at a time.
-            </p>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* === HIGHLIGHTS === */}
-      <section className="container mx-auto px-6 pb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {highlights.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + index * 0.2 }}
-              className="bg-card rounded-xl p-8 text-center shadow-md hover:shadow-[var(--shadow-gold)] transition-all duration-300"
-            >
-              <div className="text-4xl mb-3">{item.icon}</div>
-              <p className="font-medium text-foreground">{item.text}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* === STATS === */}
-      <section className="container mx-auto px-6 pb-28">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-                className="bg-card rounded-xl p-8 md:p-10 text-center shadow-md hover:shadow-[var(--shadow-gold)] transition-all duration-300"
-              >
-                <Icon className="h-8 w-8 text-primary mx-auto mb-4" />
-                <div className="text-3xl md:text-5xl font-bold text-primary mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {stat.label}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* === VALUES === */}
-      <section className="pb-32 px-6">
-        <motion.div
-          className="max-w-5xl mx-auto"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={containerVariants}
-        >
-          <motion.div className="text-center mb-16" variants={itemVariants}>
-            <h3 className="text-4xl mb-3 bg-gradient-to-r from-amber-700 via-orange-700 to-amber-800 bg-clip-text text-transparent">
-              Our Values
-            </h3>
-            <p className="text-muted-foreground text-lg">
-              What drives us every day
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-10">
-            {values.map((value, index) => {
-              const Icon = value.icon;
-              return (
-                <motion.div
-                  key={index}
-                  variants={cardVariants}
-                  whileHover={{ y: -12, scale: 1.05 }}
-                  className="text-center group"
-                >
-                  <motion.div
-                    className="inline-flex p-5 rounded-full bg-gradient-to-br from-amber-600 to-orange-600 mb-6 shadow-lg group-hover:shadow-2xl transition-all duration-500"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <Icon className="h-12 w-12 text-white" />
-                  </motion.div>
-                  <h4 className="text-foreground mb-3 text-xl">
-                    {value.title}
-                  </h4>
-                  <p className="text-muted-foreground">{value.description}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
+          Connecting global quality to local businesses,
+          <br />
+          <span className="italic text-violet-600 font-light">
+            one direct delivery at a time.
+          </span>
+        </motion.p>
       </section>
     </main>
   );
-};
-
-export default About;
+}

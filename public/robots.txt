@@ -3,4 +3,4 @@ Allow: /
 Allow: /images/
 Disallow: /admin
 Disallow: /login
-Sitemap: https://osari-trading.com/sitemap.xml
+Sitemap: https://Perozcorp.com/sitemap.xml

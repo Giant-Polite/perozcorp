@@ -1,187 +1,306 @@
-import { useEffect, useState, useMemo } from "react";
-import { supabase } from "../supabaseClient";
-import CategoryCard from "@/components/CategoryCard";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import TypewriterText from "@/components/TypewriterText";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, Truck, Shield } from "lucide-react";
+import { Anchor, MapPin, Box } from 'lucide-react';
+import {
+  ShieldCheck,
+  Globe,
+  Zap,
+  ArrowUpRight
+} from "lucide-react";
 
-// Shuffle products and avoid adjacent duplicates
-const shuffleAndAvoidAdjacent = (array: any[]) => {
-  if (!array?.length) return [];
-  const shuffled = [...array].sort(() => Math.random() - 0.5);
-  for (let i = 1; i < shuffled.length; i++) {
-    if (shuffled[i].id === shuffled[i - 1].id) {
-      const swapWith = (i + 1) % shuffled.length;
-      [shuffled[i], shuffled[swapWith]] = [shuffled[swapWith], shuffled[i]];
+/* -------------------- SLIDES -------------------- */
+const SLIDE_IMAGES = [
+  "/Hero_Section_1.png",
+  "/Hero_Section_1.png",
+  "/Hero_Section_1.png"
+];
+
+/* -------------------- MOTION -------------------- */
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+  }
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.18,
+      delayChildren: 0.2
     }
   }
-  return shuffled;
+};
+
+const cardVariant: Variants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.9,
+      ease: [0.16, 1, 0.3, 1]
+    }
+  }
 };
 
 const Home = () => {
-  const [products, setProducts] = useState<any[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-
-  // Fetch products from Supabase
-  const fetchProducts = async () => {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching products:", error.message);
-    } else {
-      console.log("Fetched products:", data);
-      setProducts(data || []);
-      // Extract unique categories
-      const uniqueCategories = Array.from(new Set(data?.map(p => p.category))).sort();
-      console.log("Unique categories:", uniqueCategories);
-      setCategories(uniqueCategories);
-    }
-  };
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    fetchProducts();
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) =>
+        prev === SLIDE_IMAGES.length - 1 ? 0 : prev + 1
+      );
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
-  // Shuffle products once
-  const shuffledProducts = useMemo(() => shuffleAndAvoidAdjacent(products), [products]);
-
-  // Duplicate for seamless scroll
-  const displayProducts = useMemo(() => [...shuffledProducts, ...shuffledProducts], [shuffledProducts]);
-
   return (
-    <main className="bg-white">
-      {/* ================= HERO SECTION ================= */}
-      <section className="relative bg-white py-12 md:py-24 overflow-hidden">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-7xl md:text-7xl font-extrabold text-Brown-800 mb-4 tracking-tight animate-fade-in">
-            OSARI TRADING
+    <main className="bg-[#FAF9F6] min-h-screen font-sans text-[#1A1A1A] overflow-x-hidden">
+
+      <section className="relative pt-16 md:pt-20 px-[5%] md:px-[9%] w-full">
+  <motion.div 
+    initial={{ opacity: 0 }} 
+    animate={{ opacity: 1 }} 
+    className="flex flex-col relative"
+  >
+    {/* IMAGE SLIDE CONTAINER */}
+    <div
+      className="
+        relative w-full overflow-hidden bg-slate-100
+        pb-[100%]
+        sm:pb-[60%]
+        md:pb-[42%]
+      "
+    >
+      <motion.div
+        key={currentSlide}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute inset-0"
+        style={{
+        backgroundImage: `url(${SLIDE_IMAGES[currentSlide]})`,
+        backgroundSize: "contain", // Shows the full image
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        willChange: "opacity",
+        }}
+      />
+      
+      {/* OVERLAY */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/10 to-transparent" />
+    </div>
+
+    {/* CTA BUTTON - Outside on mobile, Inside on desktop */}
+    <div className="relative md:absolute md:bottom-0 md:left-0 z-20 w-full md:w-auto">
+      <Link to="/products" className="group flex items-center">
+        <div
+          className="
+            bg-orange-300/90 backdrop-blur-xl
+            border-t border-r border-white/40
+            px-6 py-5
+            sm:px-8 sm:py-6
+            md:px-10 md:py-8
+            flex items-center justify-between md:justify-start gap-4
+            hover:bg-indigo-200 transition w-full
+          "
+        >
+          <span className="text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase">
+            Shop All Products
+          </span>
+
+          <div className="bg-orange-500 text-white p-2 rounded-full group-hover:rotate-45 transition">
+            <ArrowUpRight size={16} />
+          </div>
+        </div>
+      </Link>
+    </div>
+  </motion.div>
+</section>
+
+
+      {/* ================= HERO ================= */}
+      <section className="container mx-auto px-[10%] pt-12 pb-24 text-center">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          {/* MICRO-KERNED LOGOTYPE */}
+          <h1 className="text-5xl md:text-8xl font-black leading-tight mb-8 flex justify-center items-baseline">
+            <span className="inline-flex">
+              <span className="mr-[0.04em]">P</span>
+              <span className="mr-[0.02em]">E</span>
+              <span className="mr-[0.01em]">R</span>
+              <span className="-mr-[0.01em]">O</span>
+              <span className="ml-[0.06em]">Z</span>
+            </span>
+            <span className="ml-4 text-indigo-600 italic font-serif font-light tracking-normal">
+              Corp.
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
-            Are You Looking For Premium Consumer Packaged Goods Including:
-          </p>
-          <div className="mb-8 h-8 flex items-center justify-center animate-fade-in">
-            <TypewriterText speed={0} />
+
+          <div className="flex justify-center mb-8">
+            <div className="h-px w-24 bg-indigo-600" />
           </div>
-          <Button
-            asChild
-            size="lg"
-            className="bg-yellow-400 text-deepbrown hover:bg-yellow-400/90 shadow-lg transition-all animate-fade-in"
+
+          <p className="text-xl md:text-2xl text-stone-500 max-w-2xl mx-auto font-light leading-relaxed mb-12">
+            We source the best so you can serve the best.{" "}
+            <span className="text-black font-medium">Specializing in high-impact distribution across the East Coast,</span>{" "}
+             Peroz Corp provides the direct transmission your business needs to stay ahead.
+          </p>
+
+          <div className="text-sm font-mono tracking-widest text-indigo-500 uppercase">
+            <TypewriterText speed={60} />
+          </div>
+          <div className="mt-14 flex justify-center">
+  <Link to="/products" className="group flex items-center">
+    <div className="
+      bg-orange-300/90 
+      text-black 
+      border border-white/40 
+      px-10 py-5 
+      flex items-center gap-4 
+      backdrop-blur-xl 
+      hover:bg-indigo-200
+      transition-all duration-500"
+      >
+      <span className="text-xs font-bold tracking-[0.3em] uppercase">
+        Shop All Products
+      </span>
+      <div className="bg-orange-500 text-white p-2 rounded-full group-hover:rotate-45 transition">
+        <ArrowUpRight size={16} />
+      </div>
+    </div>
+  </Link>
+</div>
+
+        </motion.div>
+      </section>
+      
+
+      {/* ================= FEATURED PRODUCTS ================= */}
+      <section className="py-24 px-[10%] bg-white">
+        <div className="flex justify-between items-end mb-16">
+          <h2 className="text-4xl font-bold tracking-tight">Featured Products</h2>
+          <Link
+            to="/products"
+            className="text-sm font-bold border-b-2 border-indigo-600 pb-1 hover:text-indigo-600 transition-colors"
           >
-            <Link to="/products">
-              Shop Now
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+            VIEW ALL BRANDS
+          </Link>
         </div>
 
-        {/* ================= SCROLLING PRODUCT CAROUSEL ================= */}
-        <div className="relative mt-16 overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
-
-          <div className="overflow-hidden">
-            {products.length === 0 ? (
-              <p className="text-center text-gray-600">Products Loading...</p>
-            ) : (
-              <div className="flex w-max animate-scroll-left">
-                {displayProducts.map((product, index) => (
-                  <div
-                    key={`${product.id}-${index}`}
-                    className="flex-shrink-0 w-32 md:w-40 lg:w-48 mx-3 rounded-xl overflow-hidden bg-white shadow-sm"
-                  >
-                    <img
-                      src={product.image || "https://via.placeholder.com/300x192"}
-                      alt={product.name}
-                      className="w-full h-32 md:h-40 lg:h-48 object-contain transition-transform duration-500 hover:scale-105"
-                      loading="lazy"
-                      onError={(e) => {
-                        console.error(`Image failed to load: ${product.image}`);
-                        e.currentTarget.src = "https://via.placeholder.com/300x192";
-                      }}
-                    />
-                  </div>
-                ))}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {[1, 2, 3, 4].map((item) => (
+            <motion.div
+              key={item}
+              whileHover={{ y: -10 }}
+              className={`relative bg-[#F3F3F3] aspect-[3/4] group overflow-hidden ${
+                item % 2 === 0 ? "md:mt-12" : ""
+              }`}
+            >
+              <div className="absolute inset-0 flex items-center justify-center p-12">
+                <img
+                  src="/images/OKF/Okf_Farmers_Aloe_Vera_Drink_Original_Green.webp"
+                  alt="Product"
+                  className="max-h-full transition-transform duration-700 group-hover:scale-110"
+                />
               </div>
-            )}
-          </div>
+
+              <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-white/90 to-transparent translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+                <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest">
+                  OKF Beverage
+                </p>
+                <h4 className="text-lg font-bold">Aloe Vera Original</h4>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* ================= INTRO SECTION ================= */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-12">
-            Explore our wide range of halal products, carefully curated for quality and freshness, suitable for restaurants, grocery stores, and local businesses.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="bg-yellow-400 text-deepbrown hover:bg-yellow-400/90 hover:shadow-lg transition-all"
-          >
-            <Link to="/products">
-              Shop All Products
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      {/* ================= PEROZ CORP VALUE PROPOSITION ================= */}
+<section className="py-40 px-[10%] bg-[#0B0D11] text-white relative overflow-hidden">
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.07),transparent_70%)]" />
 
-      {/* ================= FEATURES ================= */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-          <div className="animate-fade-in">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-200 rounded-full mb-4">
-              <CheckCircle className="h-8 w-8 text-yellow-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">100% Halal Certified</h3>
-            <p className="text-gray-600">
-              All products are certified halal and meet the highest quality standards.
-            </p>
-          </div>
-          <div className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-200 rounded-full mb-4">
-              <Truck className="h-8 w-8 text-yellow-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Reliable Delivery</h3>
-            <p className="text-gray-600">
-              Timely shipping across all regions.
-            </p>
-          </div>
-          <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-200 rounded-full mb-4">
-              <Shield className="h-8 w-8 text-yellow-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Quality Guaranteed</h3>
-            <p className="text-gray-600">
-              Satisfaction guaranteed or your money back.
-            </p>
-          </div>
-        </div>
-      </section>
+  <div className="max-w-7xl mx-auto relative z-10">
+    <div className="text-center mb-28">
+      <p className="text-xs tracking-[0.35em] uppercase text-blue-500 font-bold mb-6">
+        The Peroz Standard
+      </p>
+      <h2 className="text-4xl md:text-6xl font-black tracking-tight">
+        Direct Transmission,<br />
+        <span className="italic font-serif font-light text-blue-400">Zero Detours.</span>
+      </h2>
+    </div>
 
-      {/* ================= CTA ================= */}
-      <section className="py-6 bg-yellow-400 text-deepbrown text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Get Started?
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="grid grid-cols-1 md:grid-cols-3 gap-16"
+    >
+      {[
+        {
+          icon: Anchor, // Represents importing/stability
+          title: "Sourcing Precision",
+          desc: "Direct-from-manufacturer pipelines for premium rice, cleaning systems, and pharmaceuticals."
+        },
+        {
+          icon: MapPin, // Represents their Alexandria/Maryland hubs
+          title: "Strategic Hubs",
+          desc: "Alexandria-based logistics engineered for rapid East Coast distribution and fulfillment."
+        },
+        {
+          icon: Box, // Represents the diverse product range
+          title: "Diverse Portfolio",
+          desc: "Expertly handling complex international trade across food, medical, and industrial sectors."
+        }
+      ].map((item, i) => (
+        <motion.div key={i} variants={cardVariant} className="relative group">
+          <div className="absolute -inset-px bg-gradient-to-b from-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition rounded-2xl" />
+          <div className="relative bg-[#12151C] rounded-2xl p-12 border border-white/5">
+            <item.icon size={36} strokeWidth={1.5} className="text-blue-500 mb-8" />
+            <h3 className="text-xl font-black mb-4 uppercase tracking-wider">{item.title}</h3>
+            <p className="text-gray-400 leading-relaxed font-light">{item.desc}</p>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+</section>
+
+       {/* ================= 6. FINAL CTA ================= */}
+      <section className="py-40 bg-indigo-600 text-white text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          className="container mx-auto px-4"
+        >
+          <h2 className="text-4xl md:text-6xl font-black mb-12">
+            RETAIL REDEFINED.
           </h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto opacity-90">
-            Join thousands of satisfied customers who trust Osari Trading for premium halal foods.
-          </p>
           <Button
             asChild
             size="lg"
-            variant="outline"
-            className="bg-transparent border-deepbrown hover:bg-deepbrown/10"
+            className="bg-white text-indigo-600 hover:bg-stone-100 rounded-none px-16 py-8 text-xl font-bold shadow-2xl"
           >
-            <Link to="/contact">Contact Us Today</Link>
+            <Link to="/contact">REQUEST PARTNERSHIP</Link>
           </Button>
-        </div>
+        </motion.div>
       </section>
+
     </main>
   );
 };

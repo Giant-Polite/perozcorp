@@ -1,21 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin, ExternalLink, Clock, Sparkles } from "lucide-react";
 import { DateTime } from "luxon";
+import { motion } from "framer-motion";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [isOpen, setIsOpen] = useState(false);
   const [statusText, setStatusText] = useState("");
-  const tiltRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // 🕒 Business Hours Logic — Minnesota time
+  // 🕒 Business Hours Logic — Virginia time (Eastern Time)
   useEffect(() => {
     const updateStatus = () => {
-      const now = DateTime.now().setZone("America/Chicago");
-      const day = now.weekday; // Monday=1 … Sunday=7
+      const now = DateTime.now().setZone("America/New_York");
+      const day = now.weekday; 
       const hour = now.hour;
-      const minute = now.minute;
 
       let open = false;
       let nextOpen = "";
@@ -31,9 +30,6 @@ const Footer = () => {
         nextOpen = "Opens Monday at 9:00 AM";
       }
 
-      if (!open && day < 6 && (hour < 9 || hour >= 17))
-        nextOpen = "Opens tomorrow at 9:00 AM";
-
       setIsOpen(open);
       setStatusText(open ? "Open Now" : nextOpen);
     };
@@ -43,85 +39,51 @@ const Footer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 🎢 3D Tilt Effect for Cards
-  useEffect(() => {
-    tiltRefs.current.forEach((card) => {
-      if (!card) return;
-      const handleMouseMove = (e: MouseEvent) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const rotateX = ((y - rect.height / 2) / rect.height) * 10;
-        const rotateY = ((x - rect.width / 2) / rect.width) * -10;
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-      };
-
-      const resetTilt = () => {
-        card.style.transform = "rotateX(0) rotateY(0) scale(1)";
-      };
-
-      card.addEventListener("mousemove", handleMouseMove);
-      card.addEventListener("mouseleave", resetTilt);
-
-      return () => {
-        card.removeEventListener("mousemove", handleMouseMove);
-        card.removeEventListener("mouseleave", resetTilt);
-      };
-    });
-  }, []);
-
   return (
-    <footer className="relative bg-accent text-accent-foreground overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, hsl(45, 62%, 52%, 0.1) 1px, transparent 1px),
-              linear-gradient(to bottom, hsl(45, 62%, 52%, 0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: "50px 50px",
-          }}
-        />
-      </div>
+    <footer className="relative bg-[#050506] text-slate-300 overflow-hidden border-t border-white/5 font-sans">
+      {/* BACKGROUND ELEMENTS - Amethyst & Deep Rose Orbs */}
+      <motion.div 
+        animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.12, 0.08] }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-violet-600 rounded-full blur-[120px] pointer-events-none" 
+      />
+      <motion.div 
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.05, 0.1, 0.05] }}
+        transition={{ duration: 15, repeat: Infinity }}
+        className="absolute bottom-[-10%] right-[5%] w-[600px] h-[600px] bg-fuchsia-600 rounded-full blur-[150px] pointer-events-none" 
+      />
+      
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-[0.1] pointer-events-none" 
+           style={{ backgroundImage: `linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px)`, backgroundSize: '50px 50px' }} 
+      />
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-primary/60 rounded-full animate-float-particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 6}s`,
-              animationDuration: `${8 + Math.random() * 6}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="container mx-auto px-4 py-10 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-4" ref={(el) => (tiltRefs.current[0] = el)}>
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-accent shadow-lg font-bold text-lg">
-                O
+      <div className="container mx-auto px-8 pt-20 pb-10 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          
+          {/* 1. COMPANY INFO */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-xl flex items-center justify-center shadow-lg border border-white/10">
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-accent-foreground via-primary to-accent-foreground bg-clip-text text-transparent animate-gradient">
-                Osari Trading
-              </span>
+              <span className="text-4xl font-bold tracking-tight text-white italic">
+  Peroz
+  <span className="inline-block mx-2 text-violet-400 font-black">
+    Corp
+  </span>
+</span>
+
             </div>
-            <p className="text-accent-foreground/70 leading-relaxed">
-              Proudly family-operated, serving Minneapolis and the Midwest with dedication and excellence.
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Proudly family-operated, serving the East Coast with dedication and excellence from our Virginia headquarters.
             </p>
             <div className="pt-2">
               <span
-                className={`inline-block px-3 py-1 rounded-full font-medium text-sm ${
+                className={`inline-block px-4 py-1 rounded-full font-bold text-[10px] uppercase tracking-widest border ${
                   isOpen
-                    ? "bg-green-500/20 text-green-400 border border-green-500/30 animate-pulse"
-                    : "bg-red-500/20 text-red-400 border border-red-500/30"
+                    ? "bg-violet-500/10 text-violet-400 border-violet-500/30 animate-pulse"
+                    : "bg-rose-500/10 text-rose-400 border-rose-500/30"
                 }`}
               >
                 {statusText}
@@ -129,32 +91,31 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4" ref={(el) => (tiltRefs.current[1] = el)}>
-            <h3 className="relative inline-block font-semibold text-lg">
+          {/* 2. QUICK LINKS (RESTORED FROM PREVIOUS) */}
+          <div className="space-y-6">
+            <h3 className="relative inline-block font-bold text-white tracking-widest text-sm uppercase">
               Quick Links
-              <div className="absolute -bottom-1 left-0 w-8 h-[2px] bg-gradient-to-r from-primary to-transparent" />
+              <div className="absolute -bottom-2 left-0 w-8 h-[2px] bg-gradient-to-r from-violet-500 to-transparent" />
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3 pt-2">
               {[
                 { name: "Home", path: "/" },
                 { name: "Products", path: "/products" },
                 { name: "About Us", path: "/about" },
                 { name: "Contact", path: "/contact" },
-                { name: "Login", path: "/login" },
+                { name: "Admin Portal", path: "/login" },
               ].map((link, index) => (
                 <li key={index}>
                   <NavLink
                     to={link.path}
                     end={link.path === "/"}
-                    onClick={() => console.log(`Navigating to ${link.path}`)}
                     className={({ isActive }) =>
-                      `group flex items-center space-x-2 text-accent-foreground/90 hover:text-primary transition-all duration-300 ${
-                        isActive ? "text-primary" : ""
+                      `group flex items-center space-x-2 text-sm font-medium transition-all duration-300 ${
+                        isActive ? "text-violet-400" : "text-slate-400 hover:text-violet-400"
                       }`
                     }
                   >
-                    <div className="w-1 h-1 rounded-full bg-primary/50 group-hover:w-4 group-hover:bg-primary transition-all duration-300" />
+                    <div className="w-1 h-1 rounded-full bg-violet-500/50 group-hover:w-4 group-hover:bg-violet-500 transition-all duration-300" />
                     <span className="group-hover:translate-x-1 transition-transform duration-300">
                       {link.name}
                     </span>
@@ -165,46 +126,46 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-4" ref={(el) => (tiltRefs.current[2] = el)}>
-            <h3 className="relative inline-block font-semibold text-lg">
+          {/* 3. CONTACT INFO (UPDATED TO VIRGINIA) */}
+          <div className="space-y-6">
+            <h3 className="relative inline-block font-bold text-white tracking-widest text-sm uppercase">
               Contact Us
-              <div className="absolute -bottom-1 left-0 w-8 h-[2px] bg-gradient-to-r from-primary to-transparent" />
+              <div className="absolute -bottom-2 left-0 w-8 h-[2px] bg-gradient-to-r from-violet-500 to-transparent" />
             </h3>
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 hover:border-primary/40 transition-all duration-300 backdrop-blur-sm">
-                <div className="flex items-start space-x-2">
-                  <MapPin className="w-4 h-4 text-primary mt-0.5" />
-                  <div>
-                    <p>7308 Aspen Ln N, Suite 155-157</p>
-                    <p>Brooklyn Park, MN 55428</p>
+            <div className="space-y-4 pt-2">
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm group">
+                <div className="flex items-start space-x-3">
+                  <MapPin className="w-4 h-4 text-violet-500 mt-1 shrink-0" />
+                  <div className="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">
+                    <p>6304 Gravel Ave. Suite G.</p>
+                    <p>Alexandria, Virginia 22310</p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 hover:border-primary/40 transition-all duration-300 backdrop-blur-sm">
-                <a href="tel:+16123918366" className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-primary" />
-                  <span>+1 612-391-8366</span>
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm group">
+                <a href="tel:+13013058748" className="flex items-center space-x-3">
+                  <Phone className="w-4 h-4 text-violet-500 shrink-0" />
+                  <span className="text-sm text-slate-400 group-hover:text-slate-200 font-bold transition-colors">+1 301-305-8748</span>
                 </a>
               </div>
 
-              <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 hover:border-primary/40 transition-all duration-300 backdrop-blur-sm">
-                <a href="mailto:sales@osaritrading.com" className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-primary" />
-                  <span>sales@osaritrading.com</span>
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm group">
+                <a href="mailto:sales@perozcorp.com" className="flex items-center space-x-3">
+                  <Mail className="w-4 h-4 text-violet-500 shrink-0" />
+                  <span className="text-sm text-slate-400 group-hover:text-slate-200 font-bold transition-colors">sales@perozcorp.com</span>
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Business Hours */}
-          <div className="space-y-4" ref={(el) => (tiltRefs.current[3] = el)}>
-            <h3 className="relative inline-block font-semibold text-lg">
+          {/* 4. BUSINESS HOURS */}
+          <div className="space-y-6">
+            <h3 className="relative inline-block font-bold text-white tracking-widest text-sm uppercase">
               Business Hours
-              <div className="absolute -bottom-1 left-0 w-8 h-[2px] bg-gradient-to-r from-primary to-transparent" />
+              <div className="absolute -bottom-2 left-0 w-8 h-[2px] bg-gradient-to-r from-violet-500 to-transparent" />
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-2 pt-2">
               {[
                 { day: "Monday – Friday", hours: "9:00 AM – 5:00 PM", open: true },
                 { day: "Saturday", hours: "9:00 AM – 4:00 PM", open: true },
@@ -212,21 +173,25 @@ const Footer = () => {
               ].map((d, i) => (
                 <div
                   key={i}
-                  className="flex justify-between p-2 rounded-md bg-primary/5 border border-primary/10 hover:border-primary/30 transition-all duration-300"
+                  className="flex justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-violet-500/20 transition-all duration-300 text-xs"
                 >
-                  <span>{d.day}</span>
-                  <span className={d.open ? "text-primary" : "text-muted-foreground"}>
+                  <span className="font-medium text-slate-400">{d.day}</span>
+                  <span className={d.open ? "text-violet-400 font-bold" : "text-slate-600"}>
                     {d.hours}
                   </span>
                 </div>
               ))}
+              <div className="flex items-center gap-2 pt-2 px-1 opacity-50 text-[10px] font-bold uppercase tracking-tighter text-violet-400">
+                <Clock className="w-3 h-3" />
+                <span>Eastern Standard Time (EST)</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-8 pt-6 border-t border-primary/20 text-center text-accent-foreground/70 text-sm">
-          © {currentYear} Osari Trading. All rights reserved.
+        {/* BOTTOM BAR */}
+        <div className="mt-16 pt-8 border-t border-white/5 text-center text-slate-600 text-[10px] font-black uppercase tracking-[0.3em]">
+          © {currentYear} PEROZ CORPORATION. ALL RIGHTS RESERVED.
         </div>
       </div>
     </footer>

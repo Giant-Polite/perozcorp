@@ -18,7 +18,7 @@ export default {
       },
     },
     extend: {
-      // 🌾 Osari Trading Brand Colors
+      // 🌾 Peroz Corp Brand Colors
       colors: {
         gold: "#FFD700",
         deepbrown: "#8B4513",
