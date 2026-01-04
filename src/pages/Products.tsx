@@ -230,7 +230,8 @@ const ProductsPage = () => {
                           e.stopPropagation();
                           handleRequestQuote(p.name);
                         }}
-                        className="w-full"
+                        /* Applied the purple gradient here */
+                        className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 text-white border-none hover:opacity-90 transition-all hover:shadow-md"
                       >
                         <ShoppingBag className="mr-2 w-4 h-4" />
                         Request Quote
@@ -256,41 +257,49 @@ const ProductsPage = () => {
 
       {/* MODAL (UNCHANGED LOGIC) */}
       <AnimatePresence>
-        {selectedProduct && (
-          <motion.div
-            className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center"
-            onClick={() => setSelectedProduct(null)}
-          >
-            <motion.div
-              className="bg-white rounded-2xl p-8 max-w-xl w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Button
-                variant="ghost"
-                className="absolute top-4 right-4"
-                onClick={() => setSelectedProduct(null)}
-              >
-                <X />
-              </Button>
+  {selectedProduct && (
+    <motion.div
+      className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center"
+      onClick={() => setSelectedProduct(null)}
+    >
+      <motion.div
+        className="relative bg-white rounded-2xl p-8 max-w-md w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Button
+          onClick={() => setSelectedProduct(null)}
+          className="
+            absolute top-4 right-4
+            h-10 w-10 p-0
+            rounded-full
+            bg-indigo-600 text-white
+            hover:bg-indigo-500
+            shadow-lg
+          "
+          aria-label="Close product details"
+        >
+          <X className="w-5 h-5" />
+        </Button>
 
-              <img src={selectedProduct.image} className="mb-6 rounded-xl" />
-              <h3 className="text-2xl font-bold mb-4">
-                {selectedProduct.name}
-              </h3>
-              <p className="mb-6 text-stone-500">
-                {selectedProduct.description}
-              </p>
+        <img src={selectedProduct.image} className="mb-6 rounded-xl" />
+        <h3 className="text-2xl font-bold mb-4">
+          {selectedProduct.name}
+        </h3>
+        <p className="mb-6 text-stone-500">
+          {selectedProduct.description}
+        </p>
 
-              <Button
-                className="w-full py-6"
-                onClick={() => handleRequestQuote(selectedProduct.name)}
-              >
-                Request Bulk Quote
-              </Button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* ONLY this button was changed below */}
+        <Button
+          className="w-full py-6 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 text-white border-none hover:opacity-90 transition-opacity"
+          onClick={() => handleRequestQuote(selectedProduct.name)}
+        >
+          Request Bulk Quote
+        </Button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </>
   );
 };
