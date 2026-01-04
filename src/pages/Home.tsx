@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { Anchor, MapPin, Box, ShieldCheck, Globe, Zap, ArrowUpRight } from 'lucide-react';
 
 /* -------------------- SLIDES -------------------- */
-// Fixed typo: cconst -> const
 const SLIDE_IMAGES = [
   "/Hero_Section_1.png",
   "/Hero_Section_2.png",
@@ -240,56 +239,60 @@ const Home = () => {
 
   <div className="max-w-[1600px] mx-auto">
     {/* HEADER: Minimalist & Wide */}
-    <div className="flex flex-col md:flex-row justify-between items-baseline mb-24 border-b border-slate-100 pb-12">
-      <div className="space-y-2">
-        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-600 mb-4">Curated Selection</p>
-        <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-slate-900">
-          The <span className="italic font-serif">Featured</span> Collection
-        </h2>
-      </div>
-      
-      <Link 
-  to="/products" 
-  className="group relative flex items-center justify-center mt-12 md:mt-0"
->
-  {/* The Outer Animated Ring */}
-  <div className="absolute inset-[-15px] rounded-full border border-slate-100 scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 ease-[0.16, 1, 0.3, 1]" />
-  
-  {/* The Main Button Body */}
-  <div className="relative flex flex-col items-center justify-center w-32 h-32 md:w-40 md:h-40 bg-white border border-slate-200 rounded-full shadow-sm group-hover:shadow-2xl group-hover:border-indigo-600 transition-all duration-700 ease-[0.16, 1, 0.3, 1] overflow-hidden">
-    
-    {/* Background Fill Animation */}
-    <div className="absolute inset-0 bg-indigo-600 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.16, 1, 0.3, 1]" />
-
-    {/* Text Layer: Static (Black) */}
-    <span className="relative z-10 text-[13px] font-black uppercase tracking-[0.3em] text-slate-900 group-hover:text-white transition-colors duration-500 text-center px-4">
-      Explore <br /> <span className="italic font-serif normal-case text-xs tracking-normal">Entire</span> <br /> Catalog
-    </span>
-
-    {/* Floating Arrow Icon */}
-    <div className="relative z-10 mt-2 opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
-      <ArrowUpRight size={16} className="text-white" />
-    </div>
+    {/* HEADER: Minimalist & Wide */}
+<div className="flex flex-col md:flex-row justify-between items-baseline mb-24 border-b border-slate-100 pb-12">
+  <div className="space-y-2">
+    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-600 mb-4">Curated Selection</p>
+    <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-slate-900">
+      Our <span className="italic font-serif">Featured</span> Collection
+    </h2>
   </div>
+  
+  {/* THE PERMANENTLY ACTIVE CTA BUTTON WITH NEW HOVER EFFECTS */}
+  <div className="relative flex items-center justify-center mt-12 md:mt-0 p-12">
+    <Link to="/products" className="relative group"> {/* Added 'group' trigger here */}
+      
+      {/* 1. The Outer Animated Ring - Breathing Pulse + Hover Expansion */}
+      
+      
+      {/* 2. The Main Button Body - Permanently Indigo + Hover Lift */}
+      <div className="relative flex flex-col items-center justify-center w-38 h-38 md:w-40 md:h-40 bg-indigo-600 border border-indigo-600 rounded-full shadow-2xl overflow-hidden group-hover:scale-105 group-hover:shadow-indigo-500/40 transition-all duration-500">
+        
+        {/* Text Layer: White + Subtle Tracking Expansion on Hover */}
+        <span className="relative z-10 text-[13px] font-black uppercase tracking-[0.3em] text-white text-center px-4 leading-tight group-hover:tracking-[0.4em] transition-all duration-500">
+          Explore <br /> 
+          <span className="italic font-serif normal-case text-xs tracking-normal">Entire</span> 
+          <br /> Catalog
+        </span>
 
-  {/* Magnetic Label (Floating outside) */}
-  <motion.div 
-    animate={{ rotate: 360 }}
-    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-    className="absolute inset-[-30px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
-  >
-     <svg viewBox="0 0 100 100" className="w-full h-full">
-        <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-        <text className="text-[8px] uppercase tracking-[0.8em] fill-indigo-300 font-bold">
-           <textPath xlinkHref="#circlePath">
-              Peroz Corp
-           </textPath>
-        </text>
-     </svg>
-  </motion.div>
-</Link>
+        {/* Floating Arrow Icon: Hover Diagonal Slide */}
+        <div className="relative z-10 mt-2 opacity-100 translate-y-0 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-500">
+          <ArrowUpRight size={16} className="text-white" />
+        </div>
+      </div>
 
-    </div>
+      {/* 3. Magnetic Label (Rotating Text) + Hover Scale */}
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-[-30px] pointer-events-none opacity-100 group-hover:scale-110 transition-transform duration-500"
+      >
+         <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path 
+        id="circlePath" 
+        d="M 50, 50 m 0, -37 a 37,37 0 1,1 0,74 a 37,37 0 1,1 0,-74" 
+        fill="transparent" 
+      />
+            <text className="text-[10px] uppercase tracking-[0.8em] fill-indigo-300 font-bold group-hover:fill-indigo-400 transition-colors duration-500">
+               <textPath xlinkHref="#circlePath">
+                 • Peroz Corp •
+               </textPath>
+            </text>
+         </svg>
+      </motion.div>
+    </Link>
+  </div>
+</div>
 
     {/* GRID: Asymmetric & Modern */}
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-10 gap-y-20">
@@ -381,15 +384,80 @@ const Home = () => {
         </div>
       </section>
 
+
+      
+
       {/* ================= FINAL CTA ================= */}
-      <section className="py-40 bg-indigo-600 text-white text-center">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-6xl font-black mb-12">RETAIL REDEFINED.</h2>
-          <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-stone-100 rounded-none px-16 py-8 text-xl font-bold shadow-2xl">
-            <Link to="/contact">REQUEST PARTNERSHIP</Link>
-          </Button>
-        </motion.div>
-      </section>
+      <section className="relative py-32 bg-[#FAF9F6] border-t border-slate-100 overflow-hidden">
+  {/* Sophisticated Background Element: A very faint, large serif letter 'P' */}
+  <div className="absolute -bottom-10 -right-10 text-[20rem] font-serif italic text-slate-200/20 pointer-events-none select-none">
+    P
+  </div>
+
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }} 
+    whileInView={{ opacity: 1, y: 0 }} 
+    viewport={{ once: true }}
+    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+    className="container mx-auto px-4 relative z-10 text-center"
+  >
+    {/* Refined Label */}
+    <div className="flex items-center justify-center gap-4 mb-8">
+      <div className="h-[1px] w-6 bg-indigo-600/30" />
+      <span className="text-[10px] tracking-[0.6em] uppercase text-stone-400 font-semibold">
+        Peroz Corp
+      </span>
+      <div className="h-[1px] w-6 bg-indigo-600/30" />
+    </div>
+
+    {/* The Main Title: Smaller, more elegant scale */}
+    <h2 className="text-4xl md:text-5xl tracking-tight text-slate-900 mb-12 leading-tight">
+  {/* First Line */}
+  <span className="block mb-2">
+    <span className="font-black uppercase tracking-tighter">Global</span>{" "}
+    <span className="italic font-serif font-light text-indigo-600/80 ml-2">Logistics.</span>
+  </span>
+
+  {/* Second Line */}
+  <span className="block">
+    <span className="font-black uppercase tracking-tighter">Personal</span>{" "}
+    <span className="italic font-serif font-light text-indigo-600/80 ml-2">Precision.</span>
+  </span>
+</h2>
+
+    {/* The Button: Slim, high-fashion aesthetic */}
+    <div className="flex justify-center">
+  <Link 
+    to="/contact" 
+    className="group relative inline-flex items-center gap-4 px-10 py-4 bg-transparent border border-slate-300 rounded-full overflow-hidden transition-all duration-500 hover:border-indigo-600 hover:shadow-lg hover:shadow-indigo-500/10"
+  >
+    {/* Fill Background: Smooth horizontal expansion instead of vertical */}
+    <div className="absolute inset-0 bg-indigo-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-[0.16, 1, 0.3, 1]" />
+    
+    {/* Text Layer: Adjusted for better readability */}
+    <span className="relative z-10 text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 group-hover:text-white transition-colors duration-500">
+      Partner with Peroz. Contact Us
+    </span>
+
+    {/* Modern Arrow Interaction: Slides in from the left and pushes the text slightly */}
+    <div className="relative z-10 flex items-center justify-center transition-all duration-500 group-hover:translate-x-1">
+      <ArrowUpRight 
+        size={16} 
+        className="text-slate-900 group-hover:text-white transition-colors duration-500" 
+      />
+    </div>
+
+    {/* Subtle Glass Reflection Effect */}
+    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-150%] group-hover:translate-x-[150%] ease-in-out" />
+  </Link>
+</div>
+
+    {/* Elegant Footer Detail */}
+    <p className="text-[13px] font-serif italic tracking-[0.2em] text-stone-500">
+    Established <span className="not-italic font-sans font-light ml-1 text-stone-400">2009</span>
+  </p>
+  </motion.div>
+</section>
 
     </main>
   );

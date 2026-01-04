@@ -153,7 +153,7 @@ const Footer = () => {
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm group">
                 <a href="mailto:sales@perozcorp.com" className="flex items-center space-x-3">
                   <Mail className="w-4 h-4 text-violet-500 shrink-0" />
-                  <span className="text-sm text-slate-400 group-hover:text-slate-200 font-bold transition-colors">sales@perozcorp.com</span>
+                  <span className="text-sm text-slate-400 group-hover:text-slate-200 font-bold transition-colors">Ali@PerozCorp.com</span>
                 </a>
               </div>
             </div>

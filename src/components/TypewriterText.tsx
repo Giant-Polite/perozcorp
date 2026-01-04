@@ -1,5 +1,5 @@
 import { TypeAnimation } from "react-type-animation";
-import { FC } from "react"; // Add this import
+import { FC } from "react";
 
 
 // Define the props interface
