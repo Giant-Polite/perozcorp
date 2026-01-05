@@ -2,26 +2,13 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePremiumToast } from "@/hooks/usePremiumToast";
 import { ToastContainer } from "@/components/PremiumToast";
-import TypewriterText from "@/components/TypewriterText";
-import { Input } from "@/components/ui/input";
-import { Search, ShoppingBag, ArrowUp, X } from "lucide-react";
+import { Search, ShoppingBag, ArrowUp, X, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "../supabaseClient";
 
-/* ---------------- CART ---------------- */
-const addToCart = (productName: string) => {
-  const cart = JSON.parse(localStorage.getItem("cartProducts") || "[]") as string[];
-  if (!cart.includes(productName)) {
-    cart.push(productName);
-    localStorage.setItem("cartProducts", JSON.stringify(cart));
-    return true;
-  }
-  return false;
-};
-
-/* ---------------- TYPES ---------------- */
+/* ---------------- TYPES & HELPERS ---------------- */
 interface Product {
   id: string;
   name: string;
@@ -36,6 +23,16 @@ interface Category {
   slug: string;
 }
 
+const addToCart = (productName: string) => {
+  const cart = JSON.parse(localStorage.getItem("cartProducts") || "[]") as string[];
+  if (!cart.includes(productName)) {
+    cart.push(productName);
+    localStorage.setItem("cartProducts", JSON.stringify(cart));
+    return true;
+  }
+  return false;
+};
+
 const ProductsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
@@ -48,10 +45,8 @@ const ProductsPage = () => {
   const navigate = useNavigate();
 
   const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
-  const navBarRef = useRef<HTMLDivElement>(null);
-  const categoryButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  /* ---------------- FETCH ---------------- */
+  /* ---------------- FETCH DATA ---------------- */
   useEffect(() => {
     const fetchProducts = async () => {
       const { data, error } = await supabase
@@ -73,13 +68,15 @@ const ProductsPage = () => {
     fetchProducts();
   }, []);
 
-  /* ---------------- FILTER ---------------- */
+  /* ---------------- SEARCH & FILTER LOGIC ---------------- */
   const filteredProducts = useMemo(() => {
-    const term = searchTerm.toLowerCase();
-    return products.filter(
-      p =>
-        p.name.toLowerCase().includes(term) ||
-        p.description?.toLowerCase().includes(term)
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) return products;
+
+    return products.filter(p => 
+      p.name.toLowerCase().includes(term) || 
+      p.category.toLowerCase().includes(term) ||
+      (p.description && p.description.toLowerCase().includes(term))
     );
   }, [products, searchTerm]);
 
@@ -93,34 +90,33 @@ const ProductsPage = () => {
     return grouped;
   }, [filteredProducts]);
 
-  /* ---------------- SCROLL LOGIC ---------------- */
+  /* ---------------- SCROLL & NAV LOGIC ---------------- */
   const scrollToCategory = (slug: string) => {
     const el = categoryRefs.current[slug];
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 120;
+    // Offset to account for both Search Capsule and Category Nav
+    const offset = 280; 
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top, behavior: "smooth" });
-    setActiveCategory(slug);
   };
 
   useEffect(() => {
     const onScroll = () => {
       setShowScrollTop(window.scrollY > 400);
-      const pos = window.scrollY + 160;
+      const pos = window.scrollY + 300; // Adjusted detection point
 
       for (const [slug, el] of Object.entries(categoryRefs.current)) {
         if (!el) continue;
         if (pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
           setActiveCategory(slug);
-          return;
+          break;
         }
       }
-      setActiveCategory("");
     };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, [productsByCategory]);
 
-  /* ---------------- ACTION ---------------- */
   const handleRequestQuote = (name: string) => {
     if (addToCart(name)) {
       showToast({
@@ -137,169 +133,171 @@ const ProductsPage = () => {
     <>
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
-      <main className="bg-[#FAF9F6] min-h-screen pt-28 px-[8%]">
-        {/* HEADER */}
-        <section className="text-center mb-20">
-          <h1 className="text-5xl md:text-7xl font-black mb-6">
-            Our <span className="text-indigo-600 italic">Products</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-stone-500 text-lg">
-            Carefully sourced international brands delivered through Peroz Corp’s
-            East Coast distribution network.
-          </p>
+      <main className="bg-[#FAF9F6] min-h-screen pb-20">
+        
+        {/* ================= 1. LUXURY HEADER ================= */}
+        <section className="relative pt-40 pb-20 px-[8%] bg-white overflow-hidden">
+          <div className="absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 select-none pointer-events-none tracking-[-0.05em] uppercase" 
+          style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
+             · INVENTORY ·
+          </div>
+
+          <div className="max-w-[1600px] mx-auto relative z-10">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px w-8 bg-indigo-600" />
+                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-indigo-600">
+                  World-Class Curation
+                </p>
+              </div>
+              
+              <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-slate-900 mb-8 leading-[0.85]">
+                Global <br />
+                <span className="italic font-serif font-light text-indigo-600/90 underline decoration-indigo-100 underline-offset-[12px] decoration-1">Collection</span>
+              </h1>
+            </motion.div>
+          </div>
         </section>
 
-        {/* SEARCH */}
-        <div className="max-w-xl mx-auto mb-10">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
-            <Input
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search products..."
-              className="pl-12 py-6 rounded-xl bg-white shadow"
-            />
+        {/* ================= 2. STICKY SEARCH CAPSULE ================= */}
+        <section className="sticky top-0 z-[60] py-6 px-[8%] bg-gradient-to-b from-white via-white/90 to-transparent">
+          <div className="max-w-4xl mx-auto relative group">
+            <div className="relative flex items-center bg-white border border-slate-200 rounded-full px-8 py-5 shadow-2xl shadow-indigo-900/5 group-focus-within:border-indigo-400 transition-all duration-500">
+              <Search className="text-slate-400 mr-6 group-focus-within:text-indigo-600 transition-colors" size={24} />
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search our master inventory..."
+                className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-xl font-light tracking-tight text-slate-900 placeholder:text-slate-300"
+              />
+              <div className="hidden md:flex items-center gap-3 pl-6 border-l border-slate-100">
+                <Filter size={14} className="text-slate-300" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Filter Active</span>
+              </div>
+            </div>
           </div>
+        </section>
+
+        {/* ================= 3. STICKY CATEGORY NAV ================= */}
+        <nav className="sticky top-[104px] z-[50] py-4 bg-[#FAF9F6]/80 backdrop-blur-md border-b border-slate-200/50 overflow-x-auto whitespace-nowrap px-[8%] scrollbar-hide">
+          <div className="flex gap-4 max-w-[1600px] mx-auto">
+            {categories.map(cat => (
+              <button
+                key={cat.slug}
+                onClick={() => scrollToCategory(cat.slug)}
+                className={`px-8 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-all duration-500 ${
+                  activeCategory === cat.slug
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105"
+                    : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* ================= 4. PRODUCT FEED ================= */}
+        <div className="px-[8%] mt-20 max-w-[1600px] mx-auto">
+          {categories.length > 0 && categories.map(cat => {
+            const items = productsByCategory[cat.slug];
+            if (!items?.length) return null;
+
+            return (
+              <section key={cat.slug} ref={el => (categoryRefs.current[cat.slug] = el)} className="mb-40 scroll-mt-60">
+                <div className="flex items-baseline gap-6 mb-16 border-b border-slate-200 pb-8">
+                  <h2 className="text-5xl font-light italic font-serif text-slate-900">{cat.name}</h2>
+                  <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">{items.length} Products</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+                  {items.map(p => (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -10 }}
+                      className="group bg-white rounded-sm border border-slate-100 p-6 shadow-sm hover:shadow-2xl transition-all duration-700 cursor-pointer"
+                      onClick={() => setSelectedProduct(p)}
+                    >
+                      <div className="aspect-[4/5] flex items-center justify-center bg-slate-50 mb-8 overflow-hidden rounded-sm relative">
+                        <img src={p.image} className="max-h-[80%] group-hover:scale-110 transition-transform duration-1000" />
+                        {!p.in_stock && (
+                          <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] bg-white px-4 py-2 border border-slate-200">Sold Out</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-bold text-lg text-slate-900 leading-tight">{p.name}</h3>
+                        </div>
+                        <p className="text-xs text-stone-400 font-light line-clamp-2 leading-relaxed italic font-serif">
+                          {p.description || "Premium international import."}
+                        </p>
+                        
+                        <Button
+                          onClick={(e) => { e.stopPropagation(); handleRequestQuote(p.name); }}
+                          className="w-full h-12 bg-slate-900 hover:bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-none transition-all"
+                        >
+                          Inquire for Bulk Pricing
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+
+          {/* NO RESULTS STATE */}
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-40">
+              <p className="text-2xl font-serif italic text-slate-300">No inventory found for "{searchTerm}"</p>
+              <button onClick={() => setSearchTerm("")} className="mt-6 text-indigo-600 font-black uppercase text-[10px] tracking-widest underline">Reset Search</button>
+            </div>
+          )}
         </div>
-
-        {/* CATEGORY NAV */}
-        <div
-          ref={navBarRef}
-          className="sticky top-20 z-50 flex gap-3 overflow-x-auto bg-white/90 backdrop-blur rounded-xl p-3 shadow mb-16"
-        >
-          {categories.map(cat => (
-            <button
-              key={cat.slug}
-              ref={el => (categoryButtonRefs.current[cat.slug] = el)}
-              onClick={() => scrollToCategory(cat.slug)}
-              className={`px-5 py-2 rounded-full text-sm font-bold transition ${
-                activeCategory === cat.slug
-                  ? "bg-indigo-600 text-white"
-                  : "bg-stone-100 hover:bg-indigo-100"
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-
-        {/* PRODUCTS */}
-        {categories.map(cat => {
-          const items = productsByCategory[cat.slug];
-          if (!items?.length) return null;
-
-          return (
-            <section
-              key={cat.slug}
-              ref={el => (categoryRefs.current[cat.slug] = el)}
-              className="mb-32 scroll-mt-32"
-            >
-              <div className="flex justify-between mb-10">
-                <h2 className="text-3xl font-bold">{cat.name}</h2>
-                <Badge>{items.length} items</Badge>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {items.map(p => (
-                  <motion.div
-                    key={p.id}
-                    whileHover={{ y: -8 }}
-                    className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer"
-                    onClick={() => setSelectedProduct(p)}
-                  >
-                    <div className="aspect-square flex items-center justify-center bg-slate-50">
-                      <img src={p.image} className="max-h-full" />
-                    </div>
-                    <div className="p-6">
-                      <h3 className="font-bold text-lg mb-2">{p.name}</h3>
-                      <p className="text-sm text-stone-500 mb-4 line-clamp-2">
-                        {p.description}
-                      </p>
-                      <Badge
-                        className={`mb-4 ${
-                          p.in_stock
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {p.in_stock ? "In Stock" : "Out of Stock"}
-                      </Badge>
-
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRequestQuote(p.name);
-                        }}
-                        /* Applied the purple gradient here */
-                        className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 text-white border-none hover:opacity-90 transition-all hover:shadow-md"
-                      >
-                        <ShoppingBag className="mr-2 w-4 h-4" />
-                        Request Quote
-                      </Button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-          );
-        })}
 
         {/* SCROLL TOP */}
-        {showScrollTop && (
-          <Button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-6 right-6 rounded-full"
-          >
-            <ArrowUp />
-          </Button>
-        )}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="fixed bottom-10 right-10 z-[70] w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-slate-900 transition-colors"
+            >
+              <ArrowUp size={20} />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </main>
 
-      {/* MODAL (UNCHANGED LOGIC) */}
+      {/* MODAL */}
       <AnimatePresence>
-  {selectedProduct && (
-    <motion.div
-      className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center"
-      onClick={() => setSelectedProduct(null)}
-    >
-      <motion.div
-        className="relative bg-white rounded-2xl p-8 max-w-md w-full"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Button
-          onClick={() => setSelectedProduct(null)}
-          className="
-            absolute top-4 right-4
-            h-10 w-10 p-0
-            rounded-full
-            bg-indigo-600 text-white
-            hover:bg-indigo-500
-            shadow-lg
-          "
-          aria-label="Close product details"
-        >
-          <X className="w-5 h-5" />
-        </Button>
-
-        <img src={selectedProduct.image} className="mb-6 rounded-xl" />
-        <h3 className="text-2xl font-bold mb-4">
-          {selectedProduct.name}
-        </h3>
-        <p className="mb-6 text-stone-500">
-          {selectedProduct.description}
-        </p>
-
-        {/* ONLY this button was changed below */}
-        <Button
-          className="w-full py-6 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 text-white border-none hover:opacity-90 transition-opacity"
-          onClick={() => handleRequestQuote(selectedProduct.name)}
-        >
-          Request Bulk Quote
-        </Button>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+        {selectedProduct && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-center justify-center p-6" onClick={() => setSelectedProduct(null)}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative bg-white rounded-none p-12 max-w-2xl w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <button onClick={() => setSelectedProduct(null)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 transition-colors"><X size={24} /></button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="bg-slate-50 p-8 flex items-center justify-center rounded-sm">
+                  <img src={selectedProduct.image} className="max-h-64 object-contain" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-black text-slate-900 mb-4">{selectedProduct.name}</h3>
+                  <Badge className="bg-indigo-50 text-indigo-600 border-none mb-6 rounded-none px-4 py-1 text-[10px] uppercase tracking-widest">{selectedProduct.category}</Badge>
+                  <p className="text-stone-500 font-light leading-relaxed mb-8">{selectedProduct.description || "Exclusive import sourced by Peroz Corp."}</p>
+                  <Button className="w-full h-14 bg-indigo-600 hover:bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-none transition-all" onClick={() => handleRequestQuote(selectedProduct.name)}>Inquire for Bulk Pricing</Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

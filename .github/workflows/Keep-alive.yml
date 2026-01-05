@@ -1,29 +1,13 @@
-name: Keep Repository Active
+name: Ping Supabase to Prevent Pause
 
 on:
   schedule:
-    - cron: '0 0 1 */2 *'  # Runs every 2 months on the 1st at midnight UTC
-  workflow_dispatch:
+    - cron: '0 9 * * 1,4'  # Runs at 9 AM UTC every Monday and Thursday
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
-  keep-alive:
+  ping:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Update timestamp
-        run: |
-          mkdir -p .github
-          date > .github/keep-alive.txt
-          
-      - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/keep-alive.txt
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: keep repository active" && git push)
+      - name: Ping Supabase
+        run: curl -f https://${{ secrets.VERCEL_URL }}/api/ping

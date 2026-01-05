@@ -10,19 +10,18 @@ interface TypewriterTextProps {
 const TypewriterText: FC<TypewriterTextProps> = ({ speed }) =>{
   return (
     <TypeAnimation
-      sequence={[
-        "Grains?", 2000,  // wait 2s after typing
-        "Pasta?", 2000,
-        "Cooking Oils?", 2000,
-        "Spices?", 2000,
-        "Snacks?", 2000,
-        "Tea?", 2000,
-        "Coffee?", 2000,
-        "Pocas Products?", 2000,
-        "OKF Drinks?", 2000,
-        "Dates?", 2000,
-        "Sauces & Dips?", 2000,
-      ]}
+        sequence={[
+          "Premium Confectionery?", 2000,
+          "Shafa Pomegranate Beverages?", 2000,
+          "Laziz Fruit Fudges?", 2000,
+          "International Instant Noodles?", 2000,
+          "Ginseng Energy Drinks?", 2000,
+          "Middle Eastern Pantry Staples?", 2000,
+          "Bulk Malt Beverages?", 2000,
+          "Artisan Dates & Sweets?", 2000,
+          "Exclusive Brand Distribution?", 2000,
+          "Direct Import Logistics?", 2000,
+        ]}
       wrapper="span"
       repeat={Infinity}
       cursor={true}
