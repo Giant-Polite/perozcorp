@@ -86,10 +86,10 @@ export default function About() {
             style={{ y: headlineY, letterSpacing }}
             className="text-[clamp(3.2rem,8vw,8.5rem)] font-black leading-[0.82] mb-12"
           >
-            Direct transmission.
+            World-Class Goods.
             <br />
             <span className="italic text-violet-600 font-light">
-              Global precision.
+            World-Class Delivery.
             </span>
           </motion.h1>
 
@@ -97,74 +97,74 @@ export default function About() {
             variants={fadeUp(isMobile)}
             className="max-w-3xl text-xl text-slate-600 leading-relaxed"
           >
-            Peroz Corp is an Alexandria-based wholesale distributor and global
-            importer dedicated to providing East Coast businesses with a direct
-            line to world-class products. From our strategically located
-            logistical hubs in Virginia and Maryland, we bridge the gap between
-            international manufacturers and the domestic market with unrivaled
-            precision.
+            Headquartered in Alexandria, <b>Peroz Corp</b> operates as a premier wholesale 
+            distributor and global importer, engineered to provide East Coast enterprises 
+            with a non-interrupted conduit to world-class manufacturing. Utilizing our 
+            strategically positioned logistical hubs in Virginia and Maryland, we 
+            effectively eliminate the complexities of international trade, ensuring 
+            the transition from global production to the domestic shelf is executed 
+            with unrivaled precision.
           </motion.p>
         </motion.div>
       </section>
 
       {/* ================= HERITAGE ================= */}
-      <section className="relative z-10 px-[8%] md:px-[10%] pb-40">
-        <motion.div variants={container} initial="hidden" whileInView="visible">
-          <motion.h2
-            variants={fadeUp(isMobile)}
-            className="text-5xl text-violet-500 font-black mb-6"
-          >
-            Our Heritage of Excellence
-          </motion.h2>
+<section className="relative z-10 px-[8%] md:px-[10%] pb-40">
+  <motion.div variants={container} initial="hidden" whileInView="visible">
+    <motion.h2
+      variants={fadeUp(isMobile)}
+      className="text-5xl text-violet-500 font-black mb-6"
+    >
+      A Legacy of Global Access
+    </motion.h2>
 
-          <motion.p
-            variants={fadeUp(isMobile)}
-            className="max-w-3xl text-lg text-slate-600 leading-relaxed"
-          >
-            Built on a foundation of reliability and community-focused values,
-            Peroz Corp is more than just a logistical provider — we are a partner
-            in your growth. We specialize in sourcing high-quality goods from
-            trusted global partners across Asia and Europe, including premium
-            rice varieties, cleaning systems, and specialized pharmaceutical
-            supplies.
-          </motion.p>
-        </motion.div>
-      </section>
+    <motion.p
+      variants={fadeUp(isMobile)}
+      className="max-w-3xl text-lg text-slate-600 leading-relaxed"
+    >
+      Built upon a foundation of operational transparency and cross-border expertise, 
+      Peroz Corp serves as a vital artery for international commerce. We do not simply 
+      move goods; we curate resilient supply chains. By securing exclusive partnerships 
+      with world-class manufacturers across Europe and Asia, we maintain a disciplined 
+      portfolio, Spanning from premium agricultural staples and precision industrial 
+      parts cleaning systems to essential pharmaceutical-grade consumables.
+    </motion.p>
+  </motion.div>
+</section>
 
       {/* ================= WHY PARTNER ================= */}
-      <section className="relative z-10 px-[8%] md:px-[10%] pb-40">
-        <motion.div variants={container} initial="hidden" whileInView="visible">
-          <motion.h2
-            variants={fadeUp(isMobile)}
-            className="text-5xl text-violet-500 font-black mb-6"
-          >
-            Why Partner With Us
-          </motion.h2>
+<section className="relative z-10 px-[8%] md:px-[10%] pb-40">
+  <motion.div variants={container} initial="hidden" whileInView="visible">
+    <motion.h2
+      variants={fadeUp(isMobile)}
+      className="text-5xl text-violet-500 font-black mb-6"
+    >
+      The Strategic Advantage
+    </motion.h2>
 
-          <motion.p
-            variants={fadeUp(isMobile)}
-            className="max-w-3xl text-lg text-slate-600 leading-relaxed"
-          >
-            As a key distributor for the East Coast, we are committed to
-            supporting local businesses — from grocery stores and restaurants to
-            industrial service providers — with a supply chain that never stops.
-            Our operations in Alexandria and Clarksburg are designed for speed,
-            ensuring that our partners receive essential goods exactly when they
-            need them.
-          </motion.p>
+    <motion.p
+      variants={fadeUp(isMobile)}
+      className="max-w-3xl text-lg text-slate-600 leading-relaxed"
+    >
+      As the primary gateway for high-demand Mediterranean and Middle Eastern staples 
+      on the East Coast, we bridge the gap between world-class manufacturing and the 
+      American retail landscape. From high-volume grocery chains to boutique hospitality 
+      groups, we provide a supply chain engineered for absolute reliability. 
+      Our hubs in Alexandria and Clarksburg serve as the tactical core of our 
+      distribution network, ensuring seamless inventory flow across the Atlantic corridor.
+    </motion.p>
 
-          <motion.p
-            variants={fadeUp(isMobile)}
-            className="max-w-3xl mt-6 text-lg text-slate-600 leading-relaxed"
-          >
-            At Peroz Corp, we believe in a transparent,{" "}
-            <span className="italic">direct transmission</span> approach. When
-            you work with us, you are engaging with a team that treats your
-            logistical needs with the same care and attention as a family
-            business.
-          </motion.p>
-        </motion.div>
-      </section>
+    <motion.p
+      variants={fadeUp(isMobile)}
+      className="max-w-3xl mt-6 text-lg text-slate-600 leading-relaxed"
+    >
+      At Peroz Corp, we operate with a <span className="italic text-slate-900 font-medium">Zero-Loss Integrity</span> approach. 
+      Partnering with us means gaining direct access to a curated master inventory, 
+      backed by the personalized oversight and logistical precision of a master 
+      distributor dedicated to your scale.
+    </motion.p>
+  </motion.div>
+</section>
 
       {/* ================= LOCATIONS ================= */}
       <section className="relative z-10 px-[8%] md:px-[10%] pb-48">

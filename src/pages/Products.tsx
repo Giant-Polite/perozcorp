@@ -92,30 +92,31 @@ const ProductsPage = () => {
 
   /* ---------------- SCROLL & NAV LOGIC ---------------- */
   const scrollToCategory = (slug: string) => {
-    const el = categoryRefs.current[slug];
-    if (!el) return;
-    // Offset to account for both Search Capsule and Category Nav
-    const offset = 280; 
-    const top = el.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
+  const el = categoryRefs.current[slug];
+  if (!el) return;
+  // Increased offset to 320 to account for the taller Midnight Monolith
+  const offset = 320; 
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: "smooth" });
+};
 
-  useEffect(() => {
-    const onScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-      const pos = window.scrollY + 300; // Adjusted detection point
+useEffect(() => {
+  const onScroll = () => {
+    setShowScrollTop(window.scrollY > 400);
+    // Increased detection point to 350 so active state triggers correctly
+    const pos = window.scrollY + 350; 
 
-      for (const [slug, el] of Object.entries(categoryRefs.current)) {
-        if (!el) continue;
-        if (pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
-          setActiveCategory(slug);
-          break;
-        }
+    for (const [slug, el] of Object.entries(categoryRefs.current)) {
+      if (!el) continue;
+      if (pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
+        setActiveCategory(slug);
+        break;
       }
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [productsByCategory]);
+    }
+  };
+  window.addEventListener("scroll", onScroll);
+  return () => window.removeEventListener("scroll", onScroll);
+}, [productsByCategory]);
 
   const handleRequestQuote = (name: string) => {
     if (addToCart(name)) {
@@ -136,7 +137,7 @@ const ProductsPage = () => {
       <main className="bg-[#FAF9F6] min-h-screen pb-20">
         
         {/* ================= 1. LUXURY HEADER ================= */}
-        <section className="relative pt-40 pb-20 px-[8%] bg-white overflow-hidden">
+        <section className="relative pt-6 pb-10 px-[8%] bg-white overflow-hidden">
           <div className="absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 select-none pointer-events-none tracking-[-0.05em] uppercase" 
           style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
              · INVENTORY ·
@@ -159,43 +160,85 @@ const ProductsPage = () => {
           </div>
         </section>
 
-        {/* ================= 2. STICKY SEARCH CAPSULE ================= */}
-        <section className="sticky top-0 z-[60] py-6 px-[8%] bg-gradient-to-b from-white via-white/90 to-transparent">
-          <div className="max-w-4xl mx-auto relative group">
-            <div className="relative flex items-center bg-white border border-slate-200 rounded-full px-8 py-5 shadow-2xl shadow-indigo-900/5 group-focus-within:border-indigo-400 transition-all duration-500">
-              <Search className="text-slate-400 mr-6 group-focus-within:text-indigo-600 transition-colors" size={24} />
-              <input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search our master inventory..."
-                className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-xl font-light tracking-tight text-slate-900 placeholder:text-slate-300"
-              />
-              <div className="hidden md:flex items-center gap-3 pl-6 border-l border-slate-100">
-                <Filter size={14} className="text-slate-300" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Filter Active</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* ================= 2. MIDNIGHT SEARCH MONOLITH (FIXED STICKY) ================= */}
+{/* Removed py-8 and replaced with pb-8. Set top to -1px to ensure no light leaks */}
+<section className="sticky top-[1px] z-[60] pt-0 pb-8 px-[8%] bg-[#FAF9F6]"> 
+  
+  {/* Added a spacer div above the search bar that IS NOT sticky, or simply use margin on the header above */}
+  <div className="h-4 w-full bg-white" /> 
+
+  <div className="max-w-5xl mx-auto relative group">
+    {/* The Dark Capsule */}
+    <div className="
+      relative flex items-center bg-slate-950 rounded-2xl px-8 py-6
+      shadow-[0_20px_40px_rgba(0,0,0,0.3)]
+      border border-slate-800 group-focus-within:border-indigo-500/50
+      transition-all duration-700 ease-out
+    ">
+      
+      {/* Search Icon */}
+      <div className="relative mr-6">
+        <Search 
+          className="text-slate-500 group-focus-within:text-indigo-400 transition-colors duration-500" 
+          size={22} 
+          strokeWidth={1.5} 
+        />
+      </div>
+
+      {/* The Dark Input */}
+      <input
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search For Products..."
+        className="
+          flex-1 bg-transparent border-none outline-none focus:ring-0
+          text-xl md:text-2xl font-light tracking-tight text-white
+          placeholder:text-slate-600
+        "
+      />
+
+      {/* Functional Metadata Detail */}
+      <div className="hidden lg:flex items-center gap-6 pl-8 border-l border-slate-800">
+        <div className="flex flex-col items-end">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">
+            Live Results
+          </span>
+          <span className="text-xl font-serif italic text-slate-400">
+            {filteredProducts.length < 10 ? `0${filteredProducts.length}` : filteredProducts.length}
+          </span>
+        </div>
+        
+        {searchTerm && (
+          <button 
+            onClick={() => setSearchTerm("")}
+            className="p-2 hover:bg-slate-800 rounded-full text-slate-500 hover:text-white transition-all"
+          >
+            <X size={18} />
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* ================= 3. STICKY CATEGORY NAV ================= */}
-        <nav className="sticky top-[104px] z-[50] py-4 bg-[#FAF9F6]/80 backdrop-blur-md border-b border-slate-200/50 overflow-x-auto whitespace-nowrap px-[8%] scrollbar-hide">
-          <div className="flex gap-4 max-w-[1600px] mx-auto">
-            {categories.map(cat => (
-              <button
-                key={cat.slug}
-                onClick={() => scrollToCategory(cat.slug)}
-                className={`px-8 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-all duration-500 ${
-                  activeCategory === cat.slug
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105"
-                    : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        </nav>
+        <nav className="sticky top-[128px] z-[50] py-4 bg-[#FAF9F6]/80 backdrop-blur-md border-b border-slate-200/50 overflow-x-auto whitespace-nowrap px-[8%] scrollbar-hide">
+  <div className="flex gap-4 max-w-[1600px] mx-auto">
+    {categories.map(cat => (
+      <button
+        key={cat.slug}
+        onClick={() => scrollToCategory(cat.slug)}
+        className={`px-8 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-all duration-500 ${
+          activeCategory === cat.slug
+            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105"
+            : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+        }`}
+      >
+        {cat.name}
+      </button>
+    ))}
+  </div>
+</nav>
 
         {/* ================= 4. PRODUCT FEED ================= */}
         <div className="px-[8%] mt-20 max-w-[1600px] mx-auto">
