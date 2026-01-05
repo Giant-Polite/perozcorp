@@ -127,7 +127,7 @@ useEffect(() => {
         duration: 3000,
       });
     }
-    navigate("/contact");
+    navigate("/contact#inquiry-form");
   };
 
   return (

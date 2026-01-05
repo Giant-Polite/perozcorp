@@ -76,7 +76,7 @@ const Footer = () => {
 
             </div>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Proudly family-operated, serving the East Coast with dedication and excellence from our Virginia headquarters.
+              A premier global importer and strategic distribution partner, powering East Coast supply chains with world-class products from our Alexandria logistical hub.
             </p>
             <div className="pt-2">
               <span
