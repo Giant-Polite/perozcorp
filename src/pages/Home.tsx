@@ -97,7 +97,7 @@ const Home = () => {
     <main className="bg-[#FAF9F6] min-h-screen font-sans text-[#1A1A1A] overflow-x-hidden">
       
       {/* ================= HERO SLIDESHOW SECTION ================= */}
-      <section className="relative pt-16 md:pt-20 px-[5%] md:px-[9%] w-full">
+      <section className="relative pt-2 md:pt-20 px-[5%] md:px-[9%] w-full">
         <motion.div 
           initial="hidden" 
           animate="visible" 
@@ -122,12 +122,33 @@ const Home = () => {
             
             <div className="absolute bottom-0 left-0 z-20 hidden md:block">
               <Link to="/products" className="group flex items-center">
-                <div className="bg-orange-300/90 backdrop-blur-xl border-t border-r border-white/40 px-10 py-8 flex items-center gap-4 hover:bg-indigo-200 transition">
-                  <span className="text-xs font-bold tracking-[0.3em] uppercase">Shop All Products</span>
-                  <div className="bg-orange-500 text-white p-2 rounded-full group-hover:rotate-45 transition">
+                <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border-t border-r border-white/40 px-10 py-8 flex items-center gap-4 hover:bg-indigo-200 transition">
+                  
+                  {/* THE SHIMMER PULSE: Optimized for endless, constant motion */}
+                  <motion.div
+                    initial={{ x: '-150%' }}
+                    animate={{ x: '350%' }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 2.5,
+                      repeatDelay: 1.5, 
+                      ease: "linear", // Maintains constant speed so it doesn't "stick" at the end
+                    }}
+                    className="absolute inset-y-0 w-40 pointer-events-none" // Wider shimmer for a more premium catch
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(48, 40, 78, 0.4), transparent)',
+                      skewX: '-25deg', // Slightly steeper angle to match the other high-end buttons
+                    }}
+                  />
+
+                  <span className="relative z-10 text-xs font-bold tracking-[0.3em] uppercase">
+                    Shop All Products
+                  </span>
+                  
+                  <div className="relative z-10 bg-orange-500 text-white p-2 rounded-full group-hover:rotate-45 transition">
                     <ArrowUpRight size={16} />
                   </div>
-                </div>
+                  </div>
               </Link>
             </div>
           </div>
@@ -145,13 +166,34 @@ const Home = () => {
 
           <div className="md:hidden mt-4">
             <Link to="/products" className="group flex items-center">
-              <div className="bg-orange-300/90 backdrop-blur-xl border border-white/40 px-6 py-5 flex items-center justify-between w-full">
-                <span className="text-xs font-bold tracking-[0.3em] uppercase">Shop All Products</span>
-                <div className="bg-orange-500 text-white p-2 rounded-full">
-                  <ArrowUpRight size={16} />
-                </div>
-              </div>
-            </Link>
+  <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border border-white/40 px-6 py-5 flex items-center justify-between w-full">
+    
+    {/* THE SHIMMER PULSE: Extended range for a "never-ending" feel */}
+    <motion.div
+      initial={{ x: '-150%' }}
+      animate={{ x: '350%' }} // Increased from 250% to ensure it clears the wide mobile button
+      transition={{
+        repeat: Infinity,
+        duration: 2.5,   // Slightly slower to match the "luxury" feel you liked
+        repeatDelay: 1.5, 
+        ease: "linear",  // Linear prevents that "slowing down" at the end
+      }}
+      className="absolute inset-y-0 w-40 pointer-events-none" // Made the shimmer slightly wider (w-40)
+      style={{
+        background: 'linear-gradient(90deg, transparent, rgba(48, 40, 78, 0.4), transparent)',
+        skewX: '-25deg',
+      }}
+    />
+
+    <span className="relative z-10 text-xs font-bold tracking-[0.3em] uppercase">
+      Shop All Products
+    </span>
+    
+    <div className="relative z-10 bg-orange-500 text-white p-2 rounded-full">
+      <ArrowUpRight size={16} />
+    </div>
+  </div>
+</Link>
           </div>
         </motion.div>
       </section>
@@ -209,13 +251,34 @@ const Home = () => {
             className="relative z-20"
           >
             <Link to="/products" className="group flex items-center">
-              <div className="bg-orange-300/90 backdrop-blur-xl border border-white/40 px-12 py-6 flex items-center gap-6 hover:bg-indigo-600 hover:text-white transition-all duration-500 shadow-xl shadow-orange-900/10">
-                <span className="text-xs font-black tracking-[0.4em] uppercase">Shop All Products</span>
-                <div className="bg-orange-500 text-white p-3 rounded-full group-hover:rotate-45 group-hover:bg-white group-hover:text-indigo-600 transition-all duration-500">
-                  <ArrowUpRight size={20} />
-                </div>
-              </div>
-            </Link>
+  <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border border-white/40 px-12 py-6 flex items-center gap-6 hover:bg-indigo-600 hover:text-white transition-all duration-500 shadow-xl shadow-orange-900/10">
+    
+    {/* THE LUXURY SWEEP: Pulsing light effect */}
+    <motion.div
+      initial={{ x: '-150%' }}
+      animate={{ x: '250%' }}
+      transition={{
+        repeat: Infinity,
+        duration: 2.5,
+        repeatDelay: 2, // Keeps the animation sophisticated rather than frantic
+        ease: "easeInOut",
+      }}
+      className="absolute inset-y-0 w-32 pointer-events-none"
+      style={{
+        background: 'linear-gradient(90deg, transparent, rgba(48, 40, 78, 0.4), transparent)',
+        skewX: '-25deg',
+      }}
+    />
+
+    <span className="relative z-10 text-xs font-black tracking-[0.4em] uppercase">
+      Shop All Products
+    </span>
+    
+    <div className="relative z-10 bg-orange-500 text-white p-3 rounded-full group-hover:rotate-45 group-hover:bg-white group-hover:text-indigo-600 transition-all duration-500">
+      <ArrowUpRight size={20} />
+    </div>
+  </div>
+</Link>
           </motion.div>
         </motion.div>
       </section>
@@ -226,7 +289,7 @@ const Home = () => {
   <div className="container mx-auto px-4 mb-12 text-center">
     <div className="flex items-center justify-center gap-4">
       <div className="h-[1px] w-8 bg-indigo-600/20" />
-      <p className="text-[9px] font-black uppercase tracking-[0.8em] text-slate-500">
+      <p className="text-[9px] font-black uppercase tracking-[0.8em] text-slate-800">
         Global Distribution Network
       </p>
       <div className="h-[1px] w-8 bg-indigo-600/20" />
@@ -258,7 +321,7 @@ const Home = () => {
               <span 
                 className={`
                   text-4xl md:text-6xl px-12 transition-all duration-1000 cursor-default
-                  text-slate-300 hover:text-indigo-600 hover:scale-105
+                  text-slate-400 hover:text-indigo-600 hover:scale-105
                   ${brand.style}
                 `}
               >
@@ -297,7 +360,7 @@ const Home = () => {
             {/* RESPONSIVE LUXURY CTA BUTTON */}
             <div className="relative flex items-center justify-center mt-8 md:mt-0 p-4 md:p-12">
               <Link to="/products" className="relative group">
-                {/* Desktop Version */}
+                {/* Desktop Version - Stays exactly the same */}
                 <div className="hidden md:flex relative flex-col items-center justify-center w-40 h-40 bg-indigo-600 border border-indigo-600 rounded-full shadow-2xl overflow-hidden group-hover:scale-105 group-hover:shadow-indigo-500/40 transition-all duration-500">
                   <span className="relative z-10 text-[13px] font-black uppercase tracking-[0.3em] text-white text-center px-4 leading-tight group-hover:tracking-[0.4em] transition-all duration-500">
                     Explore <br /> <span className="italic font-serif normal-case text-xs tracking-normal">Entire</span> <br /> Catalog
@@ -307,48 +370,53 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Mobile Version - Luxury Animated Pill */}
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    whileTap={{ scale: 0.96 }} // Sophisticated haptic-like press
-                    className="md:hidden relative flex items-center gap-4 bg-white border border-slate-200 px-8 py-4 rounded-full shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] overflow-hidden"
-                  >
-                    {/* The Luxury "Shine" Effect */}
-                    <motion.div
-                      initial={{ x: "-100%" }}
-                      animate={{ x: "200%" }}
-                      transition={{ 
-                        repeat: Infinity, 
-                        duration: 3, 
-                        repeatDelay: 4, 
-                        ease: "easeInOut" 
-                      }}
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] pointer-events-none"
-                    />
+                {/* Mobile Version - Luxury Animated Pill with High-Visibility Shimmer */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: [1, 1.02, 1], // Breathing effect
+                    boxShadow: [
+                      "0 4px 20px rgba(0,0,0,0.05)",
+                      "0 4px 25px rgba(79, 70, 229, 0.2)", 
+                      "0 4px 20px rgba(0,0,0,0.05)"
+                    ]
+                  }}
+                  transition={{
+                    opacity: { duration: 0.5 },
+                    scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                  whileTap={{ scale: 0.96 }}
+                  className="md:hidden relative flex items-center gap-4 bg-white border border-slate-200 px-8 py-4 rounded-full overflow-hidden"
+                >
+                  {/* High-Contrast Shimmer Sweep */}
+                  <motion.div
+                    animate={{ x: ["-150%", "150%"] }}
+                    transition={{ 
+                      repeat: Infinity, 
+                      duration: 2.5, 
+                      repeatDelay: 1, // Sweeps every second
+                      ease: "easeInOut" 
+                    }}
+                    style={{
+                      background: "linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent)",
+                      width: "50%",
+                      height: "100%",
+                      position: "absolute",
+                      top: 0,
+                      skewX: "-20deg"
+                    }}
+                  />
 
-                    <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">
-                      Explore <span className="italic font-serif font-light text-indigo-600 ml-1">Entire</span> Catalog
-                    </span>
+                  <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">
+                    Explore <span className="italic font-serif font-light text-indigo-600 ml-1">Entire</span> Catalog
+                  </span>
 
-                    <motion.div 
-                      animate={{ 
-                        x: [0, 2, 0], 
-                        y: [0, -2, 0] 
-                      }}
-                      transition={{ 
-                        repeat: Infinity, 
-                        duration: 2, 
-                        ease: "easeInOut" 
-                      }}
-                      className="relative z-10 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg shadow-indigo-200"
-                    >
-                      <ArrowUpRight size={14} className="text-white" />
-                    </motion.div>
-
-                    {/* Subtle Border Glow */}
-                    <div className="absolute inset-0 rounded-full border border-indigo-500/10 pointer-events-none" />
-                  </motion.div>
+                  <div className="relative z-10 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
+                    <ArrowUpRight size={14} className="text-white" />
+                  </div>
+                </motion.div>
 
                 {/* Rotating Label (Desktop Only) */}
                 <motion.div 
@@ -356,12 +424,12 @@ const Home = () => {
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   className="hidden md:block absolute inset-[-30px] pointer-events-none opacity-100 group-hover:scale-110 transition-transform duration-500"
                 >
-                   <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <svg viewBox="0 0 100 100" className="w-full h-full">
                       <path id="circlePath" d="M 50, 50 m 0, -37 a 37,37 0 1,1 0,74 a 37,37 0 1,1 0,-74" fill="transparent" />
                       <text className="text-[10px] uppercase tracking-[0.8em] fill-indigo-300 font-bold group-hover:fill-indigo-400 transition-colors duration-500">
-                         <textPath xlinkHref="#circlePath">• Peroz Corp •</textPath>
+                        <textPath xlinkHref="#circlePath">• Peroz Corp •</textPath>
                       </text>
-                   </svg>
+                  </svg>
                 </motion.div>
               </Link>
             </div>
@@ -480,10 +548,31 @@ const Home = () => {
           </h2>
           <div className="flex justify-center">
             <Link to="/contact" className="group relative inline-flex items-center gap-4 px-10 py-4 border border-slate-300 rounded-full overflow-hidden hover:border-indigo-600 transition-all duration-500">
-              <div className="absolute inset-0 bg-indigo-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
-              <span className="relative z-10 text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 group-hover:text-white transition-colors duration-500">Partner with Peroz. Contact Us</span>
-              <ArrowUpRight size={16} className="relative z-10 text-slate-900 group-hover:text-white transition-colors duration-500" />
-            </Link>
+            {/* The Background Layer: Now with a permanent pulse animation */}
+            <motion.div 
+              className="absolute inset-0 bg-indigo-600"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: 0 }} // Desktop behavior
+              animate={{
+                // Mobile behavior: Create a subtle "shimmer" pulse
+                x: ["-100%", "-90%", "-100%"],
+              }}
+              transition={{
+                x: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+                // Hover transition remains snappy
+                duration: 0.5 
+              }}
+            />
+            
+            <span className="relative z-10 text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 group-hover:text-white transition-colors duration-500">
+              Partner with Peroz. Contact Us
+            </span>
+            <ArrowUpRight size={16} className="relative z-10 text-slate-900 group-hover:text-white transition-colors duration-500" />
+          </Link>
           </div>
           <p className="mt-8 text-[13px] font-serif italic tracking-[0.2em] text-stone-500">Established 2009</p>
         </motion.div>
