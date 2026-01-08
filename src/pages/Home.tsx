@@ -240,8 +240,8 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="text-sm font-mono tracking-widest text-indigo-500 uppercase mb-16">
-            <TypewriterText speed={60} />
+          <div className="text-sm font-mono tracking-widest text-indigo-500 uppercase mb-16 h-6 flex items-center justify-center">
+          <TypewriterText speed={60} />
           </div>
 
           <motion.div 
@@ -309,12 +309,12 @@ const Home = () => {
       {[...Array(2)].map((_, outerIndex) => (
         <div key={outerIndex} className="flex items-center">
           {[
-            { name: "Laziz", style: "font-serif italic font-light" },
+            { name: "Buldak", style: "font-serif italic font-light" },
             { name: "SHAFA", style: "font-black tracking-tighter uppercase" },
             { name: "Indomie", style: "font-sans font-medium tracking-tight" },
-            { name: "BEHROUZ NIK", style: "font-serif tracking-widest uppercase text-xs" },
+            { name: "LAZIZ", style: "font-serif tracking-widest uppercase text-xs" },
             { name: "Ginseng", style: "font-serif italic" },
-            { name: "PEROZNIK", style: "font-black uppercase" }
+            { name: "LEZAT", style: "font-black uppercase" }
           ].map((brand, i) => (
             <div key={i} className="flex items-center">
               {/* The Brand Name */}
