@@ -149,9 +149,16 @@ useEffect(() => {
         
         {/* ================= 1. LUXURY HEADER ================= */}
         <section className="relative pt-6 pb-10 px-[8%] bg-white overflow-hidden">
-          <div className="absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 select-none pointer-events-none tracking-[-0.05em] uppercase whitespace-nowrap overflow-hidden max-w-full" 
-          style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
-             · INVENTORY ·
+         {/* MOBILE VERSION: Smaller text, positioned to fit */}
+          <div className="block md:hidden absolute top-10 left-4 text-[4rem] font-black text-slate-50/80 select-none pointer-events-none tracking-tighter uppercase" 
+            style={{ fontFamily: '"Inter", sans-serif' }}>
+              INVENTORY
+          </div>
+
+          {/* DESKTOP VERSION: The original giant text */}
+          <div className="hidden md:block absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 select-none pointer-events-none tracking-[-0.05em] uppercase" 
+            style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
+              · INVENTORY ·
           </div>
 
           <div className="max-w-[1600px] mx-auto relative z-10">
