@@ -173,7 +173,7 @@ useEffect(() => {
 
         {/* ================= 2. MIDNIGHT SEARCH MONOLITH (FIXED STICKY) ================= */}
 {/* Removed py-8 and replaced with pb-8. Set top to -1px to ensure no light leaks */}
-<section className="sticky top-[1px] z-[60] pt-0 pb-8 px-[8%] bg-[#FAF9F6]"> 
+<section className="sticky top-[1px] z-[60] pt-0 pb-8 px-[8%] bg-[#FAF9F6] max-w-full"> 
   
   {/* Added a spacer div above the search bar that IS NOT sticky, or simply use margin on the header above */}
   <div className="h-4 w-full bg-white" /> 
