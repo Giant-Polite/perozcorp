@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "../supabaseClient";
+import { Helmet } from 'react-helmet-async';
 
 /* ---------------- TYPES & HELPERS ---------------- */
 interface Product {
@@ -45,6 +46,7 @@ const ProductsPage = () => {
   const navigate = useNavigate();
 
   const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
+  
 
   /* ---------------- FETCH DATA ---------------- */
   useEffect(() => {
@@ -132,6 +134,15 @@ useEffect(() => {
 
   return (
     <>
+    <Helmet>
+        <title>Premium Imports Catalog | Peroz Corp</title>
+        <meta 
+          name="description" 
+          content="Explore Peroz Corp’s curated catalog of premium Mediterranean and Middle Eastern imports. Bulk distribution of authentic staples delivered across the East Coast." 
+        />
+        <link rel="canonical" href="https://www.perozcorp.com/products" />
+      </Helmet>
+      
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
       <main className="bg-[#FAF9F6] min-h-screen pb-20">
