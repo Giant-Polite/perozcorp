@@ -179,7 +179,7 @@ useEffect(() => {
               </h1>
             </motion.div>
           </div>
-</section>
+        </section>
 
         {/* ================= 2. MIDNIGHT SEARCH MONOLITH (FIXED STICKY) ================= */}
 {/* Removed py-8 and replaced with pb-8. Set top to -1px to ensure no light leaks */}
