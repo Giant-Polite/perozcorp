@@ -148,20 +148,18 @@ useEffect(() => {
       <main className="bg-[#FAF9F6] min-h-screen pb-20">
         
         {/* ================= 1. LUXURY HEADER ================= */}
-        <section className="relative pt-6 pb-10 px-[8%] bg-white overflow-hidden">
-         {/* MOBILE VERSION: Smaller text, positioned to fit */}
+        <section className="relative pt-6 pb-10 px-[8%] bg-white"> 
+          {/* Background Text Container */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* MOBILE VERSION */}
-      <div className="block md:hidden absolute top-10 left-4 text-[4rem] font-black text-slate-50/80 uppercase">
-          INVENTORY
-      </div>
-
-      {/* DESKTOP VERSION */}
-      <div className="hidden md:block absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 tracking-[-0.05em] uppercase" 
-        style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
-          · INVENTORY ·
-      </div>
-  </div>
+            {/* DESKTOP ONLY: 
+                'hidden' removes it from mobile entirely. 
+                'md:block' brings it back for tablets/desktops. 
+            */}
+            <div className="hidden md:block absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 tracking-[-0.05em] uppercase" 
+              style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
+                · INVENTORY ·
+            </div>
+          </div>
 
           <div className="max-w-[1600px] mx-auto relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
@@ -172,13 +170,16 @@ useEffect(() => {
                 </p>
               </div>
               
+              {/* I also adjusted the H1 text size for mobile (text-5xl) 
+                  to ensure the title doesn't cause zooming. 
+              */}
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-slate-900 mb-8 leading-[0.85]">
                 Global <br />
                 <span className="italic font-serif font-light text-indigo-600/90 underline decoration-indigo-100 underline-offset-[12px] decoration-1">Collection</span>
               </h1>
             </motion.div>
           </div>
-        </section>
+</section>
 
         {/* ================= 2. MIDNIGHT SEARCH MONOLITH (FIXED STICKY) ================= */}
 {/* Removed py-8 and replaced with pb-8. Set top to -1px to ensure no light leaks */}
