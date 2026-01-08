@@ -20,9 +20,9 @@ const FEATURED_PRODUCTS = [
   },
   {
     id: 2,
-    name: "Shafa Carbonated Pomegranate Drink",
+    name: "Alokozay Energy Drink",
     brand: "Beverage",
-    image: "/images/Shafa_Carbonated_Pomegranate_Drink.jpeg", 
+    image: "/images/alokozay_energy_drink.jpg", 
   },
   {
     id: 3,
