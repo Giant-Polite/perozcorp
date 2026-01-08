@@ -12,6 +12,7 @@ const TypewriterText: FC<TypewriterTextProps> = ({ speed }) =>{
     <TypeAnimation
         sequence={[
           "Premium Confectionery?", 2000,
+          "Afghan Dried Fruits & Nuts?", 2000,
           "Shafa Pomegranate Beverages?", 2000,
           "Laziz Fruit Fudges?", 2000,
           "International Instant Noodles?", 2000,
@@ -20,7 +21,6 @@ const TypewriterText: FC<TypewriterTextProps> = ({ speed }) =>{
           "Bulk Malt Beverages?", 2000,
           "Artisan Dates & Sweets?", 2000,
           "Exclusive Brand Distribution?", 2000,
-          "Direct Import Logistics?", 2000,
         ]}
       wrapper="span"
       repeat={Infinity}
