@@ -145,11 +145,11 @@ useEffect(() => {
       
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
-      <main className="bg-[#FAF9F6] min-h-screen pb-20">
+      <main className="bg-[#FAF9F6] min-h-screen pb-20 overflow-x-hidden w-full relative">
         
         {/* ================= 1. LUXURY HEADER ================= */}
         <section className="relative pt-6 pb-10 px-[8%] bg-white overflow-hidden">
-          <div className="absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 select-none pointer-events-none tracking-[-0.05em] uppercase" 
+          <div className="absolute top-10 left-0 text-[14rem] font-black text-slate-50/80 select-none pointer-events-none tracking-[-0.05em] uppercase whitespace-nowrap overflow-hidden max-w-full" 
           style={{ fontFamily: '"Inter", sans-serif', fontStretch: '150%' }}>
              · INVENTORY ·
           </div>
@@ -163,7 +163,7 @@ useEffect(() => {
                 </p>
               </div>
               
-              <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-slate-900 mb-8 leading-[0.85]">
+              <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-slate-900 mb-8 leading-[0.85]">
                 Global <br />
                 <span className="italic font-serif font-light text-indigo-600/90 underline decoration-indigo-100 underline-offset-[12px] decoration-1">Collection</span>
               </h1>
