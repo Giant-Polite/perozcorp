@@ -26,9 +26,9 @@ const FEATURED_PRODUCTS = [
   },
   {
     id: 3,
-    name: "Indomie Chicken Flavoured",
+    name: "Buldak Spicy Chicken Noodle Carbonara Flavor Ramen",
     brand: "Noodles",
-    image: "/images/Indomie.jpeg", 
+    image: "/images/Buldak.jpeg", 
   },
   {
     id: 4,
@@ -345,20 +345,20 @@ const Home = () => {
 
       
       {/* ================= ULTRA-LUXURY FEATURED PRODUCTS ================= */}
-      <section className="py-32 px-[7%] bg-[#FDFDFD] relative overflow-hidden">
+      <section className="py-12 px-[7%] bg-[#FDFDFD] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 translate-x-1/2 pointer-events-none" />
 
         <div className="max-w-[1600px] mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-baseline mb-24 border-b border-slate-100 pb-12">
             <div className="space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-600 mb-4">Curated Selection</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-600 mb-4">Best Sellers</p>
               <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-slate-900">
                 Our <span className="italic font-serif">Featured</span> Collection
               </h2>
             </div>
             
             {/* RESPONSIVE LUXURY CTA BUTTON */}
-            <div className="relative flex items-center justify-center mt-8 md:mt-0 p-4 md:p-12">
+            <div className="relative flex items-center justify-center mt-8 md:mt-0 p-2 md:p-4">
               <Link to="/products" className="relative group">
                 {/* Desktop Version - Stays exactly the same */}
                 <div className="hidden md:flex relative flex-col items-center justify-center w-40 h-40 bg-indigo-600 border border-indigo-600 rounded-full shadow-2xl overflow-hidden group-hover:scale-105 group-hover:shadow-indigo-500/40 transition-all duration-500">
@@ -508,7 +508,7 @@ const Home = () => {
       </section>
 
       {/* ================= VALUE PROPOSITION ================= */}
-      <section className="py-40 px-[10%] bg-[#0B0D11] text-white relative overflow-hidden">
+      <section className="py-32 px-[8%] bg-[#0B0D11] text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.07),transparent_70%)]" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-28">
@@ -534,7 +534,7 @@ const Home = () => {
       </section>
 
       {/* ================= FINAL CTA ================= */}
-      <section className="relative py-32 bg-[#FAF9F6] border-t border-slate-100 overflow-hidden">
+      <section className="relative py-16 bg-[#FAF9F6] border-t border-slate-100 overflow-hidden">
         <div className="absolute -bottom-10 -right-10 text-[20rem] font-serif italic text-slate-200/20 pointer-events-none select-none">P</div>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.2 }} className="container mx-auto px-4 relative z-10 text-center">
           <div className="flex items-center justify-center gap-4 mb-8">

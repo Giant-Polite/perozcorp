@@ -321,26 +321,78 @@ useEffect(() => {
       </main>
 
       {/* MODAL */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-center justify-center p-6" onClick={() => setSelectedProduct(null)}>
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative bg-white rounded-none p-12 max-w-2xl w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <button onClick={() => setSelectedProduct(null)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 transition-colors"><X size={24} /></button>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="bg-slate-50 p-8 flex items-center justify-center rounded-sm">
-                  <img src={selectedProduct.image} className="max-h-64 object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black text-slate-900 mb-4">{selectedProduct.name}</h3>
-                  <Badge className="bg-indigo-50 text-indigo-600 border-none mb-6 rounded-none px-4 py-1 text-[10px] uppercase tracking-widest">{selectedProduct.category}</Badge>
-                  <p className="text-stone-500 font-light leading-relaxed mb-8">{selectedProduct.description || "Exclusive import sourced by Peroz Corp."}</p>
-                  <Button className="w-full h-14 bg-indigo-600 hover:bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-none transition-all" onClick={() => handleRequestQuote(selectedProduct.name)}>Inquire for Bulk Pricing</Button>
-                </div>
+      {/* MODAL */}
+<AnimatePresence>
+  {selectedProduct && (
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }} 
+      className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4 md:p-6" 
+      onClick={() => setSelectedProduct(null)}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }} 
+        animate={{ scale: 1, opacity: 1, y: 0 }} 
+        className="relative bg-white rounded-none w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl" 
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button - Higher Z-index to stay visible */}
+        <button 
+          onClick={() => setSelectedProduct(null)} 
+          className="absolute top-4 right-4 z-20 text-slate-400 hover:text-slate-900 bg-white/80 p-1 rounded-full backdrop-blur-sm transition-colors"
+        >
+          <X size={24} />
+        </button>
+
+        {/* Scrollable Container */}
+        <div className="overflow-y-auto p-6 md:p-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            
+            {/* Image Area */}
+            <div className="bg-slate-50 p-6 md:p-8 flex items-center justify-center rounded-sm">
+              <img 
+                src={selectedProduct.image} 
+                className="max-h-48 md:max-h-64 w-full object-contain" 
+                alt={selectedProduct.name}
+              />
+            </div>
+
+            {/* Text Content */}
+            <div className="flex flex-col">
+              <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-2 md:mb-4 leading-tight">
+                {selectedProduct.name}
+              </h3>
+              
+              <div>
+                <Badge className="bg-indigo-50 text-indigo-600 border-none mb-6 rounded-none px-4 py-1 text-[10px] uppercase tracking-widest inline-block">
+                  {selectedProduct.category}
+                </Badge>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+              <div className="prose prose-sm">
+                <p className="text-stone-500 font-light leading-relaxed mb-8">
+                  {selectedProduct.description || "Exclusive import sourced by Peroz Corp."}
+                </p>
+              </div>
+
+              {/* Push button to bottom if content is short, but keep it in flow */}
+              <div className="mt-auto">
+                <Button 
+                  className="w-full h-14 bg-indigo-600 hover:bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-none transition-all" 
+                  onClick={() => handleRequestQuote(selectedProduct.name)}
+                >
+                  Inquire for Bulk Pricing
+                </Button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </>
   );
 };
