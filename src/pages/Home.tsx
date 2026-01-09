@@ -3,7 +3,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import TypewriterText from "@/components/TypewriterText";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Anchor, MapPin, Box, ShieldCheck, Globe, Zap, ArrowUpRight } from 'lucide-react';
+import { Anchor, MapPin, Box, ShieldCheck, Globe, Zap, ArrowUpRight, Sparkles } from 'lucide-react';
 
 /* -------------------- SLIDES -------------------- */
 const SLIDE_IMAGES = [
@@ -122,7 +122,7 @@ const Home = () => {
             
             <div className="absolute bottom-0 left-0 z-20 hidden md:block">
               <Link to="/products" className="group flex items-center">
-                <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border-t border-r border-white/40 px-10 py-8 flex items-center gap-4 hover:bg-indigo-200 transition">
+                <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border-t border-r border-white/40 px-10 py-8 flex items-center gap-4 hover:bg-amber-200 transition">
                   
                   {/* THE SHIMMER PULSE: Optimized for endless, constant motion */}
                   <motion.div
@@ -158,7 +158,7 @@ const Home = () => {
               <div 
                 key={index}
                 className={`h-1 transition-all duration-1000 rounded-full ${
-                  currentSlide === index ? "w-12 bg-indigo-600" : "w-4 bg-slate-200"
+                  currentSlide === index ? "w-12 bg-amber-600" : "w-4 bg-slate-200"
                 }`}
               />
             ))}
@@ -215,32 +215,32 @@ const Home = () => {
               <span className="-mr-[0.01em]">O</span>
               <span className="ml-[0.06em]">Z</span>
             </span>
-            <span className="ml-4 text-indigo-600 italic font-serif font-light tracking-normal">
+            <span className="ml-4 text-amber-600 italic font-serif font-light tracking-normal">
               Corp.
             </span>
           </h1>
 
           <div className="flex justify-center mb-8">
-            <div className="h-px w-24 bg-indigo-600" />
+            <div className="h-px w-24 bg-amber-600" />
           </div>
 
           <div className="relative max-w-4xl mx-auto py-12 px-8">
             {/* Elegant Corner Accents */}
-            <div className="absolute top-0 left-0 w-8 h-[1px] bg-indigo-600" />
-            <div className="absolute top-0 left-0 w-[1px] h-8 bg-indigo-600" />
+            <div className="absolute top-0 left-0 w-8 h-[1px] bg-amber-600" />
+            <div className="absolute top-0 left-0 w-[1px] h-8 bg-amber-600" />
             
             <p className="text-xl md:text-3xl text-stone-500 font-light leading-snug text-left md:pl-12">
               Connecting global manufacturers <br className="hidden md:block" />
               to the <span className="italic font-serif text-slate-900">American Palate.</span>
               
-              <span className="block mt-8 text-sm md:text-lg text-black font-medium tracking-tight border-l-2 border-indigo-600 pl-6">
+              <span className="block mt-8 text-sm md:text-lg text-black font-medium tracking-tight border-l-2 border-amber-600 pl-6">
                 Exclusive importers and master distributors for high-demand <br className="hidden md:block" />
                 Mediterranean and Middle Eastern staples across the East Coast.
               </span>
             </p>
           </div>
 
-          <div className="text-sm font-mono tracking-widest text-indigo-500 uppercase mb-16 h-6 flex items-center justify-center">
+          <div className="text-sm font-mono tracking-widest text-amber-500 uppercase mb-16 h-6 flex items-center justify-center">
           <TypewriterText speed={60} />
           </div>
 
@@ -251,7 +251,7 @@ const Home = () => {
             className="relative z-20"
           >
             <Link to="/products" className="group flex items-center">
-  <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border border-white/40 px-12 py-6 flex items-center gap-6 hover:bg-indigo-600 hover:text-white transition-all duration-500 shadow-xl shadow-orange-900/10">
+  <div className="relative overflow-hidden bg-orange-300/90 backdrop-blur-xl border border-white/40 px-12 py-6 flex items-center gap-6 hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-xl shadow-orange-900/10">
     
     {/* THE LUXURY SWEEP: Pulsing light effect */}
     <motion.div
@@ -274,7 +274,7 @@ const Home = () => {
       Shop All Products
     </span>
     
-    <div className="relative z-10 bg-orange-500 text-white p-3 rounded-full group-hover:rotate-45 group-hover:bg-white group-hover:text-indigo-600 transition-all duration-500">
+    <div className="relative z-10 bg-orange-500 text-white p-3 rounded-full group-hover:rotate-45 group-hover:bg-white group-hover:text-amber-600 transition-all duration-500">
       <ArrowUpRight size={20} />
     </div>
   </div>
@@ -288,11 +288,11 @@ const Home = () => {
 <section className="py-24 bg-[#FAF9F6] border-y border-slate-200/60 overflow-hidden">
   <div className="container mx-auto px-4 mb-12 text-center">
     <div className="flex items-center justify-center gap-4">
-      <div className="h-[1px] w-8 bg-indigo-600/20" />
+      <div className="h-[1px] w-8 bg-amber-600/20" />
       <p className="text-[9px] font-black uppercase tracking-[0.8em] text-slate-800">
         Global Distribution Network
       </p>
-      <div className="h-[1px] w-8 bg-indigo-600/20" />
+      <div className="h-[1px] w-8 bg-amber-600/20" />
     </div>
   </div>
 
@@ -321,7 +321,7 @@ const Home = () => {
               <span 
                 className={`
                   text-4xl md:text-6xl px-12 transition-all duration-1000 cursor-default
-                  text-slate-400 hover:text-indigo-600 hover:scale-105
+                  text-slate-400 hover:text-amber-600 hover:scale-105
                   ${brand.style}
                 `}
               >
@@ -329,7 +329,7 @@ const Home = () => {
               </span>
               
               {/* Luxury Diamond Divider */}
-              <div className="w-1.5 h-1.5 rotate-45 bg-indigo-200" />
+              <div className="w-1.5 h-1.5 rotate-45 bg-amber-200" />
             </div>
           ))}
         </div>
@@ -345,212 +345,297 @@ const Home = () => {
 
       
       {/* ================= ULTRA-LUXURY FEATURED PRODUCTS ================= */}
-      <section className="py-12 px-[7%] bg-[#FDFDFD] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 translate-x-1/2 pointer-events-none" />
+<section className="py-24 px-[7%] bg-[#FCF9F1] relative overflow-hidden">
+  {/* Warm Decorative Accent - Changed from Slate to Amber tint */}
+  <div className="absolute top-0 right-0 w-1/3 h-full bg-amber-50/50 -skew-x-12 translate-x-1/2 pointer-events-none" />
 
-        <div className="max-w-[1600px] mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-baseline mb-24 border-b border-slate-100 pb-12">
-            <div className="space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-600 mb-4">Best Sellers</p>
-              <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-slate-900">
-                Our <span className="italic font-serif">Featured</span> Collection
-              </h2>
-            </div>
-            
-            {/* RESPONSIVE LUXURY CTA BUTTON */}
-            <div className="relative flex items-center justify-center mt-8 md:mt-0 p-2 md:p-4">
-              <Link to="/products" className="relative group">
-                {/* Desktop Version - Stays exactly the same */}
-                <div className="hidden md:flex relative flex-col items-center justify-center w-40 h-40 bg-indigo-600 border border-indigo-600 rounded-full shadow-2xl overflow-hidden group-hover:scale-105 group-hover:shadow-indigo-500/40 transition-all duration-500">
-                  <span className="relative z-10 text-[13px] font-black uppercase tracking-[0.3em] text-white text-center px-4 leading-tight group-hover:tracking-[0.4em] transition-all duration-500">
-                    Explore <br /> <span className="italic font-serif normal-case text-xs tracking-normal">Entire</span> <br /> Catalog
-                  </span>
-                  <div className="relative z-10 mt-2 transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1">
-                    <ArrowUpRight size={16} className="text-white" />
-                  </div>
-                </div>
-
-                {/* Mobile Version - Luxury Animated Pill with High-Visibility Shimmer */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ 
-                    opacity: 1, 
-                    scale: [1, 1.02, 1], // Breathing effect
-                    boxShadow: [
-                      "0 4px 20px rgba(0,0,0,0.05)",
-                      "0 4px 25px rgba(79, 70, 229, 0.2)", 
-                      "0 4px 20px rgba(0,0,0,0.05)"
-                    ]
-                  }}
-                  transition={{
-                    opacity: { duration: 0.5 },
-                    scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                  }}
-                  whileTap={{ scale: 0.96 }}
-                  className="md:hidden relative flex items-center gap-4 bg-white border border-slate-200 px-8 py-4 rounded-full overflow-hidden"
-                >
-                  {/* High-Contrast Shimmer Sweep */}
-                  <motion.div
-                    animate={{ x: ["-150%", "150%"] }}
-                    transition={{ 
-                      repeat: Infinity, 
-                      duration: 2.5, 
-                      repeatDelay: 1, // Sweeps every second
-                      ease: "easeInOut" 
-                    }}
-                    style={{
-                      background: "linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent)",
-                      width: "50%",
-                      height: "100%",
-                      position: "absolute",
-                      top: 0,
-                      skewX: "-20deg"
-                    }}
-                  />
-
-                  <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">
-                    Explore <span className="italic font-serif font-light text-indigo-600 ml-1">Entire</span> Catalog
-                  </span>
-
-                  <div className="relative z-10 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
-                    <ArrowUpRight size={14} className="text-white" />
-                  </div>
-                </motion.div>
-
-                {/* Rotating Label (Desktop Only) */}
-                <motion.div 
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="hidden md:block absolute inset-[-30px] pointer-events-none opacity-100 group-hover:scale-110 transition-transform duration-500"
-                >
-                  <svg viewBox="0 0 100 100" className="w-full h-full">
-                      <path id="circlePath" d="M 50, 50 m 0, -37 a 37,37 0 1,1 0,74 a 37,37 0 1,1 0,-74" fill="transparent" />
-                      <text className="text-[10px] uppercase tracking-[0.8em] fill-indigo-300 font-bold group-hover:fill-indigo-400 transition-colors duration-500">
-                        <textPath xlinkHref="#circlePath">• Peroz Corp •</textPath>
-                      </text>
-                  </svg>
-                </motion.div>
-              </Link>
-            </div>
-          </div>
-
-          {/* GRID: Asymmetric & Modern with Light-Catch Effect */}
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-10 gap-y-20">
-  {FEATURED_PRODUCTS.map((product, index) => (
-    <motion.div
-      key={product.id}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: index * 0.15 }}
-      className={`relative group ${index % 2 !== 0 ? "md:translate-y-24" : ""}`}
-    >
-      {/* Card Frame */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] transition-all duration-700 group-hover:shadow-[0_40px_80px_-15px_rgba(79,70,229,0.1)] rounded-sm">
-        
-        {/* LUXURY SHINE SWEEP: Triggers on scroll/view */}
-        <motion.div
-          initial={{ x: "-150%" }}
-          whileInView={{ x: "150%" }}
-          viewport={{ once: false }}
-          transition={{ 
-            duration: 2.5, 
-            delay: 0.5 + (index * 0.1), 
-            ease: [0.43, 0.13, 0.23, 0.96],
-            repeat: Infinity,
-            repeatDelay: 8
-          }}
-          className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg]"
-        />
-
-        {/* Product Image */}
-        <div className="absolute inset-0 flex items-center justify-center p-10">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-contain grayscale-[0.2] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
-          />
-        </div>
-
-        {/* Interaction Layer: Very subtle darkening on hover */}
-        <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/5 transition-all duration-700 z-10" />
-        
-        {/* CTA Overlay */}
-        <div className="absolute bottom-0 left-0 w-full p-8 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.16, 1, 0.3, 1] z-30">
-          <div className="bg-white/80 backdrop-blur-md p-6 border border-white/40 shadow-xl">
-             <Link to="/products" className="flex items-center justify-between group/link">
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">
-                  Explore More
-                </span>
-                <ArrowUpRight size={14} className="group-hover/link:rotate-45 transition-transform" />
-             </Link>
-          </div>
-        </div>
+  <div className="max-w-[1600px] mx-auto relative z-10">
+    <div className="flex flex-col md:flex-row justify-between items-baseline mb-24 border-b border-amber-100 pb-12">
+      <div className="space-y-2">
+        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-amber-600 mb-4">Best Sellers</p>
+        <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-slate-900">
+          Our <span className="italic font-serif text-amber-700">Featured</span> Collection
+        </h2>
       </div>
-
-      {/* Product Info below the frame */}
-      <div className="mt-8 space-y-2 px-2">
-        <div className="flex justify-between items-baseline">
-          <h4 className="text-lg font-medium text-slate-900 tracking-tight italic font-serif">
-            {product.name}
-          </h4>
-          <div className="h-px flex-1 mx-4 bg-slate-100" />
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            {product.brand}
-          </p>
+      
+      {/* RESPONSIVE LUXURY CTA BUTTON */}
+      {/* ================= REDESIGNED RESPONSIVE LUXURY CTA BUTTON ================= */}
+<div className="relative flex items-center justify-center mt-12 md:mt-0 p-4">
+  <Link to="/products" className="relative group">
+    
+    {/* --- DESKTOP: THE LIQUID GOLD ORB --- */}
+    <div className="hidden md:flex relative items-center justify-center w-52 h-52">
+      {/* 1. Animated Outer Orbit Ring */}
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 rounded-full border border-dashed border-amber-500/30 p-2"
+      />
+      
+      {/* 2. Main Magnetic Button */}
+      <motion.div 
+        whileHover={{ scale: 1.08 }}
+        transition={{ type: "spring", stiffness: 400, damping: 15 }}
+        className="relative w-44 h-44 bg-[#1A1412] rounded-full flex flex-col items-center justify-center overflow-hidden border border-stone-800 shadow-[0_0_50px_rgba(217,119,6,0.15)] group-hover:shadow-[0_0_70px_rgba(217,119,6,0.35)] transition-all duration-500"
+      >
+        {/* Animated Lava-Lamp Background (Golden Mesh) */}
+        <div className="absolute inset-0 opacity-40 group-hover:opacity-100 transition-opacity duration-700">
+           <motion.div 
+            animate={{ 
+              scale: [1, 1.3, 1],
+              rotate: [0, 120, 0],
+              x: [0, 15, 0] 
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-[-30%] bg-[radial-gradient(circle_at_center,_#d97706_0%,_#78350f_40%,_transparent_100%)] blur-2xl"
+           />
         </div>
-      </div>
-    </motion.div>
-  ))}
-</div>
-        </div>
-      </section>
 
-      {/* ================= VALUE PROPOSITION ================= */}
-      <section className="py-32 px-[8%] bg-[#0B0D11] text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.07),transparent_70%)]" />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-28">
-            <p className="text-xs tracking-[0.35em] uppercase text-blue-500 font-bold mb-6">The Peroz Standard</p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">Direct Transmission,<br /><span className="italic font-serif font-light text-blue-400">Zero Detours.</span></h2>
-          </div>
-          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-3 gap-16">
-            {[
-              { icon: Anchor, title: "Sourcing Precision", desc: "Direct-from-manufacturer pipelines for premium logistics." },
-              { icon: MapPin, title: "Strategic Hubs", desc: "Alexandria-based logistics engineered for rapid distribution." },
-              { icon: Box, title: "Diverse Portfolio", desc: "Expertly handling international trade across all food sectors." }
-            ].map((item, i) => (
-              <motion.div key={i} variants={cardVariant} className="relative group">
-                <div className="relative bg-[#12151C] rounded-2xl p-12 border border-white/5 group-hover:border-blue-500/30 transition-colors">
-                  <item.icon size={36} strokeWidth={1.5} className="text-blue-500 mb-8" />
-                  <h3 className="text-xl font-black mb-4 uppercase tracking-wider">{item.title}</h3>
-                  <p className="text-gray-400 leading-relaxed font-light">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+        {/* Content Overlay */}
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <motion.div
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <Sparkles size={16} className="text-amber-400 mb-2" />
           </motion.div>
+          
+          <span className="text-[11px] font-black uppercase tracking-[0.4em] text-white leading-tight">
+            Explore <br /> Our <br />
+            <span className="text-amber-500 italic font-serif normal-case text-xl tracking-normal">Collection</span>
+          </span>
+          
+          <div className="mt-4 bg-white/10 backdrop-blur-md p-2 rounded-full group-hover:bg-amber-600 group-hover:scale-110 transition-all duration-300">
+            <ArrowUpRight size={20} className="text-white group-hover:rotate-45 transition-transform duration-500" />
+          </div>
         </div>
-      </section>
+
+        {/* Inner Glass Glow */}
+        <div className="absolute inset-[2px] rounded-full border border-white/5 group-hover:border-amber-400/30 transition-colors" />
+      </motion.div>
+    </div>
+
+    {/* --- MOBILE: THE RADIANT SCANNER PILL --- */}
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      className="md:hidden relative flex items-center justify-between min-w-[300px] bg-[#1A1412] border border-amber-900/40 pl-8 pr-2 py-2.5 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
+    >
+      {/* Persistent High-Energy Scanner Sweep */}
+      <motion.div
+        animate={{ x: ["-100%", "250%"] }}
+        transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
+        className="absolute top-0 bottom-0 w-32 bg-gradient-to-r from-transparent via-amber-400/20 to-transparent skew-x-12 pointer-events-none"
+      />
+
+      <div className="relative z-10 flex flex-col">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-amber-500/90 mb-0.5">Premium Imports</span>
+        <span className="text-sm font-bold text-white tracking-wide">
+          View All <span className="italic font-serif font-light text-amber-400">Products</span>
+        </span>
+      </div>
+
+      {/* Pulsing Icon Anchor */}
+      <motion.div 
+        animate={{ 
+          boxShadow: ["0 0 0px #d97706", "0 0 25px #d97706", "0 0 0px #d97706"],
+          scale: [1, 1.08, 1]
+        }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="relative z-10 w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center text-white shadow-lg"
+      >
+        <ArrowUpRight size={22} />
+      </motion.div>
+    </motion.div>
+
+  </Link>
+</div>
+    </div>
+
+    {/* GRID */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-10 gap-y-20">
+      {FEATURED_PRODUCTS.map((product, index) => (
+        <motion.div
+          key={product.id}
+          className={`relative group ${index % 2 !== 0 ? "md:translate-y-24" : ""}`}
+        >
+          {/* Card Frame - Shadow changed from Indigo-tint to Amber-tint */}
+          <div className="relative aspect-[4/5] overflow-hidden bg-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] transition-all duration-700 group-hover:shadow-[0_40px_80px_-15px_rgba(217,119,6,0.1)] rounded-sm border border-amber-50/50">
+            
+            {/* LUXURY SHINE SWEEP */}
+            <motion.div
+              animate={{ x: ["-150%", "150%"] }}
+              transition={{ duration: 2.5, delay: 0.5 + (index * 0.1), repeat: Infinity, repeatDelay: 8 }}
+              className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-amber-50/20 to-transparent skew-x-[-25deg]"
+            />
+
+            {/* Product Image */}
+            <div className="absolute inset-0 flex items-center justify-center p-10">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-contain group-hover:scale-105 transition-all duration-1000"
+              />
+            </div>
+
+            {/* Interaction Layer */}
+            <div className="absolute inset-0 bg-amber-950/0 group-hover:bg-amber-950/5 transition-all duration-700 z-10" />
+            
+            {/* CTA Overlay */}
+            <div className="absolute bottom-0 left-0 w-full p-8 translate-y-full group-hover:translate-y-0 transition-transform duration-700 z-30">
+              <div className="bg-white/90 backdrop-blur-md p-6 border border-amber-100 shadow-xl">
+                 <Link to="/products" className="flex items-center justify-between group/link">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 group-hover/link:text-amber-600 transition-colors">
+                      Explore More
+                    </span>
+                    <ArrowUpRight size={14} className="group-hover/link:rotate-45 transition-transform text-amber-600" />
+                 </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Info */}
+          <div className="mt-8 space-y-2 px-2">
+            <div className="flex justify-between items-baseline">
+              <h4 className="text-lg font-medium text-slate-900 tracking-tight italic font-serif group-hover:text-amber-700 transition-colors">
+                {product.name}
+              </h4>
+              <div className="h-px flex-1 mx-4 bg-amber-100" />
+              <p className="text-[10px] font-bold text-amber-600/60 uppercase tracking-widest">
+                {product.brand}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
+
+      {/* ================= NEW WARM VALUE PROPOSITION ================= */}
+<section className="relative py-32 px-[8%] bg-[#1A1412] overflow-hidden">
+  {/* Warm "Sunlight" Glows */}
+  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px] pointer-events-none" />
+  <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-900/10 rounded-full blur-[120px] pointer-events-none" />
+
+  <div className="max-w-[1600px] mx-auto relative z-10">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      
+      {/* Left Side: Editorial Content */}
+      <motion.div 
+        initial={{ opacity: 0, x: -30 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1 }}
+        className="space-y-12"
+      >
+        <div>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-px w-12 bg-amber-500" />
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-amber-500">
+              The Peroz Standard
+            </span>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tighter leading-[0.9]">
+            Bridging Continents. <br />
+            <span className="italic font-serif font-light text-amber-500/90">Sourcing Excellence.</span>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-10">
+          {[
+            { 
+              icon: Anchor, 
+              title: "Sourcing Precision", 
+              desc: "Direct-from-manufacturer pipelines for premium logistics.",
+              color: "text-amber-500"
+            },
+            { 
+              icon: MapPin, 
+              title: "Strategic Hubs", 
+              desc: "Alexandria-based logistics engineered for rapid distribution.",
+              color: "text-orange-500"
+            },
+            { 
+              icon: Box, 
+              title: "Diverse Portfolio", 
+              desc: "Expertly handling international trade across all food sectors.",
+              color: "text-amber-600"
+            }
+          ].map((item, i) => (
+            <motion.div 
+              key={i}
+              whileHover={{ x: 10 }}
+              className="flex gap-8 group cursor-default"
+            >
+              <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-amber-500/50 transition-all duration-500">
+                <item.icon size={28} strokeWidth={1} className={item.color} />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-white font-bold uppercase tracking-widest text-sm">{item.title}</h3>
+                <p className="text-stone-400 font-light text-sm leading-relaxed max-w-sm">
+                  {item.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Right Side: The "Visual Anchor" */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.5 }}
+        className="relative"
+      >
+        <div className="relative aspect-square md:aspect-[16/9] lg:aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-stone-900/50 flex items-center justify-center p-12">
+  <img 
+    src="/logo.webp" 
+    className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-all duration-1000 hover:scale-110"
+    alt="Logistics Excellence"
+  />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412] via-transparent to-transparent" />
+          
+          {/* Floating Badge */}
+          <div className="absolute bottom-8 left-8 right-8 p-8 bg-amber-600/10 backdrop-blur-md border border-white/10 rounded-xl">
+             <div className="flex items-center gap-6">
+                <div className="text-4xl font-serif italic text-amber-500">15+</div>
+                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white leading-tight">
+                  Years of Global <br /> Supply Chain Mastery
+                </div>
+             </div>
+          </div>
+        </div>
+
+        {/* Decorative Geometric Accents */}
+        <div className="absolute -top-10 -right-10 w-40 h-40 border-t border-r border-amber-500/20 rounded-tr-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 border-b border-l border-amber-500/20 rounded-bl-3xl pointer-events-none" />
+      </motion.div>
+
+    </div>
+  </div>
+</section>
 
       {/* ================= FINAL CTA ================= */}
       <section className="relative py-16 bg-[#FAF9F6] border-t border-slate-100 overflow-hidden">
         <div className="absolute -bottom-10 -right-10 text-[20rem] font-serif italic text-slate-200/20 pointer-events-none select-none">P</div>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.2 }} className="container mx-auto px-4 relative z-10 text-center">
           <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="h-[1px] w-6 bg-indigo-600/30" />
+            <div className="h-[1px] w-6 bg-amber-600/30" />
             <span className="text-[10px] tracking-[0.6em] uppercase text-stone-400 font-semibold">Peroz Corp</span>
-            <div className="h-[1px] w-6 bg-indigo-600/30" />
+            <div className="h-[1px] w-6 bg-amber-600/30" />
           </div>
           <h2 className="text-4xl md:text-5xl tracking-tight text-slate-900 mb-12 leading-tight">
             <span className="block mb-2 font-black uppercase tracking-tighter">Global Logistics.</span>
-            <span className="block italic font-serif font-light text-indigo-600/80">Personal Precision.</span>
+            <span className="block italic font-serif font-light text-amber-600/80">Personal Precision.</span>
           </h2>
           <div className="flex justify-center">
-            <Link to="/contact" className="group relative inline-flex items-center gap-4 px-10 py-4 border border-slate-300 rounded-full overflow-hidden hover:border-indigo-600 transition-all duration-500">
+            <Link to="/contact" className="group relative inline-flex items-center gap-4 px-10 py-4 border border-slate-300 rounded-full overflow-hidden hover:border-amber-600 transition-all duration-500">
             {/* The Background Layer: Now with a permanent pulse animation */}
             <motion.div 
-              className="absolute inset-0 bg-indigo-600"
+              className="absolute inset-0 bg-amber-600"
               initial={{ x: "-100%" }}
               whileHover={{ x: 0 }} // Desktop behavior
               animate={{

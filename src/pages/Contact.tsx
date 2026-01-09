@@ -21,7 +21,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // --- LOGIC: Persistence & Inquiry Items ---
+  // Persistence Logic
   useEffect(() => {
     localStorage.setItem("contactFormData", JSON.stringify(formData));
   }, [formData]);
@@ -40,7 +40,7 @@ const Contact = () => {
     }
   }, []);
 
-  // --- LOGIC: Auto-Scroll to Form on Hash ---
+  // Auto-Scroll Logic
   useEffect(() => {
     if (window.location.hash === "#inquiry-form") {
       const element = document.getElementById("inquiry-form");
@@ -88,7 +88,8 @@ const Contact = () => {
   const currentCartCount = JSON.parse(localStorage.getItem("cartProducts") || "[]").length;
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 font-sans pt-32 selection:bg-violet-100 selection:text-violet-900">
+    // Changed bg-slate-50 to warm #FCF9F1 and selection colors to Amber
+    <main className="min-h-screen bg-[#FCF9F1] text-stone-900 font-sans pt-32 selection:bg-amber-100 selection:text-amber-900">
       <div className="container mx-auto px-6 lg:px-[10%] pb-24">
         
         {/* ================= HEADER SECTION ================= */}
@@ -99,21 +100,21 @@ const Contact = () => {
           className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12"
         >
           <div className="max-w-4xl">
-           <span className="inline-block text-violet-600 font-black tracking-[0.4em] uppercase text-[12px] mb-2 pb-2 border-b-2 border-violet-600">
+           <span className="inline-block text-amber-600 font-black tracking-[0.4em] uppercase text-[12px] mb-2 pb-2 border-b-2 border-amber-600">
              Elite Supply Chain Connectivity
            </span>
 
-            <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.8] mb-8 text-slate-900">
-              PARTNER <br /> <span className="text-violet-600 italic">WITH US.</span>
+            <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.8] mb-8 text-stone-900 uppercase">
+              Partner <br /> <span className="text-amber-600 italic font-serif font-light lowercase">with us.</span>
             </h1>
           </div>
-          <p className="max-w-xs border-l-2 border-violet-200 pl-6">
-            <span className="block text-slate-900 font-black text-lg leading-tight mb-2">
+          <p className="max-w-xs border-l-2 border-amber-200 pl-6">
+            <span className="block text-stone-900 font-black text-lg leading-tight mb-2">
               Global Vision.
             </span>
-            <span className="block text-violet-600 italic font-medium text-lg leading-relaxed">
+            <span className="block text-amber-700 italic font-serif font-medium text-lg leading-relaxed">
               Peroz Corp eliminates the distance between global manufacturers and the US 
-              market, providing a direct conduit for high-demand international staples.
+              market with direct-conduit logistics.
             </span>
           </p>
         </motion.div>
@@ -122,27 +123,27 @@ const Contact = () => {
           
           {/* ================= LEFT: INFO BOXES ================= */}
           <div className="lg:col-span-5 space-y-12">
-            <div className="grid grid-cols-1 gap-px bg-slate-200 border border-slate-200 shadow-xl shadow-slate-200/50">
+            <div className="grid grid-cols-1 gap-px bg-amber-100 border border-amber-100 shadow-xl shadow-amber-900/5">
               
               {/* Location Box */}
-              <div className="bg-white p-10 hover:bg-slate-50 transition-colors group">
-                <MapPin className="text-violet-600 mb-6 group-hover:scale-110 transition-transform" size={28} strokeWidth={1.5} />
-                <h3 className="text-[11px] font-black tracking-[0.2em] uppercase mb-4 text-slate-400">Tactical Hub</h3>
-                <p className="text-slate-800 leading-relaxed font-bold text-lg">
+              <div className="bg-white p-10 hover:bg-amber-50/30 transition-colors group">
+                <MapPin className="text-amber-600 mb-6 group-hover:scale-110 transition-transform" size={28} strokeWidth={1.5} />
+                <h3 className="text-[11px] font-black tracking-[0.2em] uppercase mb-4 text-stone-400">Tactical Hub</h3>
+                <p className="text-stone-800 leading-relaxed font-bold text-lg">
                   6304 Gravel Ave. Suite G.<br />
                   Alexandria, Virginia 22310
                 </p>
               </div>
 
               {/* Contact Box */}
-              <div className="bg-white p-10 hover:bg-slate-50 transition-colors group">
-                <Phone className="text-violet-600 mb-6 group-hover:scale-110 transition-transform" size={28} strokeWidth={1.5} />
-                <h3 className="text-[11px] font-black tracking-[0.2em] uppercase mb-4 text-slate-400">Wholesale Desk</h3>
-                <a href="tel:+13013058748" className="text-2xl font-black text-slate-900 hover:text-violet-600 transition-colors">
+              <div className="bg-white p-10 hover:bg-amber-50/30 transition-colors group">
+                <Phone className="text-amber-600 mb-6 group-hover:scale-110 transition-transform" size={28} strokeWidth={1.5} />
+                <h3 className="text-[11px] font-black tracking-[0.2em] uppercase mb-4 text-stone-400">Wholesale Desk</h3>
+                <a href="tel:+13013058748" className="text-2xl font-black text-stone-900 hover:text-amber-600 transition-colors">
                   +1 301-305-8748
                 </a>
-                <div className="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase text-slate-400">
-                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase text-stone-400">
+                   <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
                    Operations: Mon – Sat / 9AM — 5PM EST
                 </div>
               </div>
@@ -150,30 +151,29 @@ const Contact = () => {
 
             {/* Decorative Quote */}
             <div className="hidden lg:block pt-12">
-               <div className="h-px w-24 bg-violet-600 mb-8" />
-               <p className="text-slate-400 font-serif italic text-3xl leading-snug">
+               <div className="h-px w-24 bg-amber-600 mb-8" />
+               <p className="text-stone-400 font-serif italic text-3xl leading-snug">
                   "Operational sovereignty in every layer of distribution."
                </p>
             </div>
           </div>
 
           {/* ================= RIGHT: THE INQUIRY FORM ================= */}
-          {/* Added id and scroll-margin-top for the jump logic */}
           <div className="lg:col-span-7 scroll-mt-50" id="inquiry-form">
             <motion.div
               initial="hidden"
               animate="visible"
               variants={fadeInUp}
-              className="relative bg-white rounded-[28px] px-10 py-14 md:px-14 md:py-20 shadow-[0_30px_70px_rgba(0,0,0,0.08)]"
+              className="relative bg-white rounded-[28px] px-10 py-14 md:px-14 md:py-20 shadow-[0_30px_70px_rgba(217,119,6,0.08)] border border-amber-50"
             >
-              <div className="absolute top-8 right-10 text-[11px] tracking-[0.4em] font-black uppercase text-slate-600">
+              <div className="absolute top-8 right-10 text-[11px] tracking-[0.4em] font-black uppercase text-amber-600/60">
                 Direct Inquiry
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-14">
                 {/* NAME */}
-                <div>
-                  <Label htmlFor="name" className="block mb-4 text-[18px] font-black tracking-[0.3em] uppercase text-slate-800">
+                <div className="group">
+                  <Label htmlFor="name" className="block mb-4 text-[14px] font-black tracking-[0.3em] uppercase text-stone-800 transition-colors group-focus-within:text-amber-600">
                     Client Name
                   </Label>
                   <Input
@@ -183,13 +183,13 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     placeholder="Enter your full name"
-                    className="h-14 rounded-xl border border-slate-200 bg-slate-50 px-5 text-lg font-medium focus-visible:ring-0 focus:border-violet-500 transition-all placeholder:text-slate-300"
+                    className="h-14 rounded-none border-0 border-b-2 border-stone-100 bg-transparent px-0 text-lg font-medium focus-visible:ring-0 focus:border-amber-600 transition-all placeholder:text-stone-300"
                   />
                 </div>
 
                 {/* EMAIL */}
-                <div>
-                  <Label htmlFor="email" className="block mb-4 text-[18px] font-black tracking-[0.3em] uppercase text-slate-800">
+                <div className="group">
+                  <Label htmlFor="email" className="block mb-4 text-[14px] font-black tracking-[0.3em] uppercase text-stone-800 transition-colors group-focus-within:text-amber-600">
                     Corporate Email
                   </Label>
                   <Input
@@ -200,14 +200,14 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     placeholder="name@organization.com"
-                    className="h-14 rounded-xl border border-slate-200 bg-slate-50 px-5 text-lg font-medium focus-visible:ring-0 focus:border-violet-500 transition-all placeholder:text-slate-300"
+                    className="h-14 rounded-none border-0 border-b-2 border-stone-100 bg-transparent px-0 text-lg font-medium focus-visible:ring-0 focus:border-amber-600 transition-all placeholder:text-stone-300"
                   />
                 </div>
 
                 {/* MESSAGE */}
-                <div>
+                <div className="group">
                   <div className="flex justify-between items-center mb-4">
-                    <Label htmlFor="message" className="text-[18px] font-black tracking-[0.3em] uppercase text-slate-800">
+                    <Label htmlFor="message" className="text-[14px] font-black tracking-[0.3em] uppercase text-stone-800 transition-colors group-focus-within:text-amber-600">
                       Inventory Inquiry
                     </Label>
 
@@ -215,7 +215,7 @@ const Contact = () => {
                       <button
                         type="button"
                         onClick={clearCart}
-                        className="flex items-center gap-1 text-[10px] font-bold uppercase text-rose-500 hover:text-rose-700 transition"
+                        className="flex items-center gap-1 text-[10px] font-bold uppercase text-amber-700 hover:text-amber-900 transition"
                       >
                         <Trash2 size={12} />
                         Clear Selection ({currentCartCount})
@@ -229,9 +229,9 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    rows={5}
+                    rows={4}
                     placeholder="Please specify your wholesale requirements..."
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 text-lg font-medium focus-visible:ring-0 focus:border-violet-500 transition-all resize-none placeholder:text-slate-300"
+                    className="rounded-none border-0 border-b-2 border-stone-100 bg-transparent px-0 py-4 text-lg font-medium focus-visible:ring-0 focus:border-amber-600 transition-all resize-none placeholder:text-stone-300"
                   />
                 </div>
 
@@ -240,14 +240,14 @@ const Contact = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-16 rounded-xl bg-slate-900 text-white hover:bg-violet-600 transition-all duration-300 text-[12px] font-black tracking-[0.35em] uppercase flex items-center justify-center gap-4"
+                    className="w-full h-16 rounded-xl bg-stone-950 text-white hover:bg-amber-600 transition-all duration-500 text-[12px] font-black tracking-[0.35em] uppercase flex items-center justify-center gap-4 shadow-xl shadow-amber-900/20"
                   >
                     {isSubmitting ? (
                       <Loader2 className="animate-spin" />
                     ) : (
                       <>
                         Transmit Inquiry
-                        <ArrowUpRight />
+                        <ArrowUpRight size={18} />
                       </>
                     )}
                   </Button>
