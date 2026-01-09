@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "../supabaseClient";
 import { Helmet } from 'react-helmet-async';
 
-/* ---------------- TYPES & HELPERS ---------------- */
+/* ---------------- TYPES ---------------- */
 interface Product {
   id: string;
   name: string;
@@ -44,7 +44,11 @@ const ProductsPage = () => {
 
   const { toasts, showToast, removeToast } = usePremiumToast();
   const navigate = useNavigate();
+  
+  // REFS
   const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
+  const navContainerRef = useRef<HTMLElement>(null);
+  const categoryButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   /* ---------------- FETCH DATA ---------------- */
   useEffect(() => {
@@ -63,16 +67,16 @@ const ProductsPage = () => {
             slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
           }));
         setCategories(unique);
+        if (unique.length > 0) setActiveCategory(unique[0].slug);
       }
     };
     fetchProducts();
   }, []);
 
-  /* ---------------- SEARCH & FILTER LOGIC ---------------- */
+  /* ---------------- SEARCH & FILTER ---------------- */
   const filteredProducts = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
     if (!term) return products;
-
     return products.filter(p => 
       p.name.toLowerCase().includes(term) || 
       p.category.toLowerCase().includes(term) ||
@@ -90,32 +94,67 @@ const ProductsPage = () => {
     return grouped;
   }, [filteredProducts]);
 
-  /* ---------------- SCROLL & NAV LOGIC ---------------- */
-  const scrollToCategory = (slug: string) => {
-    const el = categoryRefs.current[slug];
-    if (!el) return;
-    // Offset accounts for both the sticky Search bar and the Nav bar
-    const offset = 240; 
-    const top = el.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
+  /* ---------------- THE CENTERING ENGINE ---------------- */
+  
+  const centerActiveButton = () => {
+    const activeBtn = categoryButtonRefs.current[activeCategory];
+    const container = navContainerRef.current;
+
+    if (activeBtn && container) {
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      // Find the distance from the left of the container to the left of the button
+      const btnLeftRelativeToContainer = btnRect.left - containerRect.left;
+      
+      // Calculate how much we need to scroll to put the button's center in the container's center
+      const scrollTarget = container.scrollLeft + btnLeftRelativeToContainer - (containerRect.width / 2) + (btnRect.width / 2);
+
+      container.scrollTo({
+        left: scrollTarget,
+        behavior: "smooth",
+      });
+    }
   };
 
+  // Center when the active category changes
   useEffect(() => {
-    const onScroll = () => {
+    requestAnimationFrame(() => {
+      centerActiveButton();
+    });
+  }, [activeCategory]);
+
+  /* ---------------- SCROLL SPY & SCROLLING ---------------- */
+  
+  useEffect(() => {
+    const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
-      const pos = window.scrollY + 260; 
+      
+      // Detection offset
+      const pos = window.scrollY + 280; 
 
       for (const [slug, el] of Object.entries(categoryRefs.current)) {
         if (!el) continue;
-        if (pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
-          setActiveCategory(slug);
+        const { offsetTop, offsetHeight } = el;
+        if (pos >= offsetTop && pos < offsetTop + offsetHeight) {
+          if (activeCategory !== slug) setActiveCategory(slug);
           break;
         }
       }
     };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [productsByCategory]);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [categories, activeCategory]);
+
+  const scrollToCategory = (slug: string) => {
+    const el = categoryRefs.current[slug];
+    if (!el) return;
+    const offset = 240; 
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+    setActiveCategory(slug);
+  };
 
   const handleRequestQuote = (name: string) => {
     if (addToCart(name)) {
@@ -138,13 +177,11 @@ const ProductsPage = () => {
       
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
-      {/* Main container avoids overflow-x-hidden to allow sticky children */}
       <main className="bg-[#FAF9F6] min-h-screen pb-20 selection:bg-amber-200">
         
-        {/* ================= 1. LUXURY WARM HEADER ================= */}
+        {/* ================= 1. HEADER ================= */}
         <section className="relative pt-16 pb-12 px-[8%] bg-[#FCF9F1] border-b border-amber-50"> 
-          <div className="absolute top-[64px]right-0 w-[40vw] h-[40vw] bg-amber-400/10 blur-[120px] rounded-full pointer-events-none" />
-          
+          <div className="absolute top-[64px] right-0 w-[40vw] h-[40vw] bg-amber-400/10 blur-[120px] rounded-full pointer-events-none" />
           <div className="max-w-[1600px] mx-auto relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
               <div className="flex items-center gap-3 mb-6">
@@ -159,15 +196,10 @@ const ProductsPage = () => {
           </div>
         </section>
 
-        {/* ================= 2. ESPRESSO SEARCH MONOLITH (STICKY) ================= */}
+        {/* ================= 2. STICKY SEARCH ================= */}
         <section className="sticky top-[80px] z-[50] pt-1 pb-4 px-[8%] bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-amber-50/50"> 
           <div className="max-w-4xl mx-auto relative group">
-            <div className="
-              relative flex items-center bg-[#1A1412] rounded-2xl px-5 md:px-8 py-4 md:py-6
-              shadow-[0_20px_40px_rgba(0,0,0,0.25)]
-              border border-stone-800 group-focus-within:border-amber-600/50
-              transition-all duration-500
-            ">
+            <div className="relative flex items-center bg-[#1A1412] rounded-2xl px-5 md:px-8 py-4 md:py-6 shadow-[0_20px_40px_rgba(0,0,0,0.25)] border border-stone-800 group-focus-within:border-amber-600/50 transition-all duration-500">
               <Search className="text-stone-500 group-focus-within:text-amber-500 mr-4" size={20} />
               <input
                 value={searchTerm}
@@ -184,16 +216,20 @@ const ProductsPage = () => {
           </div>
         </section>
 
-        {/* ================= 3. STICKY CATEGORY NAV (STACKED) ================= */}
-        <nav className="sticky top-[162px] md:top-[152pxpx] z-[90] py-4 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-amber-100/50 overflow-x-auto whitespace-nowrap px-[8%] scrollbar-hide">
+        {/* ================= 3. ADAPTIVE STICKY NAV ================= */}
+        <nav 
+          ref={navContainerRef}
+          className="sticky top-[162px] md:top-[152px] z-[90] py-4 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-amber-100/50 px-[8%] overflow-x-auto whitespace-nowrap scrollbar-hide"
+        >
           <div className="flex gap-3 max-w-[1600px] mx-auto">
             {categories.map(cat => (
               <button
                 key={cat.slug}
+                ref={(el) => (categoryButtonRefs.current[cat.slug] = el)}
                 onClick={() => scrollToCategory(cat.slug)}
-                className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
+                className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-500 flex-shrink-0 ${
                   activeCategory === cat.slug
-                    ? "bg-amber-600 text-white shadow-lg shadow-amber-200 scale-105"
+                    ? "bg-amber-600 text-white shadow-xl shadow-amber-600/20 scale-105"
                     : "bg-white text-stone-500 border border-amber-100 hover:bg-amber-50"
                 }`}
               >
@@ -204,13 +240,17 @@ const ProductsPage = () => {
         </nav>
 
         {/* ================= 4. PRODUCT FEED ================= */}
-        <div className="px-[8%] mt-20 max-w-[1600px] mx-auto overflow-x-hidden">
+        <div className="px-[8%] mt-20 max-w-[1600px] mx-auto">
           {categories.length > 0 && categories.map(cat => {
             const items = productsByCategory[cat.slug];
             if (!items?.length) return null;
 
             return (
-              <section key={cat.slug} ref={el => (categoryRefs.current[cat.slug] = el)} className="mb-24 md:mb-40 scroll-mt-64 md:scroll-mt-80">
+              <section 
+                key={cat.slug} 
+                ref={el => (categoryRefs.current[cat.slug] = el)} 
+                className="mb-24 md:mb-40 scroll-mt-[300px]"
+              >
                 <div className="flex items-baseline gap-6 mb-12 border-b border-amber-100 pb-8">
                   <h2 className="text-4xl md:text-6xl font-light italic font-serif text-slate-900">{cat.name}</h2>
                   <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">{items.length} Products</span>
@@ -234,15 +274,11 @@ const ProductsPage = () => {
                           </div>
                         )}
                       </div>
-                      
                       <div className="space-y-4">
-                        <div className="flex justify-between items-start">
-                           <h3 className="font-bold text-lg text-slate-900 leading-tight group-hover:text-amber-700 transition-colors">{p.name}</h3>
-                        </div>
+                        <h3 className="font-bold text-lg text-slate-900 leading-tight group-hover:text-amber-700 transition-colors">{p.name}</h3>
                         <p className="text-xs text-stone-400 font-light line-clamp-2 leading-relaxed italic font-serif">
                           {p.description || "Exclusive import sourced by Peroz Corp."}
                         </p>
-                        
                         <Button
                           onClick={(e) => { e.stopPropagation(); handleRequestQuote(p.name); }}
                           className="w-full h-12 bg-stone-900 hover:bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-md hover:shadow-orange-600/20"
@@ -257,17 +293,15 @@ const ProductsPage = () => {
             );
           })}
 
-          {/* NO RESULTS STATE */}
           {filteredProducts.length === 0 && (
             <div className="text-center py-40">
               <PackageOpen className="mx-auto text-amber-200 mb-6" size={64} strokeWidth={1} />
               <p className="text-2xl font-serif italic text-stone-400">No inventory found for "{searchTerm}"</p>
-              <button onClick={() => setSearchTerm("")} className="mt-6 text-amber-600 font-black uppercase text-[10px] tracking-widest underline underline-offset-4">Reset Search</button>
             </div>
           )}
         </div>
 
-        {/* SCROLL TOP BUTTON */}
+        {/* SCROLL TOP */}
         <AnimatePresence>
           {showScrollTop && (
             <motion.button
@@ -287,36 +321,29 @@ const ProductsPage = () => {
       <AnimatePresence>
         {selectedProduct && (
           <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} 
             className="fixed inset-0 bg-stone-950/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4" 
             onClick={() => setSelectedProduct(null)}
           >
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }} 
-              animate={{ scale: 1, opacity: 1, y: 0 }} 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} 
               className="relative bg-white rounded-[2rem] w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-amber-100" 
               onClick={(e) => e.stopPropagation()}
             >
               <button onClick={() => setSelectedProduct(null)} className="absolute top-6 right-6 z-20 text-stone-400 hover:text-stone-900 bg-stone-100 p-2 rounded-full transition-colors">
                 <X size={20} />
               </button>
-
               <div className="overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2">
                   <div className="bg-[#FCF9F1] p-10 flex items-center justify-center">
                     <img src={selectedProduct.image} className="max-h-64 w-full object-contain" alt={selectedProduct.name} />
                   </div>
-
                   <div className="p-8 md:p-12 flex flex-col">
                     <Badge className="bg-amber-50 text-amber-700 border-none mb-4 rounded-full px-4 py-1 text-[10px] uppercase tracking-widest w-fit">
                       {selectedProduct.category}
                     </Badge>
-                    <h3 className="text-3xl font-black text-slate-900 mb-6 leading-tight">
-                      {selectedProduct.name}
-                    </h3>
-                    <p className="text-stone-500 font-light leading-relaxed mb-10 italic font-serif">
+                    <h3 className="text-3xl font-black text-slate-900 mb-6 leading-tight">{selectedProduct.name}</h3>
+                    <p className="text-stone-500 font-light mb-10 italic font-serif">
                       {selectedProduct.description || "Exclusive premium import curated for bulk distribution by Peroz Corp."}
                     </p>
                     <div className="mt-auto">
