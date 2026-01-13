@@ -97,7 +97,7 @@ const Home = () => {
     <main className="bg-[#FAF9F6] min-h-screen font-sans text-[#1A1A1A] overflow-x-hidden">
       
       {/* ================= HERO SLIDESHOW SECTION ================= */}
-      <section className="relative pt-2 md:pt-20 px-[5%] md:px-[9%] w-full">
+      <section className="relative pt-1 md:pt-5 px-[5%] md:px-[9%] w-full">
         <motion.div 
           initial="hidden" 
           animate="visible" 
@@ -196,18 +196,7 @@ const Home = () => {
 </Link>
           </div>
         </motion.div>
-      </section>
-
-      {/* ================= BRAND INTRO ================= */}
-      <section className="container mx-auto px-[10%] pt-24 pb-24 text-center">
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="flex flex-col items-center"
-        >
-          <h1 className="text-5xl md:text-8xl font-black leading-tight mb-8 flex justify-center items-baseline">
+        <h1 className="text-5xl md:text-8xl font-black leading-tight mb-8 flex justify-center items-baseline">
             <span className="inline-flex">
               <span className="mr-[0.04em]">P</span>
               <span className="mr-[0.02em]">E</span>
@@ -220,6 +209,18 @@ const Home = () => {
             </span>
           </h1>
 
+      </section>
+
+      {/* ================= BRAND INTRO ================= */}
+      <section className="container mx-auto px-[10%] pt-4 pb-24 text-center">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="flex flex-col items-center"
+        >
+          
           <div className="flex justify-center mb-8">
             <div className="h-px w-24 bg-amber-600" />
           </div>
