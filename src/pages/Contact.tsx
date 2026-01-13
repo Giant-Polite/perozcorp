@@ -231,7 +231,7 @@ const Contact = () => {
                     required
                     rows={4}
                     placeholder="Please specify your wholesale requirements..."
-                    className="rounded-none border-0 border-b-2 border-stone-100 bg-transparent px-0 py-4 text-lg font-medium focus-visible:ring-0 focus:border-amber-600 transition-all resize-none placeholder:text-stone-300"
+                    className="rounded-none border-0 border-b-2 border-stone-100 bg-transparent px-0 py-4 text-lg text-red-600 font-medium focus-visible:ring-0 focus:border-amber-600 transition-all resize-none placeholder:text-stone-300"
                   />
                 </div>
 

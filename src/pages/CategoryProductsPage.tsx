@@ -9,7 +9,6 @@ import { ToastContainer } from "@/components/PremiumToast";
 import { supabase } from "../supabaseClient";
 import type { Variants } from "framer-motion";
 
-
 /* ---------------- TYPES ---------------- */
 interface Product {
   id: string;
@@ -32,40 +31,17 @@ const addToCart = (productName: string) => {
 };
 
 /* ---------------- MOTION VARIANTS ---------------- */
-
-const gridVariants = {
+const gridVariants: Variants = {
   hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.15,
-    },
-  },
-};
-const containerVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.2,
-    },
-  },
+  show: { transition: { staggerChildren: 0.08 } },
 };
 
 const cardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 40,
-    scale: 0.96,
-  },
+  hidden: { opacity: 0, y: 30 },
   show: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] as const, // ✅ FIX
-    },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -83,46 +59,41 @@ const CategoryProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const { data } = await supabase.from("products").select("*");
-
       if (!data) return;
 
-      const filtered = data.filter(
-        p =>
-          p.category
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-") === categorySlug
+      setProducts(
+        data.filter(
+          p =>
+            p.category
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-") === categorySlug
+        )
       );
-
-      setProducts(filtered);
     };
-
     fetchProducts();
   }, [categorySlug]);
 
-  /* ---------------- SEARCH FILTER ---------------- */
+  /* ---------------- SEARCH ---------------- */
   const filteredProducts = useMemo(() => {
-    const term = searchTerm.toLowerCase().trim();
-    if (!term) return products;
-
-    return products.filter(
-      p =>
-        p.name.toLowerCase().includes(term) ||
-        p.category.toLowerCase().includes(term) ||
-        (p.description && p.description.toLowerCase().includes(term))
-    );
+    const t = searchTerm.toLowerCase();
+    return !t
+      ? products
+      : products.filter(
+          p =>
+            p.name.toLowerCase().includes(t) ||
+            p.description?.toLowerCase().includes(t)
+        );
   }, [products, searchTerm]);
 
-  /* ---------------- INQUIRY HANDLER ---------------- */
+  /* ---------------- INQUIRY ---------------- */
   const handleRequestQuote = (name: string) => {
-    if (addToCart(name)) {
-      showToast({
-        title: "Added to inquiry",
-        description: `${name} added to contact form.`,
-        variant: "success",
-        duration: 3000,
-      });
-    }
-
+    addToCart(name);
+    showToast({
+      title: "Added to inquiry",
+      description: `${name} added to contact form.`,
+      variant: "success",
+      duration: 3000,
+    });
     setSelectedProduct(null);
     navigate("/contact#inquiry-form");
   };
@@ -134,154 +105,154 @@ const CategoryProductsPage = () => {
       <main className="bg-[#FAF9F6] min-h-screen pb-32">
         {/* BACK */}
         <div className="px-[8%] pt-24">
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+          <button
             onClick={() => navigate("/products")}
-            className="mb-12 text-[10px] uppercase tracking-widest font-black text-amber-600"
+            className="text-[10px] uppercase tracking-widest font-black text-amber-600"
           >
-            ← Back to Categories
-          </motion.button>
+            ← Back to Categories Page
+          </button>
         </div>
 
         {/* HEADER */}
-        <header className="px-[8%] max-w-[1600px] mx-auto mb-12">
-          <motion.h1
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9 }}
-            className="text-5xl md:text-7xl font-black capitalize text-slate-900"
-          >
+        <header className="px-[8%] max-w-[1600px] mx-auto mt-12 mb-16">
+          <h1 className="text-4xl md:text-6xl font-black italic font-serif text-amber-700">
             {products[0]?.category}
-          </motion.h1>
+          </h1>
         </header>
 
-        {/* SEARCH BAR */}
-<section className="sticky top-[80px] z-[50] pt-1 pb-6 px-[8%] bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-amber-50/50">
-  <div className="max-w-3xl mx-auto">
-    <div className="relative flex items-center bg-[#1A1412] rounded-2xl px-6 py-5 shadow-[0_20px_40px_rgba(0,0,0,0.25)] border border-stone-800 focus-within:border-amber-600/50 transition-all">
-      <Search className="text-stone-500 mr-4" size={20} />
+        {/* SEARCH */}
+        <section className="sticky top-[80px] z-40 px-[8%] pb-6 bg-[#FAF9F6]/95 backdrop-blur">
+          <div className="max-w-3xl mx-auto flex items-center bg-[#1A1412] rounded-2xl px-6 py-4">
+            <Search className="text-stone-400 mr-4" />
+            <input
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Search this category..."
+              className="flex-1 bg-transparent outline-none text-white placeholder:text-stone-500"
+            />
+            {searchTerm && (
+              <button onClick={() => setSearchTerm("")}>
+                <X className="text-stone-400" />
+              </button>
+            )}
+          </div>
+        </section>
 
-      <input
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
-        placeholder="Search In This Category..."
-        className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-lg font-light text-white placeholder:text-stone-600"
-      />
-
-      {searchTerm && (
-        <button
-          onClick={() => setSearchTerm("")}
-          className="ml-2 p-2 hover:bg-stone-800 rounded-full text-stone-500 transition-colors"
-        >
-          <X size={18} />
-        </button>
-      )}
-    </div>
-  </div>
-</section>
-
-
-        {/* PRODUCTS GRID */}
+        {/* PRODUCTS */}
         <motion.section
           variants={gridVariants}
           initial="hidden"
           animate="show"
-          className="px-[8%] mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-[1600px] mx-auto"
+          className="px-[8%] mt-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-[1600px] mx-auto"
         >
           {filteredProducts.map(p => (
             <motion.div
               key={p.id}
               variants={cardVariants}
-              whileHover={{ y: -6 }}
-              onClick={() => setSelectedProduct(p)}
-              className="group bg-white rounded-3xl border border-amber-50 p-6 shadow-sm hover:shadow-2xl hover:shadow-orange-900/10 transition-all duration-700 cursor-pointer"
+              className="bg-white rounded-3xl p-6 shadow hover:shadow-xl transition"
             >
-              <div className="aspect-[4/5] bg-[#FCF9F1] mb-6 overflow-hidden rounded-2xl flex items-center justify-center relative">
-                <motion.img
-                  src={p.image}
-                  alt={p.name}
-                  whileHover={{ scale: 1.12 }}
-                  transition={{ duration: 1 }}
-                  className="max-h-[75%] object-contain p-4"
-                />
+              <div
+                onClick={() => setSelectedProduct(p)}
+                className="cursor-pointer"
+              >
+                <div className="aspect-[4/5] flex items-center justify-center bg-[#FCF9F1] rounded-2xl mb-5">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="max-h-[75%] object-contain"
+                  />
+                </div>
+                    <h3
+                    className="
+                        font-serif
+                        font-semibold
+                        text-[15px] sm:text-lg
+                        leading-snug
+                        tracking-tight
+                        text-[#3B2A20]
+                        transition-colors
+                        group-hover:text-amber-700
+                    "
+                    >
+                    {p.name}
+                    </h3>
 
-                {!p.in_stock && (
-                  <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] bg-white px-4 py-2 border border-slate-200">
-                      Sold Out
-                    </span>
-                  </div>
-                )}
+
+
+                <p className="text-xs italic text-stone-500 line-clamp-2">
+                  {p.description}
+                </p>
               </div>
 
-              <h3 className="font-bold text-lg text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
-                {p.name}
-              </h3>
-
-              <p className="text-xs text-stone-400 font-light italic font-serif line-clamp-2">
-                {p.description || "Exclusive import sourced by Peroz Corp."}
-              </p>
+              {/* CARD BUTTON */}
+              <Button
+                onClick={() => handleRequestQuote(p.name)}
+                className="mt-4 w-full bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
+              >
+                Inquire for Pricing
+              </Button>
             </motion.div>
           ))}
         </motion.section>
       </main>
 
-      {/* MODAL */}
+      {/* ================= MODAL ================= */}
       <AnimatePresence>
         {selectedProduct && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-stone-950/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-4"
             onClick={() => setSelectedProduct(null)}
           >
             <motion.div
-              initial={{ scale: 0.92, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.92, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="relative bg-white rounded-[2rem] w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl border border-amber-100"
               onClick={e => e.stopPropagation()}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white w-full max-w-xl max-h-[90vh] rounded-3xl flex flex-col overflow-hidden"
             >
-              <button
-                onClick={() => setSelectedProduct(null)}
-                className="absolute top-6 right-6 z-20 text-stone-400 hover:text-stone-900 bg-stone-100 p-2 rounded-full"
-              >
-                <X size={20} />
-              </button>
+              {/* HEADER */}
+              <div className="p-4 border-b flex justify-between items-center">
+                <h3
+                    className="
+                        font-serif
+                        font-semibold
+                        text-[15px] sm:text-lg
+                        leading-snug
+                        tracking-tight
+                        text-[#3B2A20]
+                        transition-colors
+                        group-hover:text-amber-700
+                    "
+                    >{selectedProduct.name}</h3>
+                <button onClick={() => setSelectedProduct(null)}>
+                  <X />
+                </button>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2">
-                <div className="bg-[#FCF9F1] p-10 flex items-center justify-center">
-                  <img
-                    src={selectedProduct.image}
-                    className="max-h-64 w-full object-contain"
-                    alt={selectedProduct.name}
-                  />
-                </div>
+              {/* SCROLLABLE CONTENT */}
+              <div className="p-6 overflow-y-auto flex-1">
+                <img
+                  src={selectedProduct.image}
+                  className="max-h-60 mx-auto mb-6 object-contain"
+                />
 
-                <div className="p-8 md:p-12 flex flex-col">
-                  <Badge className="bg-amber-50 text-amber-700 mb-4 rounded-full px-4 py-1 text-[10px] uppercase tracking-widest w-fit">
-                    {selectedProduct.category}
-                  </Badge>
+                <Badge className="mb-4">{selectedProduct.category}</Badge>
 
-                  <h3 className="text-3xl font-black text-slate-900 mb-6">
-                    {selectedProduct.name}
-                  </h3>
+                <p className="italic text-stone-600">
+                  {selectedProduct.description}
+                </p>
+              </div>
 
-                  <p className="text-stone-500 font-light mb-10 italic font-serif">
-                    {selectedProduct.description}
-                  </p>
-
-                  <Button
-                    className="mt-auto h-14 bg-amber-600 hover:bg-stone-950 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl"
-                    onClick={() => handleRequestQuote(selectedProduct.name)}
-                  >
-                    Inquire for Pricing <ArrowUpRight size={18} />
-                  </Button>
-                </div>
+              {/* STICKY FOOTER */}
+              <div className="p-4 border-t">
+                <Button
+                  onClick={() =>
+                    handleRequestQuote(selectedProduct.name)
+                  }
+                  className="w-full h-14 bg-amber-600 text-white font-black uppercase tracking-widest rounded-xl"
+                >
+                  Inquire for Pricing <ArrowUpRight />
+                </Button>
               </div>
             </motion.div>
           </motion.div>
