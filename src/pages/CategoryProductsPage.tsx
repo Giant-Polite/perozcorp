@@ -193,7 +193,7 @@ const CategoryProductsPage = () => {
                     text-[11px] sm:text-[12px]
                     font-black uppercase
                     tracking-wide sm:tracking-widest
-                    px-4 py-3
+                    px-6 py-4
                     rounded-xl
                     text-center
                     whitespace-normal
