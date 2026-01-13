@@ -143,7 +143,7 @@ const CategoryProductsPage = () => {
           variants={gridVariants}
           initial="hidden"
           animate="show"
-          className="px-[8%] mt-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-[1600px] mx-auto"
+          className="px-[8%] mt-16 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-2 max-w-[1800px] mx-auto"
         >
           {filteredProducts.map(p => (
             <motion.div
@@ -187,10 +187,21 @@ const CategoryProductsPage = () => {
               {/* CARD BUTTON */}
               <Button
                 onClick={() => handleRequestQuote(p.name)}
-                className="mt-4 w-full bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
-              >
+                className="
+                    mt-4 w-full
+                    bg-amber-600 text-white
+                    text-[11px] sm:text-[12px]
+                    font-black uppercase
+                    tracking-wide sm:tracking-widest
+                    px-4 py-3
+                    rounded-xl
+                    text-center
+                    whitespace-normal
+                "
+                >
                 Inquire for Pricing
-              </Button>
+                </Button>
+
             </motion.div>
           ))}
         </motion.section>
