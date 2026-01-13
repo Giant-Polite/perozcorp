@@ -139,56 +139,79 @@ const CategoryProductsPage = () => {
         </section>
 
         {/* PRODUCTS */}
-        <motion.section
-          variants={gridVariants}
-          initial="hidden"
-          animate="show"
-          className="px-[8%] mt-16 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-2 max-w-[1800px] mx-auto"
-        >
-          {filteredProducts.map(p => (
-            <motion.div
-              key={p.id}
-              variants={cardVariants}
-              className="bg-white rounded-3xl p-6 shadow hover:shadow-xl transition"
+            <motion.section
+            variants={gridVariants}
+            initial="hidden"
+            animate="show"
+            className="
+                px-[8%] mt-16
+                grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4
+                gap-3 sm:gap-6
+                max-w-[1800px] mx-auto
+            "
             >
-              <div
-                onClick={() => setSelectedProduct(p)}
-                className="cursor-pointer"
-              >
-                <div className="aspect-[4/5] flex items-center justify-center bg-[#FCF9F1] rounded-2xl mb-5">
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="max-h-[75%] object-contain"
-                  />
-                </div>
-                    <h3
+            {filteredProducts.map(p => (
+                <motion.div
+                key={p.id}
+                variants={cardVariants}
+                className="
+                    bg-white rounded-3xl p-6
+                    shadow hover:shadow-xl transition
+                    flex flex-col
+                "
+                >
+                {/* CLICKABLE CONTENT */}
+                <div
+                    onClick={() => setSelectedProduct(p)}
+                    className="cursor-pointer flex flex-col"
+                >
+                    {/* IMAGE CONTAINER */}
+                    <div
                     className="
-                        font-serif
-                        font-semibold
+                        aspect-[3/4] sm:aspect-[4/5]
+                        flex items-center justify-center
+                        bg-[#FCF9F1]
+                        rounded-2xl
+                        mb-5
+                        p-4 sm:p-0
+                    "
+                    >
+                    <img
+                        src={p.image}
+                        alt={p.name}
+                        className="
+                        max-h-[85%] sm:max-h-[75%]
+                        object-contain
+                        "
+                    />
+                    </div>
+
+                    {/* TEXT CONTENT */}
+                    <div className="flex-1">
+                    <h3
+                        className="
+                        font-serif font-semibold
                         text-[15px] sm:text-lg
                         leading-snug
                         tracking-tight
                         text-[#3B2A20]
-                        transition-colors
-                        group-hover:text-amber-700
-                    "
+                        mb-2
+                        "
                     >
-                    {p.name}
+                        {p.name}
                     </h3>
 
+                    <p className="text-xs italic text-stone-500 line-clamp-2">
+                        {p.description}
+                    </p>
+                    </div>
+                </div>
 
-
-                <p className="text-xs italic text-stone-500 line-clamp-2">
-                  {p.description}
-                </p>
-              </div>
-
-              {/* CARD BUTTON */}
-              <Button
-                onClick={() => handleRequestQuote(p.name)}
-                className="
-                    mt-4 w-full
+                {/* BUTTON — ALWAYS ALIGNED */}
+                <Button
+                    onClick={() => handleRequestQuote(p.name)}
+                    className="
+                    mt-6 w-full
                     bg-amber-600 text-white
                     text-[11px] sm:text-[12px]
                     font-black uppercase
@@ -197,14 +220,14 @@ const CategoryProductsPage = () => {
                     rounded-xl
                     text-center
                     whitespace-normal
-                "
+                    "
                 >
-                Inquire for Pricing
+                    Inquire for Pricing
                 </Button>
+                </motion.div>
+            ))}
+            </motion.section>
 
-            </motion.div>
-          ))}
-        </motion.section>
       </main>
 
       {/* ================= MODAL ================= */}
