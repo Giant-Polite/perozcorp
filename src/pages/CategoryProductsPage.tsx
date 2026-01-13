@@ -139,92 +139,100 @@ const CategoryProductsPage = () => {
         </section>
 
         {/* PRODUCTS */}
-            <motion.section
+        <motion.section
             variants={gridVariants}
             initial="hidden"
             animate="show"
             className="
-                px-[8%] mt-16
-                grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4
-                gap-3 sm:gap-6
-                max-w-[1800px] mx-auto
+            px-[8%] mt-16
+            grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4
+            gap-3 sm:gap-6
+            max-w-[1800px] mx-auto
             "
             >
             {filteredProducts.map(p => (
-                <motion.div
-                key={p.id}
-                variants={cardVariants}
+            <motion.div
+            key={p.id}
+            variants={cardVariants}
+            whileHover={{ y: -4 }}
+            className="
+                relative
+                bg-white rounded-3xl p-6
+                shadow-sm
+                transition-all duration-500
+                flex flex-col
+                border border-transparent
+                hover:border-amber-400/40
+                hover:shadow-[0_20px_60px_rgba(180,120,40,0.15)]
+            "
+            >
+            {/* CLICKABLE CONTENT */}
+            <div
+                onClick={() => setSelectedProduct(p)}
+                className="cursor-pointer flex flex-col"
+            >
+                {/* IMAGE CONTAINER */}
+                <div
                 className="
-                    bg-white rounded-3xl p-6
-                    shadow hover:shadow-xl transition
-                    flex flex-col
+                    aspect-[3/4] sm:aspect-[4/5]
+                    flex items-center justify-center
+                    bg-[#FCF9F1]
+                    rounded-2xl
+                    mb-5
+                    p-4 sm:p-0
                 "
                 >
-                {/* CLICKABLE CONTENT */}
-                <div
-                    onClick={() => setSelectedProduct(p)}
-                    className="cursor-pointer flex flex-col"
-                >
-                    {/* IMAGE CONTAINER */}
-                    <div
+                <img
+                    src={p.image}
+                    alt={p.name}
                     className="
-                        aspect-[3/4] sm:aspect-[4/5]
-                        flex items-center justify-center
-                        bg-[#FCF9F1]
-                        rounded-2xl
-                        mb-5
-                        p-4 sm:p-0
+                    max-h-[85%] sm:max-h-[75%]
+                    object-contain
                     "
-                    >
-                    <img
-                        src={p.image}
-                        alt={p.name}
-                        className="
-                        max-h-[85%] sm:max-h-[75%]
-                        object-contain
-                        "
-                    />
-                    </div>
-
-                    {/* TEXT CONTENT */}
-                    <div className="flex-1">
-                    <h3
-                        className="
-                        font-serif font-semibold
-                        text-[15px] sm:text-lg
-                        leading-snug
-                        tracking-tight
-                        text-[#3B2A20]
-                        mb-2
-                        "
-                    >
-                        {p.name}
-                    </h3>
-
-                    <p className="text-xs italic text-stone-500 line-clamp-2">
-                        {p.description}
-                    </p>
-                    </div>
+                />
                 </div>
 
-                {/* BUTTON — ALWAYS ALIGNED */}
-                <Button
-                    onClick={() => handleRequestQuote(p.name)}
+                {/* TEXT CONTENT */}
+                <div className="flex-1">
+                <h3
                     className="
-                    mt-6 w-full
-                    bg-amber-600 text-white
-                    text-[11px] sm:text-[12px]
-                    font-black uppercase
-                    tracking-wide sm:tracking-widest
-                    px-8 py-6
-                    rounded-xl
-                    text-center
-                    whitespace-normal
+                    font-serif font-semibold
+                    text-[15px] sm:text-lg
+                    leading-snug
+                    tracking-tight
+                    text-[#3B2A20]
+                    mb-2
                     "
                 >
-                    Inquire for Pricing
-                </Button>
-                </motion.div>
+                    {p.name}
+                </h3>
+
+                <p className="text-xs italic text-stone-500 line-clamp-2">
+                    {p.description || "Premium imported product"}
+                </p>
+                </div>
+            </div>
+
+            {/* BUTTON — ALWAYS ALIGNED */}
+            <Button
+                onClick={() => handleRequestQuote(p.name)}
+                className="
+                mt-6 w-full
+                bg-amber-600 text-white
+                text-[11px] sm:text-[12px]
+                font-black uppercase
+                tracking-wide sm:tracking-widest
+                px-8 py-6
+                rounded-xl
+                text-center
+                whitespace-normal
+                hover:bg-amber-700
+                transition-colors
+                "
+            >
+                Inquire for Pricing
+            </Button>
+            </motion.div>
             ))}
             </motion.section>
 
