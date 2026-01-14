@@ -55,13 +55,18 @@ const CategoryProductsPage = () => {
   const { toasts, showToast, removeToast } = usePremiumToast();
 
   /* SCROLL LOCK */
-  useEffect(() => {
-    if (selectedProduct) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-  }, [selectedProduct]);
+useEffect(() => {
+  if (selectedProduct) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+
+  // CLEANUP: Reset scroll when leaving the page or component unmounting
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [selectedProduct]);
 
   /* FETCH PRODUCTS */
   useEffect(() => {
@@ -94,17 +99,22 @@ const CategoryProductsPage = () => {
   }, [products, searchTerm]);
 
   /* INQUIRY */
-  const handleRequestQuote = (name: string) => {
-    addToCart(name);
-    showToast({
-      title: "Added to inquiry",
-      description: `${name} added to contact form.`,
-      variant: "success",
-      duration: 3000,
-    });
-    setSelectedProduct(null);
-    navigate("/contact#inquiry-form");
-  };
+const handleRequestQuote = (name: string) => {
+  addToCart(name);
+  
+  // Force reset overflow immediately to prevent stuck scroll on the next page
+  document.body.style.overflow = ""; 
+  
+  showToast({
+    title: "Added to inquiry",
+    description: `${name} added to contact form.`,
+    variant: "success",
+    duration: 3000,
+  });
+  
+  setSelectedProduct(null);
+  navigate("/contact#inquiry-form");
+};
 
   /* SWIPE MODAL CLOSE */
   const touchStart = useRef<number | null>(null);
