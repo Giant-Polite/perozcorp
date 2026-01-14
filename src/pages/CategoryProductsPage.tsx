@@ -125,7 +125,6 @@ const CategoryProductsPage = () => {
     <>
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
-      {/* MAIN */}
       <main
         className="min-h-screen pb-24"
         style={{
@@ -171,15 +170,15 @@ const CategoryProductsPage = () => {
           </div>
         </section>
 
-        {/* GRID */}
+        {/* GRID - Updated for better mobile display */}
         <motion.section
           variants={gridVariants}
           initial="hidden"
           animate="show"
           className="
             px-[8%] mt-12
-            grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4
-            gap-8
+            grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4
+            gap-4 sm:gap-8
             max-w-[1800px] mx-auto
           "
         >
@@ -195,27 +194,34 @@ const CategoryProductsPage = () => {
                 hover:border-[#B08D57]/40
                 hover:shadow-[0_12px_32px_rgba(176,141,87,0.20)]
                 rounded-2xl
-                p-3
+                p-4
                 bg-white/40 backdrop-blur-sm
+                h-full
               "
             >
-              <img
-                src={p.image}
-                alt={p.name}
-                loading="lazy"
-                className="
-                  w-full
-                  h-64
-                  object-contain
-                  rounded-xl
-                  bg-transparent
-                "
-              />
+              {/* Image Container with Flex-1 to fill card height */}
+              <div className="flex-1 flex items-center justify-center min-h-[140px] sm:min-h-[200px]">
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  loading="lazy"
+                  className="
+                    w-full
+                    h-full
+                    max-h-56
+                    object-contain
+                    rounded-xl
+                    bg-transparent
+                    transition-transform duration-500 group-hover:scale-105
+                  "
+                />
+              </div>
               <h3
                 className="
-                  font-serif font-semibold mt-3 text-center
-                  text-[15px] sm:text-[17px]
+                  font-serif font-semibold mt-4 text-center
+                  text-[14px] sm:text-[17px]
                   tracking-tight text-[#B08D57]
+                  leading-tight
                 "
               >
                 {p.name}
@@ -225,7 +231,7 @@ const CategoryProductsPage = () => {
         </motion.section>
       </main>
 
-      {/* MODAL */}
+      {/* MODAL (Unchanged) */}
       <AnimatePresence>
         {selectedProduct && (
           <motion.div
@@ -247,7 +253,6 @@ const CategoryProductsPage = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 40, opacity: 0 }}
             >
-              {/* HEADER */}
               <div className="p-4 border-b flex justify-between items-center">
                 <h3 className="font-serif text-lg text-[#B08D57] font-semibold">
                   {selectedProduct.name}
@@ -257,7 +262,6 @@ const CategoryProductsPage = () => {
                 </button>
               </div>
 
-              {/* CONTENT */}
               <div className="p-6 overflow-y-auto flex-1">
                 <img
                   src={selectedProduct.image}
@@ -269,7 +273,6 @@ const CategoryProductsPage = () => {
                 </p>
               </div>
 
-              {/* FOOTER */}
               <div className="p-4 border-t">
                 <Button
                   onClick={() => handleRequestQuote(selectedProduct.name)}
