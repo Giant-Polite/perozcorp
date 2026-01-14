@@ -35,7 +35,11 @@ const ProductsLandingPage = () => {
   return (
     <>
       <Helmet>
-        <title>Product Categories | Peroz Corp</title>
+        <title>Our Products | Afghan Dried Fruits, Nuts, Specialty Foods & Desserts| Peroz Corp</title>
+        <meta name="description" content="Explore Peroz Corp's full catalog of authentic Afghan imports, including premium dried fruits, nuts, traditional confectionery, teas, desserts, and pantry staples." />
+        <meta property="og:title" content="Our Products | Peroz Corp" />
+        <meta property="og:description" content="Authentic Afghan food products and household essentials." />
+        <link rel="canonical" href="https://www.perozcorp.com/products" />
       </Helmet>
 
       <main className="bg-[#FAF9F6] min-h-screen px-[6%] md:px-[8%] pt-24 pb-32">
