@@ -30,7 +30,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-md border-b border-[#E8DCC8] py-4">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-2">
         <div className="flex items-center justify-between h-14">
           
           {/* LOGO & NAME SECTION */}
