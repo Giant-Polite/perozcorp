@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowUpRight, Search } from "lucide-react";
+import { X, ArrowUpRight, Search, Info, ShoppingCart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ToastContainer } from "@/components/PremiumToast";
@@ -19,7 +19,7 @@ interface Product {
   in_stock: boolean;
 }
 
-/* ---------------- CART ---------------- */
+/* ---------------- CART LOGIC ---------------- */
 const addToCart = (productName: string) => {
   const cart = JSON.parse(localStorage.getItem("cartProducts") || "[]") as string[];
   if (!cart.includes(productName)) {
@@ -30,19 +30,15 @@ const addToCart = (productName: string) => {
   return false;
 };
 
-/* ---------------- MOTION ---------------- */
+/* ---------------- ANIMATION VARIANTS ---------------- */
 const gridVariants: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: [0.25, 1, 0.3, 1] },
-  },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
 const CategoryProductsPage = () => {
@@ -54,198 +50,165 @@ const CategoryProductsPage = () => {
 
   const { toasts, showToast, removeToast } = usePremiumToast();
 
-  /* SCROLL LOCK */
-useEffect(() => {
-  if (selectedProduct) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "";
-  }
+  /* SCROLL LOCK FOR MODAL */
+  useEffect(() => {
+    document.body.style.overflow = selectedProduct ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [selectedProduct]);
 
-  // CLEANUP: Reset scroll when leaving the page or component unmounting
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [selectedProduct]);
-
-  /* FETCH PRODUCTS */
+  /* FETCH DATA */
   useEffect(() => {
     const fetchProducts = async () => {
       const { data } = await supabase.from("products").select("*");
       if (!data) return;
-
       setProducts(
-        data.filter(
-          p =>
-            p.category
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-") === categorySlug
-        )
+        data.filter(p => p.category.toLowerCase().replace(/[^a-z0-9]+/g, "-") === categorySlug)
       );
     };
     fetchProducts();
   }, [categorySlug]);
 
-  /* SEARCH FILTER */
+  /* SEARCH */
   const filteredProducts = useMemo(() => {
     const t = searchTerm.toLowerCase();
-    return !t
-      ? products
-      : products.filter(
-          p =>
-            p.name.toLowerCase().includes(t) ||
-            p.description?.toLowerCase().includes(t)
-        );
+    return !t ? products : products.filter(p => p.name.toLowerCase().includes(t));
   }, [products, searchTerm]);
 
-  /* INQUIRY */
-const handleRequestQuote = (name: string) => {
-  addToCart(name);
+  /* INQUIRY HANDLER */
+  const handleRequestQuote = (name: string) => {
+  addToCart(name); // Uses your existing helper function
   
-  // Force reset overflow immediately to prevent stuck scroll on the next page
+  // Reset overflow and close modal
   document.body.style.overflow = ""; 
+  setSelectedProduct(null);
   
+  // Optional: show a toast before navigating
   showToast({
     title: "Added to inquiry",
-    description: `${name} added to contact form.`,
+    description: "Redirecting you to the inquiry form...",
     variant: "success",
-    duration: 3000,
+    duration: 2000,
   });
   
-  setSelectedProduct(null);
-  navigate("/contact#inquiry-form");
+  // Navigate to contact form
+  setTimeout(() => {
+    navigate("/contact#inquiry-form");
+  }, 1200); // Small delay to let the toast be seen
 };
-
-  /* SWIPE MODAL CLOSE */
-  const touchStart = useRef<number | null>(null);
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStart.current = e.touches[0].clientY;
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (touchStart.current === null) return;
-    const currentY = e.touches[0].clientY;
-    const delta = currentY - touchStart.current;
-    if (delta > 80) {
-      setSelectedProduct(null);
-    }
-  }, []);
 
   return (
     <>
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
-      <main
-        className="min-h-screen pb-24"
-        style={{
-          backgroundColor: "#F9F6F1",
-          backgroundImage:
-            "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAH+wMKS9ZhUgAAAABJRU5ErkJggg==')",
-          backgroundSize: "300px",
-          backgroundBlendMode: "soft-light",
-        }}
-      >
-        {/* BACK */}
-        <div className="px-[8%] pt-24">
+      <main className="min-h-screen pb-24 bg-[#FAF7F2]">
+        
+        {/* TOP NAVIGATION / BACK BUTTON */}
+        <div className="px-[6%] pt-32">
           <button
             onClick={() => navigate("/products")}
-            className="text-[10px] uppercase tracking-widest font-black text-amber-700"
+            className="group flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black text-[#2C3E2F]/60 hover:text-[#D4A574] transition-colors"
           >
-            ← Back to Categories Page
+            <span className="transition-transform group-hover:-translate-x-1">←</span> Back to Categories
           </button>
         </div>
 
-        {/* HEADER */}
-        <header className="px-[8%] max-w-[1600px] mx-auto mt-12 mb-10">
-          <h1 className="text-4xl md:text-6xl font-black italic font-serif text-[#B08D57]">
-            {products[0]?.category}
-          </h1>
+        {/* HEADER SECTION */}
+        <header className="px-[6%] max-w-7xl mx-auto mt-12 mb-16 text-center lg:text-left">
+          <div className="flex flex-col lg:flex-row justify-between items-end gap-6">
+            <div>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#D4A574] mb-4">Collection</h2>
+              <h1 className="text-5xl md:text-7xl font-serif italic text-[#2C3E2F]">
+                {products[0]?.category || "Category"}
+              </h1>
+            </div>
+            
+            {/* SEARCH BAR - Styled like B2B Portal */}
+            <div className="relative w-full lg:w-96">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2C3E2F]/40" />
+              <input
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                placeholder="Search products..."
+                className="w-full pl-12 pr-4 py-4 bg-white border border-[#E8DCC8] rounded-full text-sm outline-none focus:ring-2 focus:ring-[#D4A574]/20 transition-all shadow-sm"
+              />
+            </div>
+          </div>
         </header>
 
-        {/* SEARCH */}
-        <section className="sticky top-[80px] z-40 px-[8%] pb-6 bg-[#F9F6F1]/90 backdrop-blur">
-          <div className="max-w-3xl mx-auto flex items-center bg-[#1A1412] rounded-2xl px-6 py-4">
-            <Search className="text-stone-400 mr-4" />
-            <input
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Search this category..."
-              className="flex-1 bg-transparent outline-none text-white placeholder:text-stone-500"
-            />
-            {searchTerm && (
-              <button onClick={() => setSearchTerm("")}>
-                <X className="text-stone-400" />
-              </button>
-            )}
-          </div>
-        </section>
-
-        {/* GRID - Updated for better mobile display */}
+        {/* PRODUCT GRID - Matches Home Page Styled Featured Section */}
         <motion.section
           variants={gridVariants}
           initial="hidden"
           animate="show"
-          className="
-            px-[8%] mt-12
-            grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4
-            gap-4 sm:gap-8
-            max-w-[1800px] mx-auto
-          "
+          className="px-[6%] max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {filteredProducts.map(p => (
-            <motion.div
-              key={p.id}
-              variants={cardVariants}
-              onClick={() => setSelectedProduct(p)}
-              className="
-                cursor-pointer group flex flex-col
-                transition-all duration-300
-                border border-transparent
-                hover:border-[#B08D57]/40
-                hover:shadow-[0_12px_32px_rgba(176,141,87,0.20)]
-                rounded-2xl
-                p-4
-                bg-white/40 backdrop-blur-sm
-                h-full
-              "
+          <motion.div
+            key={p.id}
+            variants={cardVariants}
+            className="bg-white p-3 rounded-[2rem] border border-[#E8DCC8] hover:shadow-2xl transition-all duration-500 group flex flex-col h-full"
+          >
+            {/* 1. IMAGE CONTAINER - ADDED onClick HERE */}
+            <div 
+              onClick={() => setSelectedProduct(p)} // This activates the popup
+              className="aspect-square bg-[#FAF7F2] rounded-[1.6rem] mb-6 overflow-hidden relative flex items-center justify-center p-6 cursor-pointer"
             >
-              {/* Image Container with Flex-1 to fill card height */}
-              <div className="flex-1 flex items-center justify-center min-h-[140px] sm:min-h-[200px]">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  loading="lazy"
-                  className="
-                    w-full
-                    h-full
-                    max-h-56
-                    object-contain
-                    rounded-xl
-                    bg-transparent
-                    transition-transform duration-500 group-hover:scale-105
-                  "
-                />
+              <img
+                src={p.image}
+                alt={p.name}
+                className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700"
+              />
+              
+              {/* Visual Cue: Hover Zoom Icon */}
+              <div className="absolute inset-0 bg-[#2C3E2F]/0 group-hover:bg-[#2C3E2F]/5 transition-colors flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 p-2 rounded-full shadow-sm">
+                  <ArrowUpRight className="w-4 h-4 text-[#2C3E2F]" />
+                </div>
               </div>
-              <h3
-                className="
-                  font-serif font-semibold mt-4 text-center
-                  text-[14px] sm:text-[17px]
-                  tracking-tight text-[#B08D57]
-                  leading-tight
-                "
+
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter text-[#2C3E2F] border border-[#E8DCC8]/50 shadow-sm">
+                Peroz
+              </div>
+            </div>
+
+            {/* ... rest of the card content (Title, SKU, Buttons) remains the same ... */}
+            <div className="px-4 pb-4 flex flex-col flex-1">
+              <span className="text-[9px] text-[#D4A574] font-bold uppercase tracking-widest mb-1">{p.category}</span>
+              <h3 
+                onClick={() => setSelectedProduct(p)} // Optional: Clicking the title also opens the popup
+                className="text-xl font-serif text-[#2C3E2F] mb-6 line-clamp-2 leading-tight flex-1 cursor-pointer hover:text-[#D4A574] transition-colors"
               >
                 {p.name}
               </h3>
-            </motion.div>
-          ))}
+
+              <div className="flex gap-2">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents triggering the popup when clicking the button
+                    handleRequestQuote(p.name);
+                  }}
+                  className="flex-1 bg-[#2C3E2F] text-white py-3.5 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[#D4A574] transition-all flex items-center justify-center gap-2"
+                >
+                  Add to Inquiry
+                </button>
+                <button 
+                  onClick={() => setSelectedProduct(p)}
+                  className="w-11 h-11 flex items-center justify-center border border-[#E8DCC8] rounded-full hover:bg-[#FAF7F2] transition-colors"
+                >
+                  <Info className="w-4 h-4 text-[#2C3E2F]" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
         </motion.section>
       </main>
 
-      {/* MODAL (Unchanged) */}
+      {/* MODAL - Updated Styling to match Mediterranean Green/Gold */}
       <AnimatePresence>
         {selectedProduct && (
           <motion.div
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 touch-pan-y"
+            className="fixed inset-0 bg-[#2C3E2F]/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
             onClick={() => setSelectedProduct(null)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -253,42 +216,44 @@ const handleRequestQuote = (name: string) => {
           >
             <motion.div
               onClick={e => e.stopPropagation()}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              className="
-                bg-white w-full max-w-xl max-h-[92vh]
-                rounded-3xl flex flex-col overflow-hidden
-              "
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 40, opacity: 0 }}
+              className="bg-white w-full max-w-xl rounded-[2.5rem] flex flex-col overflow-hidden shadow-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
             >
-              <div className="p-4 border-b flex justify-between items-center">
-                <h3 className="font-serif text-lg text-[#B08D57] font-semibold">
+              <div className="relative p-8 border-b border-[#E8DCC8]">
+                <h3 className="font-serif italic text-2xl text-[#2C3E2F] pr-8">
                   {selectedProduct.name}
                 </h3>
-                <button onClick={() => setSelectedProduct(null)}>
-                  <X />
+                <button 
+                   onClick={() => setSelectedProduct(null)}
+                   className="absolute right-8 top-8 p-2 hover:bg-stone-100 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5 text-[#2C3E2F]" />
                 </button>
               </div>
 
-              <div className="p-6 overflow-y-auto flex-1">
-                <img
-                  src={selectedProduct.image}
-                  className="w-full max-h-72 object-contain rounded-xl mb-4"
-                />
-                <Badge className="mb-3">{selectedProduct.category}</Badge>
-                <p className="italic text-stone-600">
-                  {selectedProduct.description}
-                </p>
+              <div className="p-8 overflow-y-auto max-h-[60vh]">
+                <div className="bg-[#FAF7F2] rounded-[2rem] p-10 mb-8 flex justify-center border border-[#E8DCC8]/30">
+                  <img src={selectedProduct.image} className="max-h-64 object-contain mix-blend-multiply" alt="" />
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Star className="w-3 h-3 text-[#D4A574] fill-[#D4A574]" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#D4A574]">Product Specifications</span>
+                  </div>
+                  <p className="text-[#858566] leading-relaxed text-sm">
+                    {selectedProduct.description || "Inquire for detailed product specifications, wholesale pricing, and availability."}
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 border-t">
+              <div className="p-8 bg-[#FAF7F2] border-t border-[#E8DCC8]">
                 <Button
                   onClick={() => handleRequestQuote(selectedProduct.name)}
-                  className="w-full h-14 bg-amber-600 text-white font-black uppercase tracking-widest rounded-xl"
+                  className="w-full h-14 bg-[#2C3E2F] hover:bg-[#D4A574] text-white font-bold uppercase tracking-widest rounded-full transition-all flex items-center justify-center gap-3"
                 >
-                  Inquire for Pricing <ArrowUpRight />
+                  Confirm Inquiry <ArrowUpRight className="w-4 h-4" />
                 </Button>
               </div>
             </motion.div>
