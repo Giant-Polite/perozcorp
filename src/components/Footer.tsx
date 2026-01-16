@@ -31,18 +31,18 @@ const Footer = () => {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold tracking-tight text-white italic font-serif leading-none">
+              <span className="text-6xl font-bold tracking-tight text-white italic font-serif leading-none">
                 Peroz
-                <span className="inline-block ml-1 text-[#D4A574] font-black not-italic font-sans text-xl">
+                <span className="inline-block ml-3 text-[#D4A574] font-black not-italic font-sans text-4xl">
                   Corp
                 </span>
               </span>
-              <span className="text-[8px] uppercase tracking-[0.3em] text-white/40 mt-1">Global Logistics Hub</span>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 mt-1">Global Logistics Hub</span>
             </div>
           </div>
 
           {/* COMPACT NAV */}
-          <div className="flex flex-wrap gap-x-8 gap-y-2">
+          <div className="flex flex-wrap gap-x-4 gap-y-3">
             {[
               { name: "Home", path: "/" },
               { name: "Products", path: "/products" },
@@ -53,7 +53,7 @@ const Footer = () => {
               <NavLink
                 key={link.name}
                 to={link.path}
-                className="text-[11px] font-bold uppercase tracking-widest hover:text-[#D4A574] transition-colors"
+                className="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[12px] font-bold uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-all"
               >
                 {link.name}
               </NavLink>
@@ -68,7 +68,7 @@ const Footer = () => {
                 {isOpen ? "Alexandria HQ Open" : "HQ Closed"}
               </span>
             </div>
-            <a href="mailto:Ali@PerozCorp.com" className="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-all">
+            <a href="mailto:Ali@PerozCorp.com" className="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[12px] font-bold uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-all">
               Inquire Now
             </a>
           </div>
@@ -78,24 +78,24 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 text-stone-400">
           <div className="flex items-center gap-3">
             <MapPin className="w-4 h-4 text-[#D4A574]" />
-            <span className="text-xs">6304 Gravel Ave. Suite G. Alexandria, VA 22310</span>
+            <span className="text-sm">6304 Gravel Ave. Suite G. Alexandria, VA 22310</span>
           </div>
           <div className="flex items-center gap-3 md:justify-center">
             <Phone className="w-4 h-4 text-[#D4A574]" />
-            <span className="text-xs font-bold">+1 301-305-8748</span>
+            <span className="text-sm font-bold">+1 301-305-8748</span>
           </div>
           <div className="flex items-center gap-3 md:justify-end">
             <Mail className="w-4 h-4 text-[#D4A574]" />
-            <span className="text-xs font-bold">Ali@PerozCorp.com</span>
+            <span className="text-sm font-bold">Ali@PerozCorp.com</span>
           </div>
         </div>
 
         {/* COPYRIGHT */}
         <div className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20">
+          <p className="text-[12px] font-black uppercase tracking-[0.4em] text-white/20">
             © {currentYear} PEROZ CORPORATION
           </p>
-          <p className="text-[9px] font-bold uppercase tracking-widest text-white/20">
+          <p className="text-[12px] font-bold uppercase tracking-widest text-white/20">
             Quality Imported Goods • East Coast Distribution
           </p>
         </div>

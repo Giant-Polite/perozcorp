@@ -54,6 +54,7 @@ const Home = () => {
   }, [selectedProduct]);
 
   /* 2. DATA FETCHING */
+  /* 2. DATA FETCHING */
   useEffect(() => {
     const fetchData = async () => {
       // Fetch Categories
@@ -69,34 +70,36 @@ const Home = () => {
         setCategories(unique);
       }
 
-      // Fetch Featured Products
-      const { data: prodData } = await supabase.from("products").select("*").limit(8);
-      if (prodData) setFeaturedProducts(prodData);
+      // Fetch Featured Products (Only items with the flag)
+      const { data: prodData, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_featured", true) 
+        .limit(8);
+
+      if (error) {
+        console.error("Fetch error:", error);
+      } else if (prodData) {
+        setFeaturedProducts(prodData);
+      }
     };
 
     fetchData();
-      }, []);
+  }, []); // <-- Make sure this closing bracket and parenthesis are here!
 
-      /* 3. INQUIRY LOGIC */
-      const handleInquiry = (productName: string) => {
-      // 1. Get current cart from local storage
-      const cart = JSON.parse(localStorage.getItem("cartProducts") || "[]");
-      
-      // 2. Add product if it's not already there
-      if (!cart.includes(productName)) {
-        cart.push(productName);
-        localStorage.setItem("cartProducts", JSON.stringify(cart));
-      }
+  /* 3. INQUIRY LOGIC */
+  const handleInquiry = (productName: string) => {
+    const cart = JSON.parse(localStorage.getItem("cartProducts") || "[]");
+    
+    if (!cart.includes(productName)) {
+      cart.push(productName);
+      localStorage.setItem("cartProducts", JSON.stringify(cart));
+    }
 
-      // 3. IMPORTANT: Reset body overflow before navigating
-      // This prevents the "frozen scroll" bug when moving from a modal to a new page
-      document.body.style.overflow = ""; 
-      
-      // 4. Close modal and navigate to the form section
-      setSelectedProduct(null);
-      navigate("/contact#inquiry-form");
-    };
-
+    document.body.style.overflow = ""; 
+    setSelectedProduct(null);
+    navigate("/contact#inquiry-form");
+  };
   /* 4. CONTENT ARRAYS (The missing ValueProps) */
   const valueProps = [
     { icon: ShieldCheck, title: 'Authentic Sourcing', description: 'Every product carefully selected from trusted international suppliers' },
@@ -266,7 +269,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#D4A574] mb-4">Collections</h2>
           <h3 className="text-4xl md:text-5xl text-[#2C3E2F] font-serif italic mb-16">Shop by Category</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {categories.map((cat, index) => (
               <div key={cat.slug} className="cursor-pointer" onClick={() => navigate(`/products/${cat.slug}`)}>
                 <CategoryCard name={cat.name} image={cat.image} index={index} />
@@ -325,7 +328,7 @@ const Home = () => {
             </div>
             <Link to="/products" className="text-xs font-bold border-b border-[#2C3E2F] pb-1 uppercase tracking-widest">View All</Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredProducts.map((p) => (
               <div key={p.id} className="bg-white p-3 rounded-[2rem] border border-[#E8DCC8] hover:shadow-2xl transition-all duration-500 flex flex-col">
                 <div 
@@ -383,7 +386,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl text-[#2C3E2F] font-serif italic">Why Choose Peroz Corp</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {valueProps.map((prop, index) => (
             <ValuePropCard key={index} icon={prop.icon} title={prop.title} description={prop.description} index={index} />
           ))}
