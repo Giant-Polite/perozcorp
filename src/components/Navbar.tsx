@@ -1,141 +1,173 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { Menu, X, Shield, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { Menu, X, Shield, ShoppingCart, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const logo = "/logo.webp";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const location = useLocation();
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem("cartProducts") || "[]");
+      setCartCount(cart.length);
+    };
+
+    updateCartCount();
+    const interval = setInterval(updateCartCount, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/products", label: "Products" },
-    { to: "/about", label: "About Us" },
+    { to: "/about", label: "About" },
     { to: "/contact", label: "Contact" },
   ];
 
   return (
-    <nav 
-      // Changed bg to a warm dark brown-charcoal and border to a subtle amber/gold tint
-      className="sticky top-0 z-[100] bg-[#1a1412]/95 backdrop-blur-xl border-b border-amber-900/20 py-2 shadow-2xl"
-    >
+    <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-md border-b border-[#E8DCC8] py-4">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           
-          {/* LOGO SECTION */}
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className="relative">
-              <img 
-                src={logo} 
-                alt="Peroz Corp" 
-                // Border changed to a warm bronze/amber
-                className="w-11 h-11 rounded-full object-cover border-2 border-amber-900/50 group-hover:border-amber-500 transition-all duration-300 shadow-lg" 
-              />
-              <div className="absolute inset-0 rounded-full bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
+          {/* LOGO & NAME SECTION */}
+          <Link to="/" className="flex items-center gap-3 group shrink-0">
+            <img 
+              src={logo} 
+              alt="Peroz" 
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#E8DCC8] shadow-sm transition-transform group-hover:scale-105" 
+            />
             <div className="flex flex-col">
-              <span className="text-3xl font-bold tracking-tight text-white italic">
+              <span className="text-2xl md:text-3xl font-bold italic font-serif text-[#2C3E2F] leading-none tracking-tight">
                 Peroz
-                {/* Highlight changed from violet to a warm saffron/amber */}
-                <span className="inline-block mx-2 text-amber-500 font-black">
+                <span className="inline-block ml-1.5 text-[#D4A574] font-black not-italic font-sans text-xl md:text-2xl">
                   Corp
                 </span>
               </span>
-
-              <div className="flex items-center gap-1">
-                <Shield className="w-2.5 h-2.5 text-amber-700/60" />
-                <span className="text-[8px] uppercase tracking-[0.3em] text-amber-700/60 font-bold">Verified Supplier</span>
+              <div className="flex items-center gap-1 mt-1">
+                <Shield className="w-2.5 h-2.5 text-[#2C3E2F]/40" />
+                <span className="text-[7px] md:text-[8px] uppercase tracking-[0.25em] text-[#2C3E2F]/50 font-bold">Verified Supplier</span>
               </div>
             </div>
           </Link>
 
           {/* DESKTOP NAVIGATION */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-2">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 end={link.to === "/"}
                 className={({ isActive }) =>
-                  `px-5 py-2 text-[13px] font-bold uppercase tracking-widest transition-all duration-300 rounded-full ${
+                  `px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 rounded-full border ${
                     isActive 
-                    // Active state now uses a warm white/amber glow
-                    ? "text-amber-50 bg-amber-500/20 shadow-inner" 
-                    : "text-stone-400 hover:text-amber-200 hover:bg-amber-950/30"
+                    ? "bg-[#2C3E2F] text-white border-[#2C3E2F] shadow-md" 
+                    : "text-[#2C3E2F] border-[#E8DCC8] hover:border-[#2C3E2F] hover:bg-[#FAF7F2]"
                   }`
                 }
               >
                 {link.label}
               </NavLink>
             ))}
-            
-            <div className="h-6 w-[1px] bg-amber-900/30 mx-4" />
 
-            <Link to="/login">
-              <Button 
-                variant="outline" 
-                // Button now has an amber/gold hover state
-                className="border-amber-900/50 bg-transparent text-amber-200 hover:bg-amber-500 hover:text-stone-950 hover:border-amber-500 transition-all duration-500 rounded-full px-8 text-xs font-black uppercase tracking-widest"
-              >
-                Admin Portal
-              </Button>
+            {/* Admin Pill (Desktop) */}
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 rounded-full border flex items-center gap-2 ${
+                  isActive 
+                  ? "bg-[#D4A574] text-white border-[#D4A574]" 
+                  : "text-[#D4A574] border-[#D4A574]/30 hover:bg-[#D4A574] hover:text-white"
+                }`
+              }
+            >
+              <User className="w-3 h-3" />
+              Admin
+            </NavLink>
+            
+            {/* Desktop Cart */}
+            <Link to="/contact#inquiry-form" className="relative p-2.5 ml-2 bg-[#FAF7F2] rounded-full border border-[#E8DCC8] hover:border-[#2C3E2F] transition-all group">
+              <ShoppingCart className="w-5 h-5 text-[#2C3E2F] group-hover:scale-110 transition-transform" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#D4A574] text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMenu}
-              className="text-amber-100 hover:bg-amber-500/10 rounded-xl"
+          {/* MOBILE NAVIGATION */}
+          <div className="flex lg:hidden items-center gap-2">
+            {/* Products Oval (Mobile) */}
+            <Link 
+              to="/products" 
+              className={`px-3 py-2 text-[9px] font-black uppercase tracking-widest rounded-full border transition-all ${
+                location.pathname === '/products' 
+                ? 'bg-[#2C3E2F] text-white border-[#2C3E2F]' 
+                : 'text-[#2C3E2F] border-[#E8DCC8]'
+              }`}
             >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
+              Shop
+            </Link>
+
+            {/* Cart (Mobile) */}
+            <Link to="/contact#inquiry-form" className="relative p-2">
+              <ShoppingCart className="w-6 h-6 text-[#2C3E2F]" />
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 bg-[#D4A574] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">
+                  {cartCount}
+                </span>
               )}
-            </Button>
+            </Link>
+            
+            {/* Menu (Mobile) */}
+            <button onClick={() => setIsOpen(!isOpen)} className="p-1 text-[#2C3E2F]">
+              {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+            </button>
           </div>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* MOBILE OVERLAY */}
         <AnimatePresence>
           {isOpen && (
             <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden overflow-hidden bg-[#241b19] border border-amber-900/20 rounded-2xl mb-4 shadow-3xl"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="lg:hidden mt-4 bg-white border border-[#E8DCC8] rounded-[2rem] overflow-hidden shadow-2xl"
             >
-              <div className="flex flex-col p-4 space-y-1">
+              <div className="flex flex-col p-5 space-y-2">
                 {navLinks.map((link) => (
                   <NavLink
                     key={link.to}
                     to={link.to}
                     end={link.to === "/"}
-                    onClick={toggleMenu}
+                    onClick={() => setIsOpen(false)}
                     className={({ isActive }) =>
-                      `flex items-center justify-between p-4 rounded-xl text-sm font-bold uppercase tracking-widest transition-all ${
-                        isActive 
-                        ? "bg-amber-500/20 text-amber-200" 
-                        : "text-stone-400 hover:bg-amber-950/50"
+                      `px-6 py-4 rounded-2xl text-[12px] font-bold uppercase tracking-widest transition-all ${
+                        isActive ? "bg-[#FAF7F2] text-[#2C3E2F]" : "text-[#858566]"
                       }`
                     }
                   >
                     {link.label}
-                    <ChevronRight className="w-4 h-4 text-amber-500 opacity-50" />
                   </NavLink>
                 ))}
-                <Link to="/login" onClick={toggleMenu} className="pt-4">
-                  <Button className="w-full bg-amber-500 text-stone-950 hover:bg-amber-400 font-black uppercase tracking-widest rounded-xl h-12 shadow-xl shadow-amber-900/20">
-                    Admin Portal
-                  </Button>
-                </Link>
+                
+                {/* Mobile Admin Link */}
+                <NavLink
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `px-6 py-4 rounded-2xl text-[12px] font-bold uppercase tracking-widest transition-all border ${
+                      isActive ? "bg-[#D4A574] text-white" : "border-[#D4A574]/20 text-[#D4A574]"
+                    }`
+                  }
+                >
+                  Admin Portal
+                </NavLink>
               </div>
             </motion.div>
           )}
