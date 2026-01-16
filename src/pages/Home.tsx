@@ -160,7 +160,7 @@ const Home = () => {
         transition={{ duration: 0.6, delay: 0.4 }}
       >
         <Star className="w-4 h-4 text-[#D4A574] fill-current" />
-        <span className="text-white text-sm tracking-wider">Premium International Foods Since 2009</span>
+        <span className="text-white text-sm tracking-wider">Bringing Exceptional Global Flavors to America Since 2009</span>
       </motion.div>
 
       {/* Main Headline */}
