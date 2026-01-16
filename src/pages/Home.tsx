@@ -298,11 +298,8 @@ const Home = () => {
             <div key={outerIdx} className="flex items-center">
               {["Buldak", "SHAFA", "Indomie", "LAZIZ", "Ginseng", "LEZAT"].map((brand, i) => (
                 <div key={i} className="flex items-center">
-                  <span className="text-4xl md:text-6xl px-16 
-                                  text-transparent stroke-[#2C3E2F]/40 
-                                  [ -webkit-text-stroke-width:1px ] 
-                                  hover:text-[#D4A574] hover:stroke-transparent
-                                  transition-all duration-300 font-serif italic">
+                  <span className="text-4xl md:text-6xl px-16 text-[#2C3E2F]/30 hover:text-[#D4A574] hover:opacity-100 transition-all duration-300 font-serif italic tracking-wide">
+
 
                     {brand}
                   </span>
