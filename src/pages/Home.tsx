@@ -328,7 +328,7 @@ const Home = () => {
             </div>
             <Link to="/products" className="text-xs font-bold border-b border-[#2C3E2F] pb-1 uppercase tracking-widest">View All</Link>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredProducts.map((p) => (
               <div key={p.id} className="bg-white p-3 rounded-[2rem] border border-[#E8DCC8] hover:shadow-2xl transition-all duration-500 flex flex-col">
                 <div 
