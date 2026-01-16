@@ -129,35 +129,137 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#FAF7F2] font-sans">
       
-      {/* SECTION 1: EDITORIAL HERO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/hero-products.webp" alt="Premium Foods" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
-          <div className="absolute inset-0 bg-[#2C3E2F]/20" />
+      {/* Section 1: Editorial Store Introduction */}
+<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  {/* Hero Background Image */}
+  <div className="absolute inset-0">
+    <img
+      src="/hero-products.webp"
+      alt="Premium Peroz Corp Products"
+      className="w-full h-full object-cover"
+    />
+    {/* Gradient Overlay */}
+    <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+    {/* Warm overlay for brand tone */}
+    <div className="absolute inset-0 bg-[#2C3E2F]/20" />
+  </div>
+
+  {/* Hero Content */}
+  <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-32 text-center">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.2 }}
+      className="max-w-4xl mx-auto"
+    >
+      {/* Badge */}
+      <motion.div
+        className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <Star className="w-4 h-4 text-[#D4A574] fill-current" />
+        <span className="text-white text-sm tracking-wider">Premium International Foods Since 2009</span>
+      </motion.div>
+
+      {/* Main Headline */}
+      <motion.h1
+        className="text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight"
+        style={{ fontFamily: "'Playfair Display', serif" }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+      >
+        Discover Authentic
+        <br />
+        <span className="text-[#D4A574]">Flavors from Around</span>
+        <br />
+        the World
+      </motion.h1>
+
+      {/* Subheadline */}
+      <motion.p
+        className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed max-w-3xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+      >
+        Curated selection of premium dried fruits, nuts, confectionery, beverages, 
+        and specialty goods from trusted artisans worldwide
+      </motion.p>
+
+      {/* CTAs */}
+      <motion.div
+        className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1 }}
+      >
+        <Link to="/products">
+          <motion.button
+            className="bg-[#D4A574] text-white px-10 py-5 rounded-full text-lg font-medium flex items-center gap-3 shadow-2xl"
+            whileHover={{ scale: 1.05, backgroundColor: '#c89563' }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Shop All Products
+            <ArrowRight className="w-5 h-5" />
+          </motion.button>
+        </Link>
+        
+        <Link to="/products">
+          <motion.button
+            className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white px-10 py-5 rounded-full text-lg font-medium hover:bg-white/20 transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Browse Categories
+          </motion.button>
+        </Link>
+      </motion.div>
+
+      {/* Trust Badges */}
+      <motion.div
+        className="flex flex-wrap items-center justify-center gap-8 mt-16 pt-8 border-t border-white/20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1.2 }}
+      >
+        <div className="text-center">
+          <p className="text-4xl text-white mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>150+</p>
+          <p className="text-sm text-white/70 uppercase tracking-widest">Products</p>
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8">
-              <Star className="w-4 h-4 text-[#D4A574] fill-current" />
-              <span className="text-white text-sm tracking-wider uppercase">Global Imports Since 2009</span>
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl text-white mb-6 font-serif italic leading-tight">
-              Discover Authentic<br /><span className="text-[#D4A574]">World Flavors</span>
-            </h1>
-            <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
-              Curated selection of premium dried fruits, nuts, and specialty goods from trusted artisans worldwide.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/products">
-                <button className="bg-[#D4A574] text-white px-10 py-5 rounded-full text-lg font-medium flex items-center gap-3 shadow-2xl hover:bg-[#c89563]">
-                  Shop All Products <ArrowRight className="w-5 h-5" />
-                </button>
-              </Link>
-            </div>
-          </motion.div>
+        <div className="hidden sm:block h-12 w-[1px] bg-white/20" />
+        <div className="text-center">
+          <p className="text-4xl text-white mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>50+</p>
+          <p className="text-sm text-white/70 uppercase tracking-widest">Countries</p>
         </div>
-      </section>
+        <div className="hidden sm:block h-12 w-[1px] bg-white/20" />
+        <div className="text-center">
+          <p className="text-4xl text-white mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>10k+</p>
+          <p className="text-sm text-white/70 uppercase tracking-widest">Happy Customers</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  </div>
+
+  {/* Scroll Indicator */}
+  <motion.div
+    className="absolute bottom-8 left-1/2 -translate-x-1/2"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8, delay: 1.4 }}
+  >
+    <motion.div
+      className="flex flex-col items-center gap-2 text-white/60"
+      animate={{ y: [0, 10, 0] }}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <span className="text-xs uppercase tracking-widest">Scroll</span>
+      <div className="w-[1px] h-16 bg-gradient-to-b from-white/60 to-transparent" />
+    </motion.div>
+  </motion.div>
+</section>
 
       {/* SECTION 2: SHOP BY CATEGORY */}
       <section className="py-24 px-6 lg:px-8">
