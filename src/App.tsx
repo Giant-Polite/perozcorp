@@ -40,6 +40,7 @@ const App = () => (
             <Route path="admin-dashboard" element={<AdminDashboard />} />
           </Route>
           <Route path="*" element={<NotFound />} />
+          <Route path="login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
