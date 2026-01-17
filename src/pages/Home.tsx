@@ -137,7 +137,7 @@ const Home = () => {
 
     // 2. Set the "Desktop" width (1280 is standard for desktops)
     if (viewport) {
-      viewport.setAttribute('content', 'width=1280, initial-scale=0.1');
+      viewport.setAttribute('content', 'width=1024, initial-scale=0.7, minimum-scale=0.5');
     }
 
     // 3. CLEANUP: Reset to mobile-friendly view when leaving the page
