@@ -129,6 +129,25 @@ const Home = () => {
     }
   ];
 
+  /* 5. FORCE DESKTOP VIEWPORT FOR THIS PAGE */
+  useEffect(() => {
+    // 1. Find the existing viewport tag
+    const viewport = document.querySelector('meta[name="viewport"]');
+    const originalContent = viewport ? viewport.getAttribute('content') : '';
+
+    // 2. Set the "Desktop" width (1280 is standard for desktops)
+    if (viewport) {
+      viewport.setAttribute('content', 'width=1280, initial-scale=0.1');
+    }
+
+    // 3. CLEANUP: Reset to mobile-friendly view when leaving the page
+    return () => {
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FAF7F2] font-sans">
       
