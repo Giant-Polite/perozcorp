@@ -394,42 +394,75 @@ const Home = () => {
       </section>
 
       {/* MODAL SYSTEM */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <motion.div
-            className="fixed inset-0 bg-[#2C3E2F]/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+<AnimatePresence>
+  {selectedProduct && (
+    <motion.div
+      className="fixed inset-0 bg-[#2C3E2F]/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
+      onClick={() => setSelectedProduct(null)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white w-full max-w-xl rounded-[2.5rem] flex flex-col overflow-hidden shadow-2xl"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+      >
+        {/* HEADER */}
+        <div className="relative p-8 border-b border-[#E8DCC8]">
+          <h3 className="font-serif italic text-2xl text-[#2C3E2F] pr-8">
+            {selectedProduct.name}
+          </h3>
+          <button
             onClick={() => setSelectedProduct(null)}
+            className="absolute right-8 top-8 p-2 hover:bg-stone-100 rounded-full transition-colors"
           >
-            <motion.div
-              className="bg-white w-full max-w-xl rounded-[2.5rem] overflow-hidden shadow-2xl"
-              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative p-8 border-b border-[#E8DCC8]">
-                <h3 className="font-serif italic text-2xl text-[#2C3E2F]">{selectedProduct.name}</h3>
-                <button onClick={() => setSelectedProduct(null)} className="absolute right-8 top-8 p-2 hover:bg-stone-100 rounded-full">
-                  <X className="w-5 h-5 text-[#2C3E2F]" />
-                </button>
-              </div>
-              <div className="p-8">
-                <div className="bg-[#FAF7F2] rounded-[2rem] p-10 mb-6 flex justify-center border border-[#E8DCC8]/30">
-                  <img src={selectedProduct.image} className="max-h-64 object-contain" alt="" />
-                </div>
-                <p className="text-[#858566] text-sm leading-relaxed mb-8 italic">
-                  {selectedProduct.description || "Premium imported goods. Inquire for full wholesale specifications and East Coast availability."}
-                </p>
-                <button 
-                  onClick={() => handleInquiry(selectedProduct.name)}
-                  className="w-full h-14 bg-[#2C3E2F] hover:bg-[#D4A574] text-white font-bold uppercase tracking-widest rounded-full transition-all"
-                >
-                  Add to Inquiry List
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <X className="w-5 h-5 text-[#2C3E2F]" />
+          </button>
+        </div>
+
+        {/* BODY */}
+        <div className="p-8 overflow-y-auto max-h-[60vh]">
+          <div className="bg-[#FAF7F2] rounded-[2rem] p-10 mb-8 flex justify-center border border-[#E8DCC8]/30">
+            <img
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              className="max-h-64 object-contain mix-blend-multiply"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Star className="w-3 h-3 text-[#D4A574] fill-[#D4A574]" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#D4A574]">
+                Product Specifications
+              </span>
+            </div>
+
+            <p className="text-[#858566] leading-relaxed text-sm">
+              {selectedProduct.description ||
+                "Inquire for detailed product specifications, wholesale pricing, and availability."}
+            </p>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <div className="p-8 bg-[#FAF7F2] border-t border-[#E8DCC8]">
+          <button
+            onClick={() => handleInquiry(selectedProduct.name)}
+            className="w-full h-14 bg-[#2C3E2F] hover:bg-[#D4A574] text-white font-bold uppercase tracking-widest rounded-full transition-all flex items-center justify-center gap-3"
+          >
+            Confirm Inquiry
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
     </div>
   );
